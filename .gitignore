@@ -1,0 +1,13 @@
+node_modules/
+.DS_Store
+*.log
+.env
+.env.*
+.idea/
+.vscode/
+dist/assets/_index.js
+dist/assets/_index.css
+
+# Never commit credentials or host tokens
+.deed-page/
+**/token

@@ -1,0 +1,10 @@
+/* BitSharesScan fixes 2026-11 */
+@media (min-width:1024px){.bx-pagesearch{max-width:36rem}}
+.bx-search{text-overflow:ellipsis}
+.bx-search::placeholder{text-overflow:ellipsis}
+.bx-swipe{margin:0;padding:.5rem 1rem 0;font-size:11px;line-height:1.3;color:var(--color-muted,#6c757d)}
+@media (min-width:768px){.bx-swipe{display:none}}
+.bx-scroll{-webkit-overflow-scrolling:touch;background:linear-gradient(to right,var(--color-card,#fff) 30%,transparent),linear-gradient(to left,var(--color-card,#fff) 30%,transparent) 100% 0,radial-gradient(farthest-side at 0 50%,rgba(0,0,0,.14),transparent),radial-gradient(farthest-side at 100% 50%,rgba(0,0,0,.14),transparent) 100% 0;background-repeat:no-repeat;background-size:40px 100%,40px 100%,14px 100%,14px 100%;background-attachment:local,local,scroll,scroll}
+@media (max-width:767px){.bx-ad{display:none}}
+.site-footer{padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
+@media (max-width:767px){#root{padding-bottom:env(safe-area-inset-bottom,0px)}}

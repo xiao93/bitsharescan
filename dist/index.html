@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("bitscan.theme")
+          var theme = stored === "dark" ? "black" : stored === "dim" || stored === "black" ? stored : "light"
+          if (stored === "dark" || stored === "auto") localStorage.setItem("bitscan.theme", theme)
+          document.documentElement.setAttribute("data-theme", theme)
+          if (theme !== "light") document.documentElement.classList.add("dark")
+          document.documentElement.style.colorScheme = theme === "light" ? "light" : "dark"
+        } catch (e) {}
+      })()
+    </script>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="alternate icon" href="./favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="BitSharesScan is a BitShares blockchain explorer: blocks, transactions, accounts, assets, witnesses, and the DEX."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>BitSharesScan | BitShares Explorer</title>
+    <script type="module" crossorigin src="./assets/index-452bfce1.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-da70332f.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

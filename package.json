@@ -1,0 +1,21 @@
+{
+  "name": "bitsharescan",
+  "version": "1.0.0",
+  "private": false,
+  "description": "BitSharesScan — an open-source BitShares blockchain explorer",
+  "license": "MIT",
+  "author": "xiao93",
+  "homepage": "https://bitsharescan.deed.page/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xiao93/bitsharescan.git"
+  },
+  "scripts": {
+    "patch": "python3 src/patches/apply.py",
+    "build": "bash scripts/build.sh",
+    "start": "python3 -m http.server 4173 --directory dist"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}
