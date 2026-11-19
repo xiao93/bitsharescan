@@ -1,13 +1,26 @@
-node_modules/
-.DS_Store
+# Logs
+logs
 *.log
-.env
-.env.*
-.idea/
-.vscode/
-dist/assets/_index.js
-dist/assets/_index.css
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Never commit credentials or host tokens
-.deed-page/
-**/token
+node_modules
+dist
+agent-tools
+tmp
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

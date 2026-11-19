@@ -1,0 +1,257 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant dim (&:where([data-theme="dim"], [data-theme="dim"] *));
+@custom-variant black (&:where([data-theme="black"], [data-theme="black"] *));
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-link: #0784c3;
+  --color-link-dark: #066a9c;
+  --color-ink: #08131f;
+  --color-muted: #6c757d;
+  --color-line: #e7eaf3;
+  --color-canvas: #f8f9fa;
+  --color-card: #ffffff;
+  --color-page: #ffffff;
+  --color-tint: #e8f4fb;
+  --color-chip: #eef6fb;
+  --color-row: #f8fbff;
+  --color-success: #00a186;
+  --color-danger: #d32f2f;
+}
+
+[data-theme="dim"] {
+  color-scheme: dark;
+  --color-link: #4da2ff;
+  --color-link-dark: #8ec4ff;
+  --color-ink: #e7ecf3;
+  --color-muted: #8b98a9;
+  --color-line: #2c3340;
+  --color-canvas: #121a26;
+  --color-card: #1a2230;
+  --color-page: #0e141d;
+  --color-tint: #1c3148;
+  --color-chip: #1b3044;
+  --color-row: #212b3b;
+  --color-success: #3dccb4;
+  --color-danger: #ff6b6b;
+}
+
+[data-theme="black"] {
+  color-scheme: dark;
+  --color-link: #1d9bf0;
+  --color-link-dark: #8ecdf8;
+  --color-ink: #e7e9ea;
+  --color-muted: #71767b;
+  --color-line: #2f3336;
+  --color-canvas: #16181c;
+  --color-card: #000000;
+  --color-page: #000000;
+  --color-tint: #16181c;
+  --color-chip: #16181c;
+  --color-row: #16181c;
+  --color-success: #00ba7c;
+  --color-danger: #f4212e;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--color-page);
+  color: var(--color-ink);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--color-page);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Etherscan container-xxl: 1320px from 1200, 1400px from 1400, 12px side padding. */
+.shell {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 12px;
+}
+
+@media (min-width: 1200px) {
+  .shell {
+    max-width: 1320px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .shell {
+    max-width: 1400px;
+  }
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  color: inherit;
+}
+
+code,
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.hero-band {
+  background: linear-gradient(180deg, #f3f8fc 0%, var(--color-card) 78%);
+}
+
+[data-theme="dim"] .hero-band {
+  background: linear-gradient(180deg, #152033 0%, var(--color-card) 78%);
+}
+
+[data-theme="black"] .hero-band {
+  background: #000000;
+}
+
+.site-footer {
+  background: #1a2332;
+}
+
+[data-theme="dim"] .site-footer {
+  background: #070b11;
+}
+
+[data-theme="black"] .site-footer {
+  background: #000000;
+  color: #e7e9ea;
+}
+
+[data-theme="black"] .site-footer .footer-muted {
+  color: #71767b;
+}
+
+[data-theme="black"] .site-footer .footer-rule {
+  border-color: #2f3336;
+}
+
+.dark .bg-emerald-50 {
+  background-color: rgb(6 78 59 / 0.35);
+}
+
+.dark .bg-amber-50,
+.dark .bg-amber-100 {
+  background-color: rgb(120 53 15 / 0.4);
+}
+
+.dark .bg-violet-50 {
+  background-color: rgb(76 29 149 / 0.35);
+}
+
+.dark .bg-red-50 {
+  background-color: rgb(127 29 29 / 0.35);
+}
+
+.dark .text-emerald-700,
+.dark .text-emerald-800 {
+  color: #6ee7b7;
+}
+
+.dark .text-red-700,
+.dark .text-red-800 {
+  color: #fecaca;
+}
+
+.dark .text-amber-700,
+.dark .text-amber-800,
+.dark .text-amber-900,
+.dark .text-amber-950 {
+  color: #fcd34d;
+}
+
+.dark .text-violet-600,
+.dark .text-violet-700 {
+  color: #ddd6fe;
+}
+
+.dark .border-amber-200 {
+  border-color: #92400e;
+}
+
+.dark .border-red-100 {
+  border-color: #7f1d1d;
+}
+
+::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d5dde8;
+  border-radius: 999px;
+}
+
+[data-theme="dim"] ::-webkit-scrollbar-thumb {
+  background: #3a4556;
+}
+
+[data-theme="black"] input,
+[data-theme="black"] select,
+[data-theme="black"] textarea {
+  background-color: #000000;
+  border-color: #2f3336;
+}
+
+[data-theme="black"] ::-webkit-scrollbar-thumb {
+  background: #2f3336;
+}
+
+/* Wider page search so the placeholder is not cut mid-word; ellipsis when it still does not fit. */
+@media (min-width: 1024px) {
+  .bx-pagesearch {
+    max-width: 36rem;
+  }
+}
+.bx-search,
+.bx-search::placeholder {
+  text-overflow: ellipsis;
+}
+
+/* Wide tables on phones: hint and edge shadows show that the table scrolls sideways. */
+.bx-swipe {
+  margin: 0;
+  padding: 0.5rem 1rem 0;
+  font-size: 11px;
+  line-height: 1.3;
+  color: var(--color-muted, #6c757d);
+}
+@media (min-width: 768px) {
+  .bx-swipe {
+    display: none;
+  }
+}
+.bx-scroll {
+  -webkit-overflow-scrolling: touch;
+  background:
+    linear-gradient(to right, var(--color-card, #fff) 30%, transparent),
+    linear-gradient(to left, var(--color-card, #fff) 30%, transparent) 100% 0,
+    radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.14), transparent),
+    radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.14), transparent) 100% 0;
+  background-repeat: no-repeat;
+  background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
+  background-attachment: local, local, scroll, scroll;
+}
+
+/* The empty hero ad slot only takes space on phones; hide it there. */
+@media (max-width: 767px) {
+  .bx-ad {
+    display: none;
+  }
+}
+
+/* Room under the footer so the host's fixed badge never covers the last links. */
+.site-footer {
+  padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+}

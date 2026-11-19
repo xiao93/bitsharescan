@@ -1,179 +1,231 @@
 # BitSharesScan
 
-[中文](#bitsharescan-中文) | [English](#bitsharescan-english)
+[中文](#中文) | [English](#english)
 
-开源的 [BitShares](https://bitshares.org/) 区块链浏览器。线上站点：[https://bitsharescan.deed.page/](https://bitsharescan.deed.page/)
+开源的 [BitShares](https://bitshares.org/) 区块链浏览器。线上站点：<https://bitsharescan.deed.page/>
 
-An open-source [BitShares](https://bitshares.org/) blockchain explorer. Live site: [https://bitsharescan.deed.page/](https://bitsharescan.deed.page/)
+An open-source [BitShares](https://bitshares.org/) blockchain explorer. Live site: <https://bitsharescan.deed.page/>
 
 ---
 
-## BitSharesScan (中文)
+## 中文
 
-BitSharesScan 是一个纯前端静态站点，通过公共 WebSocket API 节点和公开的 Elasticsearch 索引浏览 BitShares 主网与测试网：区块、交易、账户、资产、治理、DEX 与部分 DeFi 功能。
+BitSharesScan 是一个纯前端静态站点（React 19 + TypeScript + Vite + Tailwind CSS），直接从公共 API 节点和公开的 Elasticsearch 索引读取 BitShares 主网与测试网数据。它只读取公开链上数据，不保存私钥，也不广播交易。
+
+本仓库就是网站的**原始工程源码**，`npm run build` 生成的就是线上部署的文件。
 
 ### 功能
 
-- 区块、交易、操作查询
-- 账户余额、权限、投票、历史记录（支持 1 万条以上翻页）与导出
-- 资产列表与详情，包括持有人、喂价、结算、市场、流动性池
-- 治理：见证人、理事会、工人预算、提案列表与详情
-- DEX 市场与订单簿；流动性池、借贷、闪贷、同额转账、锁仓
-- 节点追踪（公共 API 与 P2P 种子列表）
-- 图表与统计；隐私转账统计页
-- 中文 / 英文，主网 / 测试网，浅色 / Dim / 深色主题
-- 节点自动故障切换；首页价格默认使用 CoinGecko，并标注来源（无法取得时回退到链上 DEX 报价）
+- 区块、交易、操作详情；最新区块与交易
+- 账户：余额、挂单、抵押仓位、投票、权限、白名单、关系，以及完整操作历史（超过 1 万条也能翻页）和数据导出
+- 资产列表与详情：供应量、持有人、喂价、市场
+- 治理：见证人、理事会、预算提案（workers）、**提案（1.10.x）列表与详情**
+- DEX 市场与订单簿；流动性池、借贷（credit offer/deal）、SameT 闪贷、锁仓（tickets）
+- 节点追踪（公共 API 节点与 P2P 快照）、网络参数与手续费表、图表统计、隐私转账统计
+- 中文 / 英文，主网 / 测试网，浅色 / Dim / 黑色主题
 
-### 关于这份源码（请先读）
+### 本地开发
 
-**原始工程源码已经找不到。** 本仓库里的可读 JavaScript 是从当时线上的生产打包文件反美化（de-minify）后再打补丁得到的，变量名仍是打包后的短名称，**不是**当初的组件/工程源码。因此代码是生成的、可读但难以按模块维护。`dist/` 是当前部署到线上站点的静态文件。
-
-后续若要做路由级代码拆分等较大改动，建议在此基础上逐步还原成可维护的工程，或用新的前端工程重写页面、复用现有 API 调用逻辑。
-
-### 数据来源
-
-站点本身不运行节点，也不存储私钥。浏览器直接请求下列公共服务：
-
-| 用途 | 地址 |
-|---|---|
-| 主网 WebSocket（默认，失败会自动切换） | `wss://api.bitshares.dev/ws`，备用：`wss://node.xbts.io/ws`、`wss://api.bts.mobi/ws`、`wss://api.dex.trading/ws`、`wss://dex.iobanker.com/ws` |
-| 测试网 WebSocket | `wss://testnet.dex.trading/ws`，备用：`wss://testnet.xbts.io/ws` |
-| 操作历史、持有人、提案、图表等 | 公开 Elasticsearch：`https://es.bitshares.dev`（代码中无认证头，按网络使用不同索引前缀） |
-| 首页 BTS 美元价格 | [CoinGecko](https://api.coingecko.com/api/v3/simple/price?ids=bitshares&vs_currencies=usd)，失败时回退到链上 DEX |
-| 节点追踪页的 P2P 名单 | 本仓库 `data/p2p-nodes.json` 与 `data/p2p-nodes-testnet.json`；地理/DNS 查询使用公开的 geojs 与 Google DNS |
-
-可在站点设置中自定义节点和 ES 地址。可选的 HTTP RPC 代理仅用于你自己的本地转发，占位符为 `http://127.0.0.1:8787`。
-
-### 本地运行
-
-需要 Node.js（用于 `esbuild`）和 Python 3。
+需要 Node.js 20.19+ 或 22.12+。
 
 ```bash
 git clone https://github.com/xiao93/bitsharescan.git
 cd bitsharescan
-npm install
-# 直接预览已经构建好的 dist/：
-npm start
-# 浏览器打开 http://127.0.0.1:4173/
+npm ci
+npm run dev        # http://127.0.0.1:43123
 ```
 
-从可读源码重新打包：
+### 构建
 
 ```bash
-npm run build
-npm start
+npm run build      # tsc 类型检查 + vite build，输出到 dist/
+npm run preview    # 本地预览 dist/
+npm run lint       # oxlint
 ```
 
-`npm run build` 会先运行 `src/patches/apply.py`（把补丁打进 `src/app.js`，写出 `src/app.patched.js`），再用 esbuild 压缩 JS，把 `src/style.css` 与 `src/patches/extra.css` 合并为 CSS，并更新 `dist/index.html` 中的带内容哈希的文件名。重新打包后的 JS 内容哈希未必与当前 `dist/` 里已部署的文件完全相同，但功能一致；本仓库提交的 `dist/` 是线上正在使用的那一份。
-
-这是一个 hash 路由的静态站点（`#/account/...`），用任意静态文件服务器托管即可，无需后端。
+`dist/` 是纯静态文件。路由用 URL hash（`/#/block/123`），任何静态托管都能直接放，不需要重写规则。除首页外，每个页面都会单独打成一个 JS 分包，第一次访问时才加载。
 
 ### 部署
 
-把 `dist/` 目录发布到任意静态托管即可（deed.page、GitHub Pages、Nginx、对象存储网站托管等）。不要把主机令牌、API 密钥或 `.env` 提交进仓库。若使用 deed.page，请把令牌放在环境变量或本地配置文件中，**不要写进脚本**。
+把 `dist/` 里的文件上传到任意静态托管即可（GitHub Pages、Nginx、对象存储等）。线上站点用的是 deed.page：
+
+```bash
+npm run build
+tar -C dist -czf site.tar.gz .
+curl -X PUT "https://deed.page/v1/sites?slug=<你的站点名>" \
+  -H "Authorization: Bearer $DEED_PAGE_TOKEN" \
+  -H "Content-Type: application/gzip" \
+  --data-binary @site.tar.gz
+```
+
+令牌只放在环境变量或本机配置里，**不要**提交到仓库。
+
+### 数据来源
+
+| 用途 | 地址 |
+| --- | --- |
+| 主网节点（WebSocket） | 默认 `wss://api.bitshares.dev/ws`；连不上或连续超时会自动切换到 `wss://node.xbts.io/ws`、`wss://api.bts.mobi/ws`、`wss://api.dex.trading/ws`、`wss://dex.iobanker.com/ws` |
+| 测试网节点 | `wss://testnet.dex.trading/ws`，备用 `wss://testnet.xbts.io/ws` |
+| 操作历史、持有人、提案、图表 | 公开 Elasticsearch `https://es.bitshares.dev`（主网 `bitshares-*` / `objects-*`，测试网 `testnet-*` / `testnetobjs-*`） |
+| 首页 BTS 价格 | [CoinGecko](https://www.coingecko.com/en/coins/bitshares)，并附链上 DEX 加权价作对比；CoinGecko 不可用时退回 DEX 价格并注明成交量 |
+
+切换节点时会先校验 `get_chain_id`，不是所选网络的节点不会被使用。顶栏会显示当前连接的节点。首页「操作总数」是 Elasticsearch 的基数估算值，所以显示为「≈」。
+
+节点和 ES 地址也可以在页面右上角的设置里改，或在构建时用环境变量设置默认值：
+
+```bash
+VITE_WS_URL=wss://api.bitshares.dev/ws
+VITE_ES_URL=https://es.bitshares.dev
+VITE_HTTP_RPC=
+```
+
+### 可选：HTTP RPC 代理
+
+只有浏览器打不开 WebSocket 的网络才需要。`proxy/server.mjs` 把 HTTP JSON-RPC 转发到节点并加上 CORS 头：
+
+```bash
+node proxy/server.mjs
+# PORT=8787 RPC_TARGET=https://api.bitshares.dev/ node proxy/server.mjs
+```
+
+然后在设置里把「Optional HTTP RPC proxy」填成 `http://127.0.0.1:8787`。
+
+### P2P 快照
+
+`scripts/p2p-crawl.py` 走 Graphene P2P 握手，生成 `public/data/p2p-nodes.json`，节点追踪页读取这个快照。需要 `coincurve` 和 `cryptography`：
+
+```bash
+python3 scripts/p2p-crawl.py
+```
+
+### 首页广告位
+
+`src/ads.config.ts` 配置首页搜索框右侧 321×81 的横幅。留空时显示「广告位招租」占位（手机上隐藏）。
 
 ### 目录结构
 
 ```
-src/app.js                 从原生产包反美化的 JS（打补丁前）
-src/app.patched.js         打补丁后的可读 JS（当前逻辑）
-src/style.css              原生产包 CSS
-src/index.html             页面模板
-src/patches/apply.py       补丁脚本
-src/patches/proposals.js   提案页
-src/patches/extra.css      移动端等样式补丁
-data/                      P2P 节点名单（构建时复制到 dist/data/）
-public/                    图标
-dist/                      当前线上部署使用的静态文件
-scripts/build.sh           重新打包
+src/App.tsx            路由（页面按需加载）
+src/components/        布局、搜索框、通用组件
+src/pages/             各页面
+src/lib/               节点客户端、ES 查询、格式化、多语言等
+public/                图标与 P2P 快照
+proxy/server.mjs       可选 HTTP RPC 代理
+scripts/p2p-crawl.py   P2P 快照脚本
 ```
 
-### 许可
+### 许可证
 
-[MIT](LICENSE)，Copyright (c) 2026 xiao93。打包文件中还包含 React、React Router、Tailwind CSS 等第三方库，遵循各自的开源许可证。
+[MIT](LICENSE)
 
 ---
 
-## BitSharesScan (English)
+## English
 
-BitSharesScan is a static, client-side explorer for the BitShares mainnet and testnet. It talks to public WebSocket API nodes and a public Elasticsearch index, and covers blocks, transactions, accounts, assets, governance, the DEX, and some DeFi features.
+BitSharesScan is a static front-end (React 19 + TypeScript + Vite + Tailwind CSS) that reads BitShares mainnet and testnet data straight from public API nodes and the public Elasticsearch index. It only reads public chain data; it holds no keys and never broadcasts transactions.
+
+This repository is the **original project source**. `npm run build` produces exactly what is deployed to the live site.
 
 ### Features
 
-- Blocks, transactions, and operations
-- Account balances, authorities, votes, history (including pages beyond 10,000 entries), and export
-- Assets, holders, feeds, settlements, markets, and pools
-- Governance: witnesses, committee, budget workers, and proposal list/detail pages
-- DEX markets and order books; liquidity pools, lending, flash loans, same-T transfers, and locking
-- Node tracker (public API nodes and P2P seeds)
-- Charts/statistics and a confidential-transfer statistics page
-- Chinese / English, mainnet / testnet, light / dim / dark themes
-- Automatic API node failover; homepage USD price from CoinGecko with a visible source label (falls back to the on-chain DEX)
+- Blocks, transactions, operations; latest blocks and transactions
+- Accounts: balances, open orders, debt positions, votes, authorities, whitelists, relations, full operation history (pages past 10,000 entries work) and data export
+- Asset list and details: supply, holders, feeds, markets
+- Governance: witnesses, committee, workers, **proposals (1.10.x) list and detail**
+- DEX markets and order books; liquidity pools, credit offers/deals, SameT flash loans, locking (tickets)
+- Node tracker (public API nodes and a P2P snapshot), chain parameters and fee schedule, charts, confidential transfer stats
+- English / Chinese, mainnet / testnet, light / dim / black themes
 
-### About this source tree
+### Develop
 
-**The original application source is not available.** The readable JavaScript in this repository was reconstructed by de-minifying the production bundle and then applying patches. Identifiers are still the short names from the bundled output; this is **not** the original component-level source. Treat it as generated, readable code. `dist/` is the exact static tree currently deployed to the live site.
-
-Larger changes such as route-level code splitting would be easier after gradually turning this back into a maintainable project, or after rewriting the UI and reusing the existing API-calling logic.
-
-### Data sources
-
-The site does not run a node and does not store private keys. The browser calls these public services:
-
-| Purpose | Endpoint |
-|---|---|
-| Mainnet WebSocket (default, with failover) | `wss://api.bitshares.dev/ws`, then `wss://node.xbts.io/ws`, `wss://api.bts.mobi/ws`, `wss://api.dex.trading/ws`, `wss://dex.iobanker.com/ws` |
-| Testnet WebSocket | `wss://testnet.dex.trading/ws`, then `wss://testnet.xbts.io/ws` |
-| Operation history, holders, proposals, charts | Public Elasticsearch at `https://es.bitshares.dev` (no auth headers in this code; index prefixes differ per network) |
-| Homepage BTS/USD price | [CoinGecko](https://api.coingecko.com/api/v3/simple/price?ids=bitshares&vs_currencies=usd), with an on-chain DEX fallback |
-| Node-tracker P2P lists | `data/p2p-nodes.json` and `data/p2p-nodes-testnet.json`; geo/DNS lookups use public geojs and Google DNS |
-
-Custom node and ES URLs can be set in the in-app settings. The optional HTTP RPC proxy field is only for a local proxy you run yourself; the placeholder is `http://127.0.0.1:8787`.
-
-### Run locally
-
-You need Node.js (for `esbuild`) and Python 3.
+Requires Node.js 20.19+ or 22.12+.
 
 ```bash
 git clone https://github.com/xiao93/bitsharescan.git
 cd bitsharescan
-npm install
-# Serve the already-built dist/ directory:
-npm start
-# Open http://127.0.0.1:4173/
+npm ci
+npm run dev        # http://127.0.0.1:43123
 ```
 
-Rebuild from the readable source:
+### Build
 
 ```bash
-npm run build
-npm start
+npm run build      # tsc type check + vite build into dist/
+npm run preview    # serve dist/ locally
+npm run lint       # oxlint
 ```
 
-`npm run build` runs `src/patches/apply.py` (patches `src/app.js` into `src/app.patched.js`), minifies the JS with esbuild, concatenates `src/style.css` and `src/patches/extra.css`, and rewrites the content-hashed filenames in `dist/index.html`. A rebuild may produce a different JS content hash from the files already in `dist/`; behavior is the same. The committed `dist/` is the tree currently served on the live site.
-
-This is a hash-router static app (`#/account/...`). Any static file server is enough; no backend is required.
+`dist/` is plain static files. Routing lives in the URL hash (`/#/block/123`), so any static host works without rewrites. Every page except the home page is its own JS chunk, loaded on first visit.
 
 ### Deploy
 
-Publish the `dist/` directory to any static host (deed.page, GitHub Pages, Nginx, object-storage website hosting, and so on). Do not commit host tokens, API keys, or `.env` files. If you deploy with deed.page, read the token from an environment variable or a local config file — **never hard-code it**.
+Upload the contents of `dist/` to any static host (GitHub Pages, Nginx, object storage, ...). The live site uses deed.page:
+
+```bash
+npm run build
+tar -C dist -czf site.tar.gz .
+curl -X PUT "https://deed.page/v1/sites?slug=<your-site>" \
+  -H "Authorization: Bearer $DEED_PAGE_TOKEN" \
+  -H "Content-Type: application/gzip" \
+  --data-binary @site.tar.gz
+```
+
+Keep the token in an environment variable or local config. **Never** commit it.
+
+### Data sources
+
+| Use | Endpoint |
+| --- | --- |
+| Mainnet node (WebSocket) | Default `wss://api.bitshares.dev/ws`; on connection failure or repeated timeouts it fails over to `wss://node.xbts.io/ws`, `wss://api.bts.mobi/ws`, `wss://api.dex.trading/ws`, `wss://dex.iobanker.com/ws` |
+| Testnet node | `wss://testnet.dex.trading/ws`, fallback `wss://testnet.xbts.io/ws` |
+| Operation history, holders, proposals, charts | Public Elasticsearch `https://es.bitshares.dev` (mainnet `bitshares-*` / `objects-*`, testnet `testnet-*` / `testnetobjs-*`) |
+| Home page BTS price | [CoinGecko](https://www.coingecko.com/en/coins/bitshares), with the on-chain DEX volume-weighted price shown for comparison; falls back to the DEX price (with its 24h volume) when CoinGecko is unreachable |
+
+Before a node is used, its `get_chain_id` must match the selected network. The top bar shows which node is in use. The home page operation count is an Elasticsearch cardinality estimate, so it is shown with "≈".
+
+Endpoints can be changed in the settings dialog, or given build-time defaults:
+
+```bash
+VITE_WS_URL=wss://api.bitshares.dev/ws
+VITE_ES_URL=https://es.bitshares.dev
+VITE_HTTP_RPC=
+```
+
+### Optional HTTP RPC proxy
+
+Only needed on networks that block browser WebSockets. `proxy/server.mjs` forwards HTTP JSON-RPC to a node and adds CORS headers:
+
+```bash
+node proxy/server.mjs
+# PORT=8787 RPC_TARGET=https://api.bitshares.dev/ node proxy/server.mjs
+```
+
+Then set **Optional HTTP RPC proxy** to `http://127.0.0.1:8787` in settings.
+
+### P2P snapshot
+
+`scripts/p2p-crawl.py` speaks the Graphene P2P handshake and writes `public/data/p2p-nodes.json`, which the node tracker reads. It needs `coincurve` and `cryptography`:
+
+```bash
+python3 scripts/p2p-crawl.py
+```
+
+### Home page banner
+
+`src/ads.config.ts` sets the 321×81 banner next to the home search box. Left empty, it shows an "Advertise here" placeholder (hidden on phones).
 
 ### Layout
 
 ```
-src/app.js                 De-minified JS from the original production bundle (before patches)
-src/app.patched.js         Readable JS after patches (current behavior)
-src/style.css              CSS from the original production bundle
-src/index.html             HTML template
-src/patches/apply.py       Patch script
-src/patches/proposals.js   Proposals pages
-src/patches/extra.css      Mobile and layout CSS patches
-data/                      P2P node lists (copied into dist/data/ at build time)
-public/                    Icons
-dist/                      Static files currently deployed to the live site
-scripts/build.sh           Rebuild
+src/App.tsx            routes (pages load on demand)
+src/components/        layout, search, shared widgets
+src/pages/             one file per page
+src/lib/               node client, Elasticsearch queries, formatting, i18n
+public/                icons and the P2P snapshot
+proxy/server.mjs       optional HTTP RPC proxy
+scripts/p2p-crawl.py   P2P snapshot crawler
 ```
 
 ### License
 
-[MIT](LICENSE), Copyright (c) 2026 xiao93. The bundled file also includes third-party libraries such as React, React Router, and Tailwind CSS, each under its own license.
+[MIT](LICENSE)
