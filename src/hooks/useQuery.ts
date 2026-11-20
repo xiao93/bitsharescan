@@ -41,6 +41,6 @@ export function useTitle(title: string) {
   const { lang, t } = useI18n()
   useEffect(() => {
     const heading = title ? t(title) : t("BitShares Explorer")
-    document.title = `${heading} | BitSharesScan`
+    document.title = `${heading} | BitShares (BTS) Explorer`
   }, [title, lang, t])
 }
