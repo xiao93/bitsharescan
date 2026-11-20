@@ -29,6 +29,7 @@ export default function ChartDetail() {
   const [zoom, setZoom] = useState<[number, number] | null>(null)
   const [attempt, setAttempt] = useState(0)
   const [quote, setQuote] = useState<BtsUsd | null>(null)
+  const [updatedAt, setUpdatedAt] = useState<string | null>(null)
 
   useEffect(() => {
     if (!isPrice) {
@@ -50,6 +51,7 @@ export default function ChartDetail() {
     setError(null)
     setPoints(null)
     setZoom(null)
+    setUpdatedAt(null)
     loadChart(chart.id, range).then(
       (data) => {
         if (stop) return
@@ -60,6 +62,7 @@ export default function ChartDetail() {
         setBucket(data.bucket)
         setMonthlyUnique(data.monthlyUnique)
         setShown(data.series?.map((row) => row.id) ?? [])
+        setUpdatedAt(data.updatedAt ?? null)
       },
       (err: unknown) => {
         if (!stop) setError(err instanceof Error ? err.message : "Failed")
@@ -135,6 +138,7 @@ export default function ChartDetail() {
               <div className="text-[11px] font-medium uppercase tracking-wide text-muted">{t("Current BTS price")}</div>
               <div className="mt-0.5 text-2xl font-semibold text-ink">{quote?.price == null ? "—" : `$${formatDecimal(quote.price, 6)}`}</div>
               {priceHint(quote, t) ? <div className="mt-0.5 text-xs text-muted" title={quote?.source || undefined}>{priceHint(quote, t)}</div> : null}
+              {updatedAt ? <p className="mt-1 text-xs text-muted">{t("History via CoinMarketCap, updated {time}", { time: formatTime(updatedAt) })}</p> : null}
             </div>
           ) : null}
         </div>

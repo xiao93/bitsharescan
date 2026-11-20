@@ -19,6 +19,7 @@ export type ChartData = {
   monthlyUnique: boolean
   rows?: RankRow[]
   grid?: number[][]
+  updatedAt?: string
 }
 
 export type ChartCategory = "Blockchain Data" | "Market Data" | "Network" | "DeFi"
@@ -49,7 +50,7 @@ export const CHARTS: ChartDef[] = [
   { id: "transfers", category: "Market Data", title: "Daily transfers", description: "Unique transfer operations per day.", unit: "transfers", digits: 0 },
   { id: "transfer-volume", category: "Market Data", title: "Daily BTS transfer volume", description: "Sum of transfer amounts denominated in BTS, counted once per operation.", unit: "BTS", digits: 0 },
   { id: "fills", category: "Market Data", title: "Daily DEX fills", description: "Unique fill-order operations per day.", unit: "fills", digits: 0 },
-  { id: "bts-price", category: "Market Data", title: "BTS price", description: "Daily BTS price in USD from CoinGecko. The free API limits history to the past 365 days, so the All range shows about one year. Full history would need a CoinGecko Pro key.", unit: "USD", digits: 5 },
+  { id: "bts-price", category: "Market Data", title: "BTS price", description: "Daily BTS price in USD from a CoinMarketCap history snapshot, covering the full daily record since July 2014 and refreshed periodically. The live current price still comes from CoinGecko or the on-chain DEX.", unit: "USD", digits: 5 },
   { id: "pool-exchanges", category: "DeFi", title: "Daily pool exchanges", description: "Unique liquidity-pool exchange operations per day.", unit: "exchanges", digits: 0 },
   { id: "credit-deals", category: "DeFi", title: "Daily credit offers accepted", description: "Unique credit-offer accept operations per day. That is when a new credit deal opens.", unit: "deals", digits: 0 },
   { id: "op-type-share", category: "Blockchain Data", title: "Operation type share", description: "Share of unique operations by type. All uses the past year.", unit: "operations", digits: 0, view: "share" },
@@ -119,7 +120,7 @@ function rangeWindow(range: RangeId) {
 }
 
 function cacheKey(id: string, range: RangeId) {
-  return `bitscan.chart.v3.${currentNetwork()}.${id}.${range}`
+  return `bitscan.chart.v4.${currentNetwork()}.${id}.${range}`
 }
 
 function readCache(id: string, range: RangeId) {
@@ -382,6 +383,29 @@ async function loadRank(id: string, range: RangeId): Promise<ChartData> {
   throw new Error("Unknown chart")
 }
 
+type CmcSnapshot = {
+  generated_at?: string
+  points?: Array<{ date: string; price: number }>
+}
+
+async function loadBtsPriceFromSnapshot(range: RangeId): Promise<ChartData | null> {
+  try {
+    const response = await fetch(`${import.meta.env.BASE_URL}data/bts-price-history.json`)
+    if (!response.ok) return null
+    const body = await response.json() as CmcSnapshot
+    const rows = (body.points ?? [])
+      .map((row) => ({ date: row.date, value: Number(row.price) }))
+      .filter((row) => typeof row.date === "string" && row.date.length >= 10 && row.value > 0)
+    if (!rows.length) return null
+    const start = range === "all" ? null : rangeWindow(range).start.toISOString().slice(0, 10)
+    const points = start ? rows.filter((row) => row.date >= start) : rows
+    if (!points.length) return null
+    return { points: trimLeadingZeros(points), bucket: "day", monthlyUnique: false, updatedAt: body.generated_at }
+  } catch {
+    return null
+  }
+}
+
 async function fetchCoinGeckoPriceHistory(days: number): Promise<Point[]> {
   try {
     const controller = new AbortController()
@@ -433,6 +457,8 @@ async function loadBtsPriceFromDex(range: RangeId): Promise<ChartData> {
 
 async function loadRaw(id: string, range: RangeId): Promise<ChartData> {
   if (id === "bts-price") {
+    const snapshot = await loadBtsPriceFromSnapshot(range)
+    if (snapshot) return snapshot
     const gecko = await fetchCoinGeckoPriceHistory(range === "1m" ? 30 : range === "6m" ? 182 : 365)
     if (gecko.length) return { points: trimLeadingZeros(gecko), bucket: "day", monthlyUnique: false }
     return loadBtsPriceFromDex(range)

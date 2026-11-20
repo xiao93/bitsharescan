@@ -262,6 +262,8 @@ const zh: Record<string, string> = {
   "Daily close of BTS against USD from the chain's market history.": "来自链上市场历史的 BTS 对 USD 每日收盘价。",
   "Daily close of BTS in dollars, inverted from the deepest USD stablecoin market. bitUSD is not used.": "BTS 的美元日收盘价，由成交量最大的美元稳定币市场换算，不使用 bitUSD。",
   "Daily BTS price in USD from CoinGecko. The free API limits history to the past 365 days, so the All range shows about one year. Full history would need a CoinGecko Pro key.": "BTS 的美元价格历史来自 CoinGecko。免费接口只能查询近 365 天，因此「全部」范围约等于一年。完整历史需要 CoinGecko Pro 密钥。",
+  "Daily BTS price in USD from a CoinMarketCap history snapshot, covering the full daily record since July 2014 and refreshed periodically. The live current price still comes from CoinGecko or the on-chain DEX.": "BTS 的美元历史价格来自 CoinMarketCap 快照，覆盖自 2014 年 7 月以来的完整日线，并定期更新。当前实时价格仍来自 CoinGecko 或链上 DEX。",
+  "History via CoinMarketCap, updated {time}": "历史价格来自 CoinMarketCap，更新于 {time}",
   "Daily pool exchanges": "每日池兑换",
   "Unique liquidity-pool exchange operations per day.": "每天的去重流动性池兑换数。",
   "Daily credit offers accepted": "每日接受的借贷报价",
