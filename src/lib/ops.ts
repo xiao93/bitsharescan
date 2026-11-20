@@ -526,7 +526,7 @@ type EsSource = {
     fee_payer?: string
     op?: string
     op_object?: Record<string, unknown>
-    operation_result_object?: { which?: number; data_object?: unknown }
+    operation_result_object?: { which?: number; data_object?: unknown; data_string?: unknown }
   }
   operation_type?: number
   operation_id_num?: number | string
@@ -577,7 +577,12 @@ export function toOpView(src: EsSource, index = 0): OpView {
     fee,
     body,
     result: hist.operation_result_object
-      ? { which: hist.operation_result_object.which, data: hist.operation_result_object.data_object }
+      ? {
+          which: hist.operation_result_object.which,
+          // ES stores a newly created object id in data_string (e.g. a
+          // proposal_create result "1.10.x"); other results use data_object.
+          data: hist.operation_result_object.data_object ?? hist.operation_result_object.data_string,
+        }
       : undefined,
   }
 }
