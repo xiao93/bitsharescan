@@ -29,15 +29,6 @@ const NAV: Array<{ label: string; to?: string; children?: { label: string; to: s
     ],
   },
   { label: "Assets", to: "/assets" },
-  {
-    label: "Governance",
-    children: [
-      { label: "Witnesses", to: "/witnesses" },
-      { label: "Committee", to: "/committee" },
-      { label: "Workers", to: "/workers" },
-      { label: "Proposals", to: "/proposals" },
-    ],
-  },
   { label: "Markets", to: "/markets" },
   {
     label: "DeFi",
@@ -46,6 +37,15 @@ const NAV: Array<{ label: string; to?: string; children?: { label: string; to: s
       { label: "Lending", to: "/lending" },
       { label: "Flash loans", to: "/flash" },
       { label: "Locking", to: "/locking" },
+    ],
+  },
+  {
+    label: "Governance",
+    children: [
+      { label: "Committee", to: "/committee" },
+      { label: "Witnesses", to: "/witnesses" },
+      { label: "Workers", to: "/workers" },
+      { label: "Proposals", to: "/proposals" },
     ],
   },
   { label: "Network", to: "/network" },
