@@ -381,6 +381,8 @@ export function summarizeBits(type: number, body: Record<string, unknown>): Summ
       return phrase("Feed for {asset} by {publisher}", { asset: whoBit(body.asset_id), publisher: whoBit(body.publisher) })
     case 22:
       return phrase("Proposal by {account} · {n} ops", { account: whoBit(body.fee_paying_account), n: String(Array.isArray(body.proposed_ops) ? body.proposed_ops.length : 0) })
+    case 23:
+      return phrase("Update proposal {id}", { id: whoBit(body.proposal) })
     case 24:
       return phrase("Delete proposal {id}", { id: whoBit(body.proposal) })
     case 33:
@@ -493,10 +495,22 @@ export function formatResult(result: OpResult | undefined): string {
   return summaryText(formatResultBits(result))
 }
 
+function resultIsObjectId(result: OpResult | undefined): boolean {
+  if (!result || result.which === 0 || result.data == null) return false
+  if (typeof result.data === "string") return true
+  if (asAmount(result.data)) return false
+  if (typeof result.data === "object" && result.data && "id" in result.data && typeof (result.data as { id?: unknown }).id === "string") return true
+  return false
+}
+
 export function opSummaryBits(op: OpView): SummaryBit[] {
   const text = summarizeBits(op.type, op.body)
   const result = formatResultBits(op.result)
-  return result.length ? [...text, " → ", ...result] : text
+  if (!result.length) return text
+  // Only proposal_create (22) surfaces its newly created object id here.
+  // Other create ops (account/asset/limit-order create) must not leak theirs.
+  if (op.type !== 22 && resultIsObjectId(op.result)) return text
+  return [...text, " → ", ...result]
 }
 
 export function opSummary(op: OpView): string {

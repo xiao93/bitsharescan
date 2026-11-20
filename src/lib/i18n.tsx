@@ -794,6 +794,7 @@ const zh: Record<string, string> = {
   "Settle {amount}": "清算 {amount}",
   "Feed for {asset} by {publisher}": "{publisher} 为 {asset} 发布喂价",
   "Proposal by {account} · {n} ops": "{account} 的提案 · {n} 个操作",
+  "Update proposal {id}": "更新提案 {id}",
   "Delete proposal {id}": "删除提案 {id}",
   "Withdraw vesting {amount}": "提取待解冻余额 {amount}",
   "Worker {name}": "预算提案 {name}",
