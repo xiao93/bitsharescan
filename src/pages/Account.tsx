@@ -56,6 +56,7 @@ export default function AccountPage() {
   const [orders, setOrders] = useState<LimitOrder[] | null>(null)
   const [balances, setBalances] = useState<PricedBalance[] | null>(null)
   const [showZero, setShowZero] = useState(false)
+  const [holdingsQuery, setHoldingsQuery] = useState("")
   const [votes, setVotes] = useState<Awaited<ReturnType<typeof fetchVoteMap>> | null>(null)
   const [voteError, setVoteError] = useState<string | null>(null)
 
@@ -95,9 +96,20 @@ export default function AccountPage() {
     }
   }, [tab, votes])
 
+  useEffect(() => {
+    setHoldingsQuery("")
+  }, [id])
+
   const full = account.data
   const member = membershipOf(full?.account.membership_expiration_date)
   const visibleBalances = (balances ?? []).filter((row) => showZero || asBig(row.raw) !== 0n)
+  const query = holdingsQuery.trim().toLowerCase()
+  const filteredBalances = visibleBalances.filter((row) => {
+    if (!query) return true
+    const symbol = row.asset.symbol.toLowerCase()
+    const name = assetTitle(row.asset).toLowerCase()
+    return symbol.includes(query) || name.includes(query)
+  })
   const totalUsd = visibleBalances.reduce((sum, row) => sum + (row.usd ?? 0), 0)
 
   function setTab(next: string) {
@@ -139,13 +151,25 @@ export default function AccountPage() {
               <InfoRow label={t("Token holdings")}>
                 <Dropdown label={balances ? t("{n} assets", { n: visibleBalances.length }) : "…"}>
                   <div>
-                    <div className="flex justify-end border-b border-line px-3 py-2">
-                      <label className="flex items-center gap-2 text-xs text-muted">
+                    <div className="border-b border-line px-3 py-2">
+                      <input
+                        type="text"
+                        value={holdingsQuery}
+                        autoFocus
+                        onChange={(event) => setHoldingsQuery(event.target.value)}
+                        onMouseDown={(event) => event.stopPropagation()}
+                        placeholder={t("Search assets")}
+                        aria-label={t("Search assets")}
+                        className="h-8 w-full rounded-lg border border-line bg-card px-2 text-sm text-ink outline-none placeholder:text-muted focus:border-link"
+                      />
+                      <label className="mt-2 flex items-center justify-end gap-2 text-xs text-muted">
                         <input type="checkbox" checked={showZero} onChange={(event) => setShowZero(event.target.checked)} />
                         {t("Show zero")}
                       </label>
                     </div>
-                    {!balances ? <LoadingBlock lines={3} /> : visibleBalances.length ? (
+                    {!balances ? <LoadingBlock lines={3} /> : !visibleBalances.length ? (
+                      <Empty title={t("No balances")} />
+                    ) : filteredBalances.length ? (
                       <div className="max-h-80 overflow-auto">
                         <table className="w-full text-left text-sm">
                           <thead className="sticky top-0 bg-card text-[11px] uppercase tracking-wide text-muted">
@@ -156,7 +180,7 @@ export default function AccountPage() {
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-line">
-                            {visibleBalances.map((row) => (
+                            {filteredBalances.map((row) => (
                               <tr key={row.asset.id}>
                                 <td className="px-3 py-2">
                                   <Link to={`/asset/${row.asset.symbol}`} className={linkClass}>{row.asset.symbol}</Link>
@@ -169,7 +193,7 @@ export default function AccountPage() {
                           </tbody>
                         </table>
                       </div>
-                    ) : <Empty title={t("No balances")} />}
+                    ) : <div className="px-3 py-6 text-center text-sm text-muted">{t("No matching assets")}</div>}
                   </div>
                 </Dropdown>
               </InfoRow>

@@ -418,6 +418,8 @@ const zh: Record<string, string> = {
   "Memo key": "备注公钥",
   Balances: "余额",
   "Show zero": "显示零余额",
+  "Search assets": "搜索资产",
+  "No matching assets": "无匹配资产",
   Asset: "资产",
   Balance: "余额",
   Value: "估值",
