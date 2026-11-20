@@ -40,7 +40,8 @@ export function useQuery<T>(fn: () => Promise<T>, deps: unknown[]) {
 export function useTitle(title: string) {
   const { lang, t } = useI18n()
   useEffect(() => {
-    const heading = title ? t(title) : t("BitShares Explorer")
-    document.title = `${heading} | BitShares (BTS) Explorer`
+    const brand = "BitShares (BTS) Explorer"
+    const heading = title ? t(title) : ""
+    document.title = heading ? `${heading} | ${brand}` : brand
   }, [title, lang, t])
 }

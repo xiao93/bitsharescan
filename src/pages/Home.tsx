@@ -19,7 +19,7 @@ import { fetchBtsUsd, priceHint, type BtsUsd } from "../lib/usd.ts"
 
 export default function Home() {
   const { t } = useI18n()
-  useTitle("BitShares Explorer")
+  useTitle("")
   const [dgp, setDgp] = useState<DynamicGlobal | null>(null)
   const [global, setGlobal] = useState<GlobalProps | null>(null)
   const [blocks, setBlocks] = useState<BlockRow[]>([])
