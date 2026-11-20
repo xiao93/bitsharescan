@@ -9,11 +9,28 @@ import { useI18n } from "../lib/i18n.tsx"
 export default function SearchPage() {
   const [params] = useSearchParams()
   const q = params.get("q") ?? ""
+  const type = params.get("type") ?? "all"
   const { t } = useI18n()
   useTitle(q ? `${t("Search")} ${q}` : t("Search"))
   const query = useQuery(() => searchDirectory(q), [q])
   const data = query.data
-  const empty = data && !data.accounts.length && !data.assets.length && !data.keys.length
+  const scoped = type === "account" || type === "asset" || type === "key"
+  const showAccounts = !scoped || type === "account"
+  const showAssets = !scoped || type === "asset"
+  const showKeys = !scoped || type === "key"
+  const empty = data && !(
+    (showAccounts && data.accounts.length) ||
+    (showAssets && data.assets.length) ||
+    (showKeys && data.keys.length)
+  )
+  const emptyTitle = type === "account" ? "No matching accounts" : type === "asset" ? "No matching assets" : type === "key" ? "No matching public keys" : "No exact or prefix matches"
+  const emptyBody = type === "account"
+    ? "Try a full or prefix account name."
+    : type === "asset"
+      ? "Try a full or prefix asset symbol."
+      : type === "key"
+        ? "Enter a public key starting with the network address prefix."
+        : "Try a block number, a 40-character transaction id, an account name, or an asset symbol."
 
   return (
     <div>
@@ -24,8 +41,8 @@ export default function SearchPage() {
       </p>
       {query.loading ? <LoadingBlock /> : null}
       {query.error ? <ErrorBox message={query.error} onRetry={query.reload} /> : null}
-      {empty ? <Panel><Empty title="No exact or prefix matches" body="Try a block number, a 40-character transaction id, an account name, or an asset symbol." /></Panel> : null}
-      {data?.accounts.length ? (
+      {empty ? <Panel><Empty title={emptyTitle} body={emptyBody} /></Panel> : null}
+      {showAccounts && data?.accounts.length ? (
         <Panel title={t("Accounts")} className="mb-4">
           <ul className="divide-y divide-line">
             {data.accounts.map(([name, id]) => (
@@ -37,7 +54,7 @@ export default function SearchPage() {
           </ul>
         </Panel>
       ) : null}
-      {data?.assets.length ? (
+      {showAssets && data?.assets.length ? (
         <Panel title={t("Assets")} className="mb-4">
           <ul className="divide-y divide-line">
             {data.assets.map((asset) => (
@@ -49,7 +66,7 @@ export default function SearchPage() {
           </ul>
         </Panel>
       ) : null}
-      {data?.keys.length ? (
+      {showKeys && data?.keys.length ? (
         <Panel title={t("Key references")}>
           <ul className="divide-y divide-line">
             {data.keys.map((id) => (
