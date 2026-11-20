@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react"
+import { ChevronDown } from "lucide-react"
 import { Link, useParams, useSearchParams } from "react-router-dom"
 import { TimeAgo } from "../components/Now.tsx"
 import { AccountPositions } from "../components/AccountPositions.tsx"
@@ -126,7 +127,7 @@ export default function AccountPage() {
               </p>
             </div>
           </header>
-          <div className="mb-4 grid gap-3 lg:grid-cols-3">
+          <div className="mb-4 grid items-start gap-3 lg:grid-cols-3">
             <InfoCard title={t("Overview")}>
               <InfoRow label={t("{sym} balance", { sym: coreSymbol() })}>
                 {btsBalance(full)}
@@ -180,7 +181,7 @@ export default function AccountPage() {
               <InfoRow label={t("Referrer")}>{full.referrer_name ?? accountLabel(full.account.referrer)}</InfoRow>
               <InfoRow label={t("Lifetime referrer")}>{full.lifetime_referrer_name ?? accountLabel(full.account.lifetime_referrer)}</InfoRow>
               <InfoRow label={t("Memo key")}>
-                <span className="inline-flex items-center gap-1 break-all font-mono text-xs">{full.account.options.memo_key}<CopyButton value={full.account.options.memo_key} /></span>
+                <div className="flex min-w-0 items-start gap-1"><span className="min-w-0 flex-1 break-all font-mono text-xs leading-5 [overflow-wrap:anywhere]">{full.account.options.memo_key}</span><span className="shrink-0"><CopyButton value={full.account.options.memo_key} /></span></div>
               </InfoRow>
             </InfoCard>
             <InfoCard title={t("Activity")}>
@@ -334,9 +335,7 @@ function Dropdown({ label, children }: { label: ReactNode; children: ReactNode }
         className="flex w-full items-center justify-between gap-2 rounded-lg border border-line bg-card px-3 py-2 text-left text-sm hover:bg-line/40"
       >
         <span>{label}</span>
-        <svg viewBox="0 0 20 20" className={`h-4 w-4 shrink-0 text-muted transition-transform ${open ? "rotate-180" : ""}`} fill="currentColor" aria-hidden>
-          <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.17l3.71-3.94a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z" clipRule="evenodd" />
-        </svg>
+        <ChevronDown className={`h-4 w-4 shrink-0 text-muted transition-transform duration-200 ${open ? "rotate-180" : ""}`} aria-hidden />
       </button>
       {open ? (
         <div className="absolute inset-x-0 top-full z-30 mt-1 overflow-hidden rounded-lg border border-line bg-card shadow-lg">{children}</div>
