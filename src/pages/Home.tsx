@@ -232,7 +232,7 @@ export default function Home() {
             <div className="flex items-start justify-between gap-4 px-4 py-3">
               <Stat
                 label={t("Operations")}
-                value={totalOps != null ? `≈ ${formatInt(totalOps)}` : "—"}
+                value={totalOps != null ? `${formatDecimal(totalOps / 1_000_000, 2)} M` : "—"}
                 title={t("Approximate: Elasticsearch cardinality estimate of non-virtual operations")}
                 hint={opsRate == null ? (historyGap ? null : t("All time")) : t("{rate} ops/s", { rate: opsRate.toFixed(2) })}
               />
