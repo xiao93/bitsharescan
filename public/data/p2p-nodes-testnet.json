@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-18T04:41:11Z",
+  "generated_at": "2026-11-20T12:30:39Z",
   "chain_id": "39f5e2ede1f8bc1a3a54a7914414e3779e33193f1f5693510e73cb7a87617447",
   "seeds": [
     "bts-testnet-seed1.abit-more.com:1779",
@@ -20,7 +20,7 @@
       "platform": "linux",
       "bitness": "64",
       "head_block": null,
-      "last_seen": "2026-11-18T04:41:11Z",
+      "last_seen": "2026-11-20T12:30:39Z",
       "first_via": "seed:bts-testnet-seed1.abit-more.com:1779",
       "error": "",
       "country": "Canada",
@@ -29,8 +29,8 @@
       "asn": "AS16509 Amazon.com, Inc."
     },
     {
-      "ip": "51.38.56.13",
-      "port": 37183,
+      "ip": "54.37.157.123",
+      "port": 27174,
       "reachable": false,
       "user_agent": "",
       "fc_git_revision": "",
@@ -46,8 +46,8 @@
       "asn": "AS16276 OVH SAS"
     },
     {
-      "ip": "54.37.157.123",
-      "port": 46097,
+      "ip": "51.38.56.13",
+      "port": 58020,
       "reachable": false,
       "user_agent": "",
       "fc_git_revision": "",
@@ -80,6 +80,23 @@
       "asn": "AS24940 Hetzner Online GmbH"
     },
     {
+      "ip": "47.120.16.124",
+      "port": 39940,
+      "reachable": false,
+      "user_agent": "",
+      "fc_git_revision": "",
+      "platform": "",
+      "bitness": "",
+      "head_block": null,
+      "last_seen": null,
+      "first_via": "15.156.130.30",
+      "error": "TimeoutError: timed out",
+      "country": "China",
+      "country_code": "CN",
+      "city": "Shenzhen",
+      "asn": "AS37963 Hangzhou Alibaba Advertising Co.,Ltd."
+    },
+    {
       "ip": "44.200.83.13",
       "port": 5776,
       "reachable": false,
@@ -95,23 +112,6 @@
       "country_code": "US",
       "city": "Ashburn",
       "asn": "AS14618 Amazon.com, Inc."
-    },
-    {
-      "ip": "47.120.16.124",
-      "port": 1776,
-      "reachable": false,
-      "user_agent": "",
-      "fc_git_revision": "",
-      "platform": "",
-      "bitness": "",
-      "head_block": null,
-      "last_seen": null,
-      "first_via": "15.156.130.30",
-      "error": "TimeoutError: timed out",
-      "country": "China",
-      "country_code": "CN",
-      "city": "Shenzhen",
-      "asn": "AS37963 Hangzhou Alibaba Advertising Co.,Ltd."
     },
     {
       "ip": "54.157.239.228",
