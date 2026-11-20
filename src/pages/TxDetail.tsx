@@ -65,6 +65,7 @@ export default function TxDetail() {
               rows={[
                 {
                   label: "Transaction id",
+                  hint: "The unique hash that identifies this transaction on the BitShares blockchain.",
                   value: (
                     <span className="inline-flex items-center gap-1 break-all font-mono text-xs">
                       {trxId} <CopyButton value={trxId} />
@@ -73,23 +74,26 @@ export default function TxDetail() {
                 },
                 {
                   label: "Block",
+                  hint: "The block that includes this transaction. Click to open the block.",
                   value: (
                     <Link to={`/block/${first.blockNum}`} className={linkClass}>
                       {formatInt(first.blockNum)}
                     </Link>
                   ),
                 },
-                { label: "Timestamp", value: <>{formatTime(first.time)} · <TimeAgo time={first.time} /></> },
-                { label: "Confirmations", value: formatInt(confirmations) },
-                { label: "Position in block", value: first.trxInBlock },
-                { label: "Operations", value: data.ops.length },
-                { label: "Fee payer", value: <AccountLink id={first.feePayer} /> },
+                { label: "Timestamp", hint: "The date and time when the block containing this transaction was produced.", value: <>{formatTime(first.time)} · <TimeAgo time={first.time} /></> },
+                { label: "Confirmations", hint: "How many blocks have been produced after this transaction\u2019s block. More confirmations make it harder to reverse; once past the last irreversible block it is final.", value: formatInt(confirmations) },
+                { label: "Position in block", hint: "The index of this transaction within its block (the first transaction is 0).", value: first.trxInBlock },
+                { label: "Operations", hint: "The number of operations bundled in this transaction. A BitShares transaction can carry several operations that all succeed or fail together.", value: data.ops.length },
+                { label: "Fee payer", hint: "The account that paid the fee for this transaction.", value: <AccountLink id={first.feePayer} /> },
                 {
                   label: "Expiration",
+                  hint: "The time after which this transaction is no longer valid if it has not been included in a block.",
                   value: data.signed?.expiration ? formatTime(data.signed.expiration) : "—",
                 },
                 {
                   label: "Signatures",
+                  hint: "The cryptographic signatures that authorize this transaction under the signing accounts\u2019 keys.",
                   value: data.signed?.signatures?.length
                     ? data.signed.signatures.map((sig) => (
                         <span key={sig} className="mr-3 inline-flex items-center gap-1 font-mono text-xs">
@@ -115,9 +119,9 @@ export default function TxDetail() {
               >
                 <KeyValue
                   rows={[
-                    { label: "Summary", value: <OpSummary op={op} /> },
-                    { label: "Fee payer", value: <AccountLink id={op.feePayer} /> },
-                    { label: "Fee", value: <AmountView value={op.fee} /> },
+                    { label: "Summary", hint: "A human-readable summary of what this operation does.", value: <OpSummary op={op} /> },
+                    { label: "Fee payer", hint: "The account charged the fee for this operation.", value: <AccountLink id={op.feePayer} /> },
+                    { label: "Fee", hint: "The fee charged for this operation.", value: <AmountView value={op.fee} /> },
                   ]}
                 />
                 <details className="border-t border-line px-4 py-3 text-sm">

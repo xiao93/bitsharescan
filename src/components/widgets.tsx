@@ -1,4 +1,4 @@
-import { Check, ChevronLeft, ChevronRight, Copy } from "lucide-react"
+import { Check, ChevronLeft, ChevronRight, CircleHelp, Copy } from "lucide-react"
 import { useId, useState, type MouseEvent, type ReactNode } from "react"
 import { Link } from "react-router-dom"
 import { accountLabel, accountPath, assetSymbol, peekAsset } from "../lib/directory.ts"
@@ -437,13 +437,55 @@ export function LineChart({
   )
 }
 
-export function KeyValue({ rows }: { rows: { label: string; value: ReactNode }[] }) {
+export function HelpTip({ text }: { text: string }) {
+  const { t } = useI18n()
+  const [open, setOpen] = useState(false)
+  const label = t(text)
+  return (
+    <span className="inline-flex flex-col">
+      <button
+        type="button"
+        aria-label={label}
+        aria-expanded={open}
+        title={label}
+        className="inline-flex h-4 w-4 items-center justify-center rounded-full text-muted hover:text-link focus:outline-none focus-visible:ring-2 focus-visible:ring-link"
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+        onFocus={() => setOpen(true)}
+        onBlur={() => setOpen(false)}
+        onClick={(event) => {
+          event.preventDefault()
+          event.stopPropagation()
+          setOpen((value) => !value)
+        }}
+        onKeyDown={(event) => {
+          if (event.key === "Escape") setOpen(false)
+        }}
+      >
+        <CircleHelp className="h-3.5 w-3.5" />
+      </button>
+      {open ? (
+        <span
+          role="tooltip"
+          className="mt-1 max-w-xs rounded-lg border border-line bg-canvas px-2.5 py-1.5 text-xs font-normal leading-relaxed text-ink shadow-sm"
+        >
+          {label}
+        </span>
+      ) : null}
+    </span>
+  )
+}
+
+export function KeyValue({ rows }: { rows: { label: string; value: ReactNode; hint?: string }[] }) {
   const { t } = useI18n()
   return (
     <dl className="divide-y divide-line">
       {rows.map((row) => (
         <div key={row.label} className="grid gap-1 px-4 py-3 sm:grid-cols-[220px_1fr] sm:gap-4">
-          <dt className="text-sm text-muted">{t(row.label)}</dt>
+          <dt className="flex items-start gap-1.5 text-sm text-muted">
+            <span>{t(row.label)}</span>
+            {row.hint ? <HelpTip text={row.hint} /> : null}
+          </dt>
           <dd className="min-w-0 break-all text-sm text-ink">{row.value}</dd>
         </div>
       ))}
