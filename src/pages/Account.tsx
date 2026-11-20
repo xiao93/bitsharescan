@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react"
 import { ChevronDown } from "lucide-react"
-import { Link, useParams, useSearchParams } from "react-router-dom"
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import { TimeAgo } from "../components/Now.tsx"
 import { AccountPositions } from "../components/AccountPositions.tsx"
 import { AccountWhitelist } from "../components/AccountWhitelist.tsx"
@@ -46,6 +46,7 @@ export default function AccountPage() {
   const type = typeRaw == null || typeRaw === "" ? null : Number(typeRaw)
   const tab = search.get("tab") || "operations"
   const { t } = useI18n()
+  const navigate = useNavigate()
   useTitle(id)
   const account = useQuery(() => fetchFullAccount(id), [id])
   const accountId = account.data?.account.id ?? ""
@@ -181,7 +182,11 @@ export default function AccountPage() {
                           </thead>
                           <tbody className="divide-y divide-line">
                             {filteredBalances.map((row) => (
-                              <tr key={row.asset.id}>
+                              <tr
+                                key={row.asset.id}
+                                className="cursor-pointer hover:bg-row"
+                                onClick={() => navigate(`/asset/${row.asset.symbol}`)}
+                              >
                                 <td className="px-3 py-2">
                                   <Link to={`/asset/${row.asset.symbol}`} className={linkClass}>{row.asset.symbol}</Link>
                                   <div className="max-w-[9rem] truncate text-xs text-muted">{assetTitle(row.asset)}</div>
