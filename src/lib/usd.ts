@@ -1,3 +1,4 @@
+import { formatTime } from "./format.ts"
 import { coreSymbol } from "./network.ts"
 import { db } from "./node.ts"
 
@@ -8,7 +9,9 @@ export type BtsUsd = {
   /** Stablecoin with the most BTS volume, used for the historical chart. */
   anchor: string | null
   /** Where the headline price comes from. */
-  kind?: "coingecko" | "dex"
+  kind?: "cmc" | "coingecko" | "dex"
+  /** Snapshot timestamp when the headline price comes from CoinMarketCap. */
+  updated?: string
   /** CoinGecko reference price, when it answered. */
   cg?: number | null
   /** Volume-weighted on-chain DEX price, shown next to CoinGecko for comparison. */
@@ -63,9 +66,9 @@ export function isUsdStable(symbol: string): boolean {
 }
 
 /**
- * Dollars per 1 BTS. CoinGecko's aggregated price is the headline number because the
- * on-chain stablecoin markets are thin; the volume-weighted DEX price is kept for
- * comparison and used as the fallback when CoinGecko cannot be reached.
+ * Dollars per 1 BTS. The CoinMarketCap snapshot is the headline number (current.price,
+ * refreshed periodically). If that snapshot is missing, CoinGecko is used, then the
+ * volume-weighted on-chain DEX price.
  */
 export async function fetchBtsUsd(): Promise<BtsUsd> {
   if (cache && Date.now() - cache.at < 60_000) return cache.value
@@ -74,7 +77,34 @@ export async function fetchBtsUsd(): Promise<BtsUsd> {
   return value
 }
 
+type CmcCurrentFile = {
+  generated_at?: string
+  current?: { price?: number; updated?: string }
+}
+
+async function fetchCmcCurrent(): Promise<BtsUsd | null> {
+  try {
+    const response = await fetch(`${import.meta.env.BASE_URL}data/bts-price-history.json`)
+    if (!response.ok) return null
+    const body = await response.json() as CmcCurrentFile
+    const price = Number(body.current?.price)
+    if (!(price > 0)) return null
+    const updated = body.current?.updated || body.generated_at || ""
+    return {
+      price,
+      source: updated ? `CoinMarketCap · ${updated}` : "CoinMarketCap",
+      anchor: "XBTSX.USDT",
+      kind: "cmc",
+      updated,
+    }
+  } catch {
+    return null
+  }
+}
+
 async function loadBtsUsd(): Promise<BtsUsd> {
+  const cmc = await fetchCmcCurrent()
+  if (cmc) return cmc
   const core = "BTS"
   const [rows, cg] = await Promise.all([
     db<TopMarket[]>("get_top_markets", [100]).catch(() => [] as TopMarket[]),
@@ -143,6 +173,11 @@ export function priceHint(
   t: (key: string, vars?: Record<string, string | number>) => string,
 ): string | null {
   if (!value || value.price == null) return null
+  if (value.kind === "cmc") {
+    return value.updated
+      ? t("Source: CoinMarketCap, updated {time}", { time: formatTime(value.updated) })
+      : t("Source: CoinMarketCap")
+  }
   if (value.kind === "coingecko") {
     if (!value.dex || !value.cg) return t("Source: CoinGecko")
     const diff = ((value.dex.price - value.cg) / value.cg) * 100

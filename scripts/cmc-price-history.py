@@ -19,6 +19,30 @@ def fetch(ts_end):
     with urllib.request.urlopen(req, timeout=30) as r:
         return json.load(r)
 
+def fetch_current():
+    url = f"https://api.coinmarketcap.com/data-api/v3/cryptocurrency/detail?id={CMC_ID}"
+    req = urllib.request.Request(url, headers={"User-Agent": UA})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            d = json.load(r)
+        st = (d.get("data") or {}).get("statistics") or {}
+        price = st.get("price")
+        if not price or price <= 0:
+            return None
+        return {
+            "price": price,
+            "change24h": st.get("priceChangePercentage24h"),
+            "marketCap": st.get("marketCap"),
+            "volume24h": st.get("volume") or st.get("volume24h"),
+            "circulatingSupply": st.get("circulatingSupply"),
+            "rank": st.get("rank"),
+            "updated": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        }
+    except Exception as e:
+        sys.stderr.write(f"fetch_current failed: {e}\n")
+        return None
+
+
 def main():
     rows = {}
     ts_end = int(time.time())
@@ -58,6 +82,7 @@ def main():
         "count": len(out),
         "first": out[0]["date"] if out else None,
         "last": out[-1]["date"] if out else None,
+        "current": fetch_current(),
         "points": out,
     }
     os.makedirs(os.path.dirname(OUT), exist_ok=True)

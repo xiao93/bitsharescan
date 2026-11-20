@@ -138,7 +138,7 @@ export default function ChartDetail() {
               <div className="text-[11px] font-medium uppercase tracking-wide text-muted">{t("Current BTS price")}</div>
               <div className="mt-0.5 text-2xl font-semibold text-ink">{quote?.price == null ? "—" : `$${formatDecimal(quote.price, 6)}`}</div>
               {priceHint(quote, t) ? <div className="mt-0.5 text-xs text-muted" title={quote?.source || undefined}>{priceHint(quote, t)}</div> : null}
-              {updatedAt ? <p className="mt-1 text-xs text-muted">{t("History via CoinMarketCap, updated {time}", { time: formatTime(updatedAt) })}</p> : null}
+              {updatedAt && quote?.kind !== "cmc" ? <p className="mt-1 text-xs text-muted">{t("History via CoinMarketCap, updated {time}", { time: formatTime(updatedAt) })}</p> : null}
             </div>
           ) : null}
         </div>
