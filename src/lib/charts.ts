@@ -49,7 +49,7 @@ export const CHARTS: ChartDef[] = [
   { id: "transfers", category: "Market Data", title: "Daily transfers", description: "Unique transfer operations per day.", unit: "transfers", digits: 0 },
   { id: "transfer-volume", category: "Market Data", title: "Daily BTS transfer volume", description: "Sum of transfer amounts denominated in BTS, counted once per operation.", unit: "BTS", digits: 0 },
   { id: "fills", category: "Market Data", title: "Daily DEX fills", description: "Unique fill-order operations per day.", unit: "fills", digits: 0 },
-  { id: "bts-price", category: "Market Data", title: "BTS price", description: "Daily close of BTS in dollars, inverted from the deepest USD stablecoin market. bitUSD is not used.", unit: "USD", digits: 5 },
+  { id: "bts-price", category: "Market Data", title: "BTS price", description: "Daily BTS price in USD from CoinGecko. The free API limits history to the past 365 days, so the All range shows about one year. Full history would need a CoinGecko Pro key.", unit: "USD", digits: 5 },
   { id: "pool-exchanges", category: "DeFi", title: "Daily pool exchanges", description: "Unique liquidity-pool exchange operations per day.", unit: "exchanges", digits: 0 },
   { id: "credit-deals", category: "DeFi", title: "Daily credit offers accepted", description: "Unique credit-offer accept operations per day. That is when a new credit deal opens.", unit: "deals", digits: 0 },
   { id: "op-type-share", category: "Blockchain Data", title: "Operation type share", description: "Share of unique operations by type. All uses the past year.", unit: "operations", digits: 0, view: "share" },
@@ -382,27 +382,60 @@ async function loadRank(id: string, range: RangeId): Promise<ChartData> {
   throw new Error("Unknown chart")
 }
 
+async function fetchCoinGeckoPriceHistory(days: number): Promise<Point[]> {
+  try {
+    const controller = new AbortController()
+    const timer = window.setTimeout(() => controller.abort(), 8_000)
+    const response = await fetch(`https://api.coingecko.com/api/v3/coins/bitshares/market_chart?vs_currency=usd&days=${days}`, {
+      signal: controller.signal,
+    })
+    window.clearTimeout(timer)
+    if (!response.ok) return []
+    const body = await response.json() as { prices?: Array<[number, number]> }
+    const prices = body.prices
+    if (!Array.isArray(prices) || !prices.length) return []
+    const byDate = new Map<string, number>()
+    for (const row of prices) {
+      const ms = Number(row?.[0])
+      const price = Number(row?.[1])
+      if (!(ms > 0) || !(price > 0)) continue
+      byDate.set(new Date(ms).toISOString().slice(0, 10), price)
+    }
+    return [...byDate.entries()]
+      .map(([date, value]) => ({ date, value }))
+      .sort((a, b) => a.date.localeCompare(b.date))
+  } catch {
+    return []
+  }
+}
+
+async function loadBtsPriceFromDex(range: RangeId): Promise<ChartData> {
+  const core = coreSymbol()
+  const quote = await fetchBtsUsd()
+  const stable = quote.anchor || "XBTSX.USDT"
+  const window = rangeWindow(range)
+  const raw: Point[] = []
+  let cursor = window.start
+  while (cursor < window.end) {
+    const chunkEnd = new Date(Math.min(window.end.getTime(), cursor.getTime() + 150 * 86400000))
+    const closes = await fetchDailyCloses(stable, core, cursor, chunkEnd)
+    raw.push(...closes.map((row) => ({ date: row.date, value: row.price })).filter((row) => row.value > 0))
+    const next = new Date(chunkEnd.getTime() + 86400000)
+    if (next.getTime() <= cursor.getTime()) break
+    cursor = next
+  }
+  const seen = new Set<string>()
+  const unique = raw.filter((row) => (seen.has(row.date) ? false : seen.add(row.date)))
+  const mid = unique.map((row) => row.value).sort((a, b) => a - b)[Math.floor(unique.length / 2)] ?? 0
+  const points = mid > 1 ? unique.map((row) => ({ ...row, value: 1 / row.value })) : unique
+  return { points: trimLeadingZeros(points), bucket: "day", monthlyUnique: false }
+}
+
 async function loadRaw(id: string, range: RangeId): Promise<ChartData> {
   if (id === "bts-price") {
-    const core = coreSymbol()
-    const quote = await fetchBtsUsd()
-    const stable = quote.anchor || "XBTSX.USDT"
-    const window = rangeWindow(range)
-    const raw: Point[] = []
-    let cursor = window.start
-    while (cursor < window.end) {
-      const chunkEnd = new Date(Math.min(window.end.getTime(), cursor.getTime() + 150 * 86400000))
-      const closes = await fetchDailyCloses(stable, core, cursor, chunkEnd)
-      raw.push(...closes.map((row) => ({ date: row.date, value: row.price })).filter((row) => row.value > 0))
-      const next = new Date(chunkEnd.getTime() + 86400000)
-      if (next.getTime() <= cursor.getTime()) break
-      cursor = next
-    }
-    const seen = new Set<string>()
-    const unique = raw.filter((row) => (seen.has(row.date) ? false : seen.add(row.date)))
-    const mid = unique.map((row) => row.value).sort((a, b) => a - b)[Math.floor(unique.length / 2)] ?? 0
-    const points = mid > 1 ? unique.map((row) => ({ ...row, value: 1 / row.value })) : unique
-    return { points: trimLeadingZeros(points), bucket: "day", monthlyUnique: false }
+    const gecko = await fetchCoinGeckoPriceHistory(range === "1m" ? 30 : range === "6m" ? 182 : 365)
+    if (gecko.length) return { points: trimLeadingZeros(gecko), bucket: "day", monthlyUnique: false }
+    return loadBtsPriceFromDex(range)
   }
   if (!networkHasEs()) throw new Error("This network has no public operation index. Blocks and accounts still load from the node.")
   if (chartById(id)?.view && chartById(id)?.view !== "line") return loadRank(id, range)
