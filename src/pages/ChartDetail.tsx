@@ -5,6 +5,7 @@ import { RANGES, chartById, loadChart, type LineSeries, type Point, type RangeId
 import { formatDecimal, formatInt, formatTime } from "../lib/format.ts"
 import { timeZoneSuffix } from "../lib/timePref.ts"
 import { coreSymbol } from "../lib/network.ts"
+import { fetchBtsUsd, priceHint, type BtsUsd } from "../lib/usd.ts"
 import { useTitle } from "../hooks/useQuery.ts"
 import { useI18n } from "../lib/i18n.tsx"
 
@@ -14,7 +15,8 @@ export default function ChartDetail() {
   const { id = "" } = useParams()
   const chart = chartById(id)
   const { t } = useI18n()
-  useTitle(chart?.title ?? "Chart")
+  const isPrice = chart?.id === "bts-price"
+  useTitle(isPrice ? "BitShares (BTS) Price Chart" : (chart?.title ?? "Chart"))
   const [range, setRange] = useState<RangeId>("1y")
   const [points, setPoints] = useState<Point[] | null>(null)
   const [rows, setRows] = useState<RankRow[] | null>(null)
@@ -26,6 +28,21 @@ export default function ChartDetail() {
   const [monthlyUnique, setMonthlyUnique] = useState(false)
   const [zoom, setZoom] = useState<[number, number] | null>(null)
   const [attempt, setAttempt] = useState(0)
+  const [quote, setQuote] = useState<BtsUsd | null>(null)
+
+  useEffect(() => {
+    if (!isPrice) {
+      setQuote(null)
+      return
+    }
+    let stop = false
+    void fetchBtsUsd().then((value) => {
+      if (!stop) setQuote(value)
+    })
+    return () => {
+      stop = true
+    }
+  }, [isPrice])
 
   useEffect(() => {
     if (!chart) return
@@ -107,12 +124,19 @@ export default function ChartDetail() {
 
   return (
     <div>
-      <Crumbs items={[{ label: "Home", to: "/" }, { label: "Charts", to: "/charts" }, { label: chart.title }]} />
+      <Crumbs items={[{ label: "Home", to: "/" }, { label: "Charts", to: "/charts" }, { label: isPrice ? "BitShares (BTS) Price Chart" : chart.title }]} />
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">{t(chart.title)}</h1>
+          <h1 className="text-2xl font-semibold">{t(isPrice ? "BitShares (BTS) Price Chart" : chart.title)}</h1>
           <p className="mt-1 max-w-3xl text-sm text-muted">{t(chart.description)}</p>
           {monthlyUnique ? <p className="mt-1 text-sm text-muted">{t("All range shows monthly unique accounts, not a daily average.")}</p> : null}
+          {isPrice ? (
+            <div className="mt-3">
+              <div className="text-[11px] font-medium uppercase tracking-wide text-muted">{t("Current BTS price")}</div>
+              <div className="mt-0.5 text-2xl font-semibold text-ink">{quote?.price == null ? "—" : `$${formatDecimal(quote.price, 6)}`}</div>
+              {priceHint(quote, t) ? <div className="mt-0.5 text-xs text-muted" title={quote?.source || undefined}>{priceHint(quote, t)}</div> : null}
+            </div>
+          ) : null}
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {ranges.map((item) => (
@@ -147,6 +171,9 @@ export default function ChartDetail() {
           <ChartSummary series={sliced} digits={chart.digits} bucket={bucket} />
           <AreaChart series={sliced} digits={chart.digits} bucket={bucket} onZoom={(start, end) => setZoom([start, end])} />
         </>
+      ) : null}
+      {isPrice && (sliced[0]?.points.length || points?.length) ? (
+        <PriceTable points={sliced[0]?.points ?? points ?? []} digits={chart.digits} />
       ) : null}
       <p className="mt-3 text-xs text-muted">
         <Link to="/charts" className="text-link">{t("All charts")}</Link>
@@ -253,6 +280,33 @@ function hourLabel(utcHour: number, withZone = true) {
 function spansYears(points: Point[]) {
   if (points.length < 2) return false
   return points.at(-1)!.date.slice(0, 4) !== points[0]!.date.slice(0, 4)
+}
+
+function PriceTable({ points, digits }: { points: Point[]; digits: number }) {
+  const { t } = useI18n()
+  const rows = [...points].reverse()
+  return (
+    <div className="mt-6 overflow-hidden rounded-xl border border-line bg-card">
+      <div className="max-h-[28rem] overflow-auto">
+        <table className="w-full text-left text-sm">
+          <thead className="sticky top-0 bg-canvas text-[11px] uppercase tracking-wide text-muted">
+            <tr>
+              <th className="px-4 py-2 font-medium">{t("Date")}</th>
+              <th className="px-4 py-2 text-right font-medium">{t("Close price")}</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-line">
+            {rows.map((row) => (
+              <tr key={row.date}>
+                <td className="px-4 py-2">{row.date}</td>
+                <td className="px-4 py-2 text-right font-mono tabular-nums">${formatDecimal(row.value, digits)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
 }
 
 function ChartSummary({ series, digits, bucket }: { series: LineSeries[]; digits: number; bucket: "day" | "month" }) {

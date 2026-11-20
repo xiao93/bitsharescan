@@ -216,12 +216,14 @@ export default function Home() {
       <section className="mb-3 overflow-hidden rounded-xl border border-line bg-card">
         <div className="grid divide-y divide-line lg:grid-cols-3 lg:divide-x lg:divide-y-0">
           <div className="grid grid-cols-2 gap-3 px-4 py-3 lg:grid-cols-1 lg:content-center">
-            <Stat
-              label={t("{sym} price", { sym: core })}
-              value={price == null ? "—" : `$${formatDecimal(price, 6)}`}
-              title={priceSource}
-              hint={price == null ? null : priceHint(quoteInfo, t)}
-            />
+            <Link to="/charts/bts-price" className="group block min-w-0 cursor-pointer" title={priceSource || undefined}>
+              <Stat
+                label={t("{sym} price", { sym: core })}
+                value={price == null ? "—" : `$${formatDecimal(price, 6)}`}
+                title={priceSource}
+                hint={price == null ? null : priceHint(quoteInfo, t)}
+              />
+            </Link>
             <Stat
               label={t("Market cap")}
               value={marketCap == null ? "—" : compactUsd(marketCap)}
@@ -391,7 +393,7 @@ function Stat({ label, value, hint, title }: { label: string; value: ReactNode; 
   return (
     <div className="min-w-0" title={title}>
       <div className="text-[11px] font-medium uppercase tracking-wide text-muted">{label}</div>
-      <div className="mt-0.5 truncate text-base font-semibold leading-tight text-ink sm:text-lg">{value}</div>
+      <div className="mt-0.5 truncate text-base font-semibold leading-tight text-ink group-hover:text-link sm:text-lg">{value}</div>
       {hint ? <div className="mt-0.5 text-[11px] leading-snug text-muted">{hint}</div> : null}
     </div>
   )

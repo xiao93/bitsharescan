@@ -193,6 +193,10 @@ const zh: Record<string, string> = {
   "Blocks, accounts, assets, witnesses, and the on-chain exchange. Live data from the public node and the operation history index.":
     "区块、账户、资产、见证人，以及链上交易所。数据来自公共节点与操作历史索引。",
   "BTS price": "BTS 价格",
+  "BitShares (BTS) Price Chart": "BitShares (BTS) 价格走势图",
+  "Current BTS price": "当前 BTS 价格",
+  "Close price": "收盘价",
+  Date: "日期",
   "bitUSD market": "bitUSD 市场",
   "Market cap": "市值",
   "{n} BTS supply": "流通量 {n} BTS",
