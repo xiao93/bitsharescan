@@ -1,5 +1,6 @@
 import { Check, ChevronLeft, ChevronRight, CircleHelp, Copy } from "lucide-react"
-import { useId, useState, type MouseEvent, type ReactNode } from "react"
+import { useEffect, useId, useRef, useState, type MouseEvent, type ReactNode } from "react"
+import { createPortal } from "react-dom"
 import { Link } from "react-router-dom"
 import { accountLabel, accountPath, assetSymbol, peekAsset } from "../lib/directory.ts"
 import type { Amount } from "../lib/directory.ts"
@@ -440,39 +441,80 @@ export function LineChart({
 export function HelpTip({ text }: { text: string }) {
   const { t } = useI18n()
   const [open, setOpen] = useState(false)
+  const [coords, setCoords] = useState<{ top: number; left: number } | null>(null)
+  const ref = useRef<HTMLButtonElement>(null)
   const label = t(text)
+
+  const place = () => {
+    const el = ref.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    const center = rect.left + rect.width / 2
+    const left = Math.min(Math.max(center, 12), Math.max(12, window.innerWidth - 12))
+    setCoords({ top: rect.bottom + 6, left })
+  }
+  const show = () => {
+    place()
+    setOpen(true)
+  }
+  const hide = () => setOpen(false)
+
+  useEffect(() => {
+    if (!open) return
+    const onDismiss = () => setOpen(false)
+    window.addEventListener("scroll", onDismiss, true)
+    window.addEventListener("resize", onDismiss)
+    return () => {
+      window.removeEventListener("scroll", onDismiss, true)
+      window.removeEventListener("resize", onDismiss)
+    }
+  }, [open])
+
   return (
-    <span className="inline-flex flex-col">
+    <>
       <button
+        ref={ref}
         type="button"
         aria-label={label}
         aria-expanded={open}
         title={label}
-        className="inline-flex h-4 w-4 items-center justify-center rounded-full text-muted hover:text-link focus:outline-none focus-visible:ring-2 focus-visible:ring-link"
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => setOpen(false)}
-        onFocus={() => setOpen(true)}
-        onBlur={() => setOpen(false)}
+        className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-muted hover:text-link focus:outline-none focus-visible:ring-2 focus-visible:ring-link"
+        onMouseEnter={show}
+        onMouseLeave={hide}
+        onFocus={show}
+        onBlur={hide}
         onClick={(event) => {
           event.preventDefault()
           event.stopPropagation()
-          setOpen((value) => !value)
+          if (open) hide()
+          else show()
         }}
         onKeyDown={(event) => {
-          if (event.key === "Escape") setOpen(false)
+          if (event.key === "Escape") hide()
         }}
       >
         <CircleHelp className="h-3.5 w-3.5" />
       </button>
-      {open ? (
-        <span
-          role="tooltip"
-          className="mt-1 max-w-xs rounded-lg border border-line bg-canvas px-2.5 py-1.5 text-xs font-normal leading-relaxed text-ink shadow-sm"
-        >
-          {label}
-        </span>
-      ) : null}
-    </span>
+      {open && coords
+        ? createPortal(
+            <span
+              role="tooltip"
+              style={{
+                position: "fixed",
+                top: coords.top,
+                left: coords.left,
+                transform: "translateX(-50%)",
+                maxWidth: "min(18rem, calc(100vw - 16px))",
+                zIndex: 60,
+              }}
+              className="pointer-events-none rounded-lg border border-line bg-card px-2.5 py-1.5 text-xs font-normal leading-relaxed text-ink shadow-lg"
+            >
+              {label}
+            </span>,
+            document.body,
+          )
+        : null}
+    </>
   )
 }
 
@@ -482,7 +524,7 @@ export function KeyValue({ rows }: { rows: { label: string; value: ReactNode; hi
     <dl className="divide-y divide-line">
       {rows.map((row) => (
         <div key={row.label} className="grid gap-1 px-4 py-3 sm:grid-cols-[220px_1fr] sm:gap-4">
-          <dt className="flex items-start gap-1.5 text-sm text-muted">
+          <dt className="flex items-center gap-1.5 text-sm text-muted">
             <span>{t(row.label)}</span>
             {row.hint ? <HelpTip text={row.hint} /> : null}
           </dt>
