@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState, type ReactNode } from "react"
 import { Link, useParams, useSearchParams } from "react-router-dom"
 import { TimeAgo } from "../components/Now.tsx"
 import { AccountPositions } from "../components/AccountPositions.tsx"
 import { AccountWhitelist } from "../components/AccountWhitelist.tsx"
 import { AccountRelations } from "../components/AccountRelations.tsx"
-import { AccountLink, CopyButton, Crumbs, Empty, ErrorBox, KeyValue, LoadingBlock, OpTable, Pager, Panel } from "../components/widgets.tsx"
+import { AccountLink, CopyButton, Crumbs, Empty, ErrorBox, LoadingBlock, OpTable, Pager, Panel } from "../components/widgets.tsx"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs.tsx"
 import {
   fetchAccountOrders,
@@ -43,7 +43,7 @@ export default function AccountPage() {
   const page = Math.max(1, Number(search.get("page") || "1") || 1)
   const typeRaw = search.get("type")
   const type = typeRaw == null || typeRaw === "" ? null : Number(typeRaw)
-  const tab = search.get("tab") || "overview"
+  const tab = search.get("tab") || "operations"
   const { t } = useI18n()
   useTitle(id)
   const account = useQuery(() => fetchFullAccount(id), [id])
@@ -126,68 +126,43 @@ export default function AccountPage() {
               </p>
             </div>
           </header>
-          <div className="mb-4 grid gap-3 sm:grid-cols-3">
-            <Mini label={t("{sym} balance", { sym: coreSymbol() })} value={btsBalance(full)} />
-            <Mini label={t("Estimated value")} value={balances ? compactUsd(totalUsd) : "…"} hint={t("Priced balances only")} />
-            <Mini label={t("Operations")} value={formatInt(full.statistics?.total_ops ?? ops.data?.total ?? 0)} />
-          </div>
-          <Panel>
-            <Tabs value={tab} onValueChange={setTab}>
-              <TabsList className="px-2">
-                <TabsTrigger value="overview">{t("Overview")}</TabsTrigger>
-                <TabsTrigger value="operations">{t("Operations")}</TabsTrigger>
-                <TabsTrigger value="orders">{t("Limit orders")}</TabsTrigger>
-                <TabsTrigger value="votes">{t("Votes")}</TabsTrigger>
-                <TabsTrigger value="authorities">{t("Authorities")}</TabsTrigger>
-                <TabsTrigger value="whitelist">{t("Whitelist")}</TabsTrigger>
-                <TabsTrigger value="positions">{t("Positions")}</TabsTrigger>
-                <TabsTrigger value="registered">{t("Registered")}</TabsTrigger>
-                <TabsTrigger value="referred">{t("Referred")}</TabsTrigger>
-                <TabsTrigger value="proxies">{t("Vote proxies")}</TabsTrigger>
-              </TabsList>
-              <TabsContent value="overview">
-                <div className="grid gap-4 lg:grid-cols-2">
+          <div className="mb-4 grid gap-3 lg:grid-cols-3">
+            <InfoCard title={t("Overview")}>
+              <InfoRow label={t("{sym} balance", { sym: coreSymbol() })}>
+                {btsBalance(full)}
+              </InfoRow>
+              <InfoRow label={t("Estimated value")}>
+                {balances ? compactUsd(totalUsd) : "…"}
+                <div className="text-xs text-muted">{t("Priced balances only")}</div>
+              </InfoRow>
+              <InfoRow label={t("Token holdings")}>
+                <Dropdown label={balances ? t("{n} assets", { n: visibleBalances.length }) : "…"}>
                   <div>
-                    <h3 className="px-4 pb-2 text-sm font-semibold">{t("Profile")}</h3>
-                    <KeyValue
-                      rows={[
-                        { label: t("Registrar"), value: full.registrar_name ? <Link className={linkClass} to={`/account/${full.registrar_name}`}>{full.registrar_name}</Link> : <AccountLink id={full.account.registrar} /> },
-                        { label: t("Referrer"), value: full.referrer_name ?? accountLabel(full.account.referrer) },
-                        { label: t("Lifetime referrer"), value: full.lifetime_referrer_name ?? accountLabel(full.account.lifetime_referrer) },
-                        { label: t("Created"), value: full.account.creation_time ? formatTime(full.account.creation_time) : "—" },
-                        { label: t("Creation block"), value: full.account.creation_block_num ? <Link className={linkClass} to={`/block/${full.account.creation_block_num}`}>{formatInt(full.account.creation_block_num)}</Link> : "—" },
-                        { label: t("Lifetime fees"), value: `${formatRaw(full.statistics?.lifetime_fees_paid ?? 0, 5)} ${coreSymbol()}` },
-                        { label: t("Memo key"), value: <span className="inline-flex items-center gap-1 break-all font-mono text-xs">{full.account.options.memo_key}<CopyButton value={full.account.options.memo_key} /></span> },
-                      ]}
-                    />
-                  </div>
-                  <div>
-                    <div className="flex items-center justify-between px-4 pb-2">
-                      <h3 className="text-sm font-semibold">{t("Balances")}</h3>
+                    <div className="flex justify-end border-b border-line px-3 py-2">
                       <label className="flex items-center gap-2 text-xs text-muted">
                         <input type="checkbox" checked={showZero} onChange={(event) => setShowZero(event.target.checked)} />
                         {t("Show zero")}
                       </label>
                     </div>
-                    {!balances ? <LoadingBlock lines={4} /> : visibleBalances.length ? (
-                      <div className="overflow-x-auto">
+                    {!balances ? <LoadingBlock lines={3} /> : visibleBalances.length ? (
+                      <div className="max-h-80 overflow-auto">
                         <table className="w-full text-left text-sm">
-                          <thead className="text-[11px] uppercase tracking-wide text-muted">
+                          <thead className="sticky top-0 bg-card text-[11px] uppercase tracking-wide text-muted">
                             <tr>
-                              <th className="px-4 py-2 font-medium">{t("Asset")}</th>
-                              <th className="px-4 py-2 font-medium">{t("Balance")}</th>
-                              <th className="px-4 py-2 font-medium">{t("Value")}</th>
+                              <th className="px-3 py-2 font-medium">{t("Asset")}</th>
+                              <th className="px-3 py-2 font-medium">{t("Balance")}</th>
+                              <th className="px-3 py-2 text-right font-medium">{t("Value")}</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-line">
                             {visibleBalances.map((row) => (
                               <tr key={row.asset.id}>
-                                <td className="px-4 py-2.5">
+                                <td className="px-3 py-2">
                                   <Link to={`/asset/${row.asset.symbol}`} className={linkClass}>{row.asset.symbol}</Link>
-                                  <div className="max-w-[12rem] truncate text-xs text-muted">{assetTitle(row.asset)}</div>
+                                  <div className="max-w-[9rem] truncate text-xs text-muted">{assetTitle(row.asset)}</div>
                                 </td>
-                                <td className="px-4 py-2.5">{formatRaw(row.raw, row.asset.precision)}</td>
-                                <td className="px-4 py-2.5 text-muted">{row.usd == null ? "—" : compactUsd(row.usd)}</td>
+                                <td className="break-all px-3 py-2">{formatRaw(row.raw, row.asset.precision)}</td>
+                                <td className="px-3 py-2 text-right text-muted">{row.usd == null ? "—" : compactUsd(row.usd)}</td>
                               </tr>
                             ))}
                           </tbody>
@@ -195,8 +170,46 @@ export default function AccountPage() {
                       </div>
                     ) : <Empty title={t("No balances")} />}
                   </div>
-                </div>
-              </TabsContent>
+                </Dropdown>
+              </InfoRow>
+            </InfoCard>
+            <InfoCard title={t("More Info")}>
+              <InfoRow label={t("Registrar")}>
+                {full.registrar_name ? <Link className={linkClass} to={`/account/${full.registrar_name}`}>{full.registrar_name}</Link> : <AccountLink id={full.account.registrar} />}
+              </InfoRow>
+              <InfoRow label={t("Referrer")}>{full.referrer_name ?? accountLabel(full.account.referrer)}</InfoRow>
+              <InfoRow label={t("Lifetime referrer")}>{full.lifetime_referrer_name ?? accountLabel(full.account.lifetime_referrer)}</InfoRow>
+              <InfoRow label={t("Memo key")}>
+                <span className="inline-flex items-center gap-1 break-all font-mono text-xs">{full.account.options.memo_key}<CopyButton value={full.account.options.memo_key} /></span>
+              </InfoRow>
+            </InfoCard>
+            <InfoCard title={t("Activity")}>
+              <InfoRow label={t("Operations")}>{formatInt(full.statistics?.total_ops ?? ops.data?.total ?? 0)}</InfoRow>
+              <InfoRow label={t("Created")}>{full.account.creation_time ? formatTime(full.account.creation_time) : "—"}</InfoRow>
+              <InfoRow label={t("Creation block")}>
+                {full.account.creation_block_num ? <Link className={linkClass} to={`/block/${full.account.creation_block_num}`}>{formatInt(full.account.creation_block_num)}</Link> : "—"}
+              </InfoRow>
+              <InfoRow label={t("Lifetime fees")}>{`${formatRaw(full.statistics?.lifetime_fees_paid ?? 0, 5)} ${coreSymbol()}`}</InfoRow>
+              <InfoRow label={t("Membership")}>{member.label}</InfoRow>
+            </InfoCard>
+          </div>
+          <Panel>
+            <Tabs value={tab} onValueChange={setTab}>
+              <TabsList className="flex-wrap gap-1.5 border-b border-line px-3 py-3">
+                {([
+                  ["operations", t("Operations")],
+                  ["orders", t("Limit orders")],
+                  ["votes", t("Votes")],
+                  ["authorities", t("Authorities")],
+                  ["whitelist", t("Whitelist")],
+                  ["positions", t("Positions")],
+                  ["registered", t("Registered")],
+                  ["referred", t("Referred")],
+                  ["proxies", t("Vote proxies")],
+                ] as const).map(([value, label]) => (
+                  <TabsTrigger key={value} value={value} className={PILL}>{label}</TabsTrigger>
+                ))}
+              </TabsList>
               <TabsContent value="operations" className="pt-0">
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-4 py-3">
                   <p className="text-sm text-muted">
@@ -282,12 +295,61 @@ export default function AccountPage() {
   )
 }
 
-function Mini({ label, value, hint }: { label: string; value: string; hint?: string }) {
+const PILL =
+  "rounded-lg border-0 px-3 py-1.5 text-sm font-medium text-muted hover:bg-line/50 hover:text-ink data-[state=active]:bg-link data-[state=active]:text-white data-[state=active]:hover:bg-link"
+
+function InfoCard({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div className="rounded-xl border border-line bg-card px-4 py-3">
-      <div className="text-xs text-muted">{label}</div>
-      <div className="text-lg font-semibold">{value}</div>
-      {hint ? <div className="text-xs text-muted">{hint}</div> : null}
+    <section className="rounded-xl border border-line bg-card p-4">
+      <h2 className="mb-3 text-sm font-semibold text-ink">{title}</h2>
+      <div className="space-y-3">{children}</div>
+    </section>
+  )
+}
+
+function Dropdown({ label, children }: { label: ReactNode; children: ReactNode }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!open) return
+    function onDown(event: MouseEvent) {
+      if (ref.current && !ref.current.contains(event.target as Node)) setOpen(false)
+    }
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") setOpen(false)
+    }
+    document.addEventListener("mousedown", onDown)
+    document.addEventListener("keydown", onKey)
+    return () => {
+      document.removeEventListener("mousedown", onDown)
+      document.removeEventListener("keydown", onKey)
+    }
+  }, [open])
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        aria-expanded={open}
+        onClick={() => setOpen((value) => !value)}
+        className="flex w-full items-center justify-between gap-2 rounded-lg border border-line bg-card px-3 py-2 text-left text-sm hover:bg-line/40"
+      >
+        <span>{label}</span>
+        <svg viewBox="0 0 20 20" className={`h-4 w-4 shrink-0 text-muted transition-transform ${open ? "rotate-180" : ""}`} fill="currentColor" aria-hidden>
+          <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.17l3.71-3.94a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z" clipRule="evenodd" />
+        </svg>
+      </button>
+      {open ? (
+        <div className="absolute inset-x-0 top-full z-30 mt-1 overflow-hidden rounded-lg border border-line bg-card shadow-lg">{children}</div>
+      ) : null}
+    </div>
+  )
+}
+
+function InfoRow({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="min-w-0">
+      <div className="mb-0.5 text-[11px] font-medium uppercase tracking-wide text-muted">{label}</div>
+      <div className="text-sm text-ink">{children}</div>
     </div>
   )
 }
