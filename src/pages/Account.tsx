@@ -5,6 +5,7 @@ import { TimeAgo } from "../components/Now.tsx"
 import { AccountPositions } from "../components/AccountPositions.tsx"
 import { AccountWhitelist } from "../components/AccountWhitelist.tsx"
 import { AccountRelations } from "../components/AccountRelations.tsx"
+import { AccountHeatmap } from "../components/AccountHeatmap.tsx"
 import { AccountLink, CopyButton, Crumbs, Empty, ErrorBox, LoadingBlock, OpTable, Pager, Panel } from "../components/widgets.tsx"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs.tsx"
 import {
@@ -228,6 +229,7 @@ export default function AccountPage() {
               <TabsList className="flex-wrap gap-1.5 border-b border-line px-3 py-3">
                 {([
                   ["operations", t("Operations")],
+                  ["analytics", t("Analytics")],
                   ["orders", t("Limit orders")],
                   ["votes", t("Votes")],
                   ["authorities", t("Authorities")],
@@ -283,6 +285,9 @@ export default function AccountPage() {
                     setSearch(copy)
                   }}
                 />
+              </TabsContent>
+              <TabsContent value="analytics" className="pt-0">
+                <AccountHeatmap accountId={full.account.id} />
               </TabsContent>
               <TabsContent value="orders">
                 <OrderTable orders={orders ?? []} />

@@ -432,3 +432,58 @@ export function pairPrice(pays: Amount, receives: Amount, baseId: string, quoteI
   if (!q) return Number.NaN
   return b / q
 }
+
+export type ActivityDay = { date: string; ops: number }
+
+/** ES `time_zone` for the user's UTC / Local time setting. */
+function esZone(zone: string): string {
+  return zone === "UTC" ? "+00:00" : zone
+}
+
+/**
+ * Operations per calendar day for one account, from the operation index.
+ * `start` and `end` are inclusive `YYYY-MM-DD` dates in `zone` (an IANA name or "UTC").
+ */
+export async function fetchAccountActivityDays(accountId: string, start: string, end: string, zone: string): Promise<ActivityDay[]> {
+  const data = await esSearch(allOpIndexes(), {
+    size: 0,
+    track_total_hits: false,
+    query: {
+      bool: {
+        filter: [
+          { term: { "account_history.account": accountId } },
+          { range: { "block_data.block_time": { gte: start, lte: end, format: "yyyy-MM-dd", time_zone: esZone(zone) } } },
+        ],
+      },
+    },
+    aggs: {
+      per_day: {
+        date_histogram: { field: "block_data.block_time", calendar_interval: "day", min_doc_count: 1, time_zone: esZone(zone) },
+      },
+    },
+  })
+  const buckets = data.aggregations?.per_day?.buckets ?? []
+  return buckets.flatMap((bucket) => {
+    const date = (bucket.key_as_string ?? "").slice(0, 10)
+    return date ? [{ date, ops: bucket.doc_count ?? 0 }] : []
+  })
+}
+
+/** Calendar years (in `zone`) in which the account has at least one indexed operation. */
+export async function fetchAccountActiveYears(accountId: string, zone: string): Promise<number[]> {
+  const data = await esSearch(allOpIndexes(), {
+    size: 0,
+    track_total_hits: false,
+    query: { term: { "account_history.account": accountId } },
+    aggs: {
+      per_year: {
+        date_histogram: { field: "block_data.block_time", calendar_interval: "year", min_doc_count: 1, time_zone: esZone(zone) },
+      },
+    },
+  })
+  const buckets = data.aggregations?.per_year?.buckets ?? []
+  return buckets
+    .map((bucket) => Number((bucket.key_as_string ?? "").slice(0, 4)))
+    .filter((year) => Number.isFinite(year) && year > 2000)
+    .sort((a, b) => b - a)
+}

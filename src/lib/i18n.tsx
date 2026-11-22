@@ -2,6 +2,19 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 import { getLanguage, setLanguage, subscribeLanguage, type Lang } from "./locale.ts"
 
 const zh: Record<string, string> = {
+  Analytics: "分析",
+  "Transaction Heatmap": "交易热力图",
+  "Operations per day involving this account · days in {zone}": "每天涉及该账户的操作数 · 按 {zone} 划分日期",
+  "Last 12 months": "近 12 个月",
+  "in the last 12 months": "近 12 个月",
+  "in {year}": "{year} 年",
+  "Active days": "活跃天数",
+  "Total operations": "操作总数",
+  "Busiest day": "最活跃的一天",
+  "{n} operation": "{n} 笔操作",
+  "Source: BitShares Elasticsearch operation index": "数据来源：BitShares Elasticsearch 操作索引",
+  Less: "少",
+  More: "多",
   Home: "首页",
   Blockchain: "区块链",
   Blocks: "区块",
