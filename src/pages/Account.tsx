@@ -229,7 +229,6 @@ export default function AccountPage() {
               <TabsList className="flex-wrap gap-1.5 border-b border-line px-3 py-3">
                 {([
                   ["operations", t("Operations")],
-                  ["analytics", t("Analytics")],
                   ["orders", t("Limit orders")],
                   ["votes", t("Votes")],
                   ["authorities", t("Authorities")],
@@ -238,6 +237,7 @@ export default function AccountPage() {
                   ["registered", t("Registered")],
                   ["referred", t("Referred")],
                   ["proxies", t("Vote proxies")],
+                  ["analytics", t("Analytics")],
                 ] as const).map(([value, label]) => (
                   <TabsTrigger key={value} value={value} className={PILL}>{label}</TabsTrigger>
                 ))}
