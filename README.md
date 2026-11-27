@@ -2,9 +2,15 @@
 
 [中文](#中文) | [English](#english)
 
-开源的 [BitShares](https://bitshares.org/) 区块链浏览器。线上站点：<https://bitsharescan.deed.page/>
+开源的 [BitShares](https://bitshares.org/) 区块链浏览器。线上站点：
 
-An open-source [BitShares](https://bitshares.org/) blockchain explorer. Live site: <https://bitsharescan.deed.page/>
+- <https://bitsharescan.github.io/>（GitHub Pages，由 [`bitsharescan/bitsharescan.github.io`](https://github.com/bitsharescan/bitsharescan.github.io) 自动部署）
+- <https://bitsharescan.deed.page/>
+
+An open-source [BitShares](https://bitshares.org/) blockchain explorer. Live sites:
+
+- <https://bitsharescan.github.io/> (GitHub Pages, auto-deployed from [`bitsharescan/bitsharescan.github.io`](https://github.com/bitsharescan/bitsharescan.github.io))
+- <https://bitsharescan.deed.page/>
 
 ---
 
@@ -12,17 +18,20 @@ An open-source [BitShares](https://bitshares.org/) blockchain explorer. Live sit
 
 BitSharesScan 是一个纯前端静态站点（React 19 + TypeScript + Vite + Tailwind CSS），直接从公共 API 节点和公开的 Elasticsearch 索引读取 BitShares 主网与测试网数据。它只读取公开链上数据，不保存私钥，也不广播交易。
 
-本仓库就是网站的**原始工程源码**，`npm run build` 生成的就是线上部署的文件。
+本仓库就是网站的**原始工程源码**，`npm run build` 生成的就是线上部署的文件。代码同时维护在 [`xiao93/bitsharescan`](https://github.com/xiao93/bitsharescan) 和 [`bitsharescan/bitsharescan.github.io`](https://github.com/bitsharescan/bitsharescan.github.io)。
 
 ### 功能
 
-- 区块、交易、操作详情；最新区块与交易
+- 区块、交易、操作详情；最新区块与交易；全部 78 种 BitShares 操作类型，并按各操作的 `fee_payer()` 字段准确显示 From
 - 账户：余额、挂单、抵押仓位、投票、权限、白名单、关系，以及完整操作历史（超过 1 万条也能翻页）和数据导出
 - 资产列表与详情：供应量、持有人、喂价、市场
 - 治理：见证人、理事会、预算提案（workers）、**提案（1.10.x）列表与详情**
 - DEX 市场与订单簿；流动性池、借贷（credit offer/deal）、SameT 闪贷、锁仓（tickets）
-- 节点追踪（公共 API 节点与 P2P 快照）、网络参数与手续费表、图表统计、隐私转账统计
-- 中文 / 英文，主网 / 测试网，浅色 / Dim / 黑色主题
+- 节点追踪：主网与测试网的公共 API 节点，以及由 `scripts/p2p-crawl.py` 生成的 P2P 节点快照和地图
+- 交互式 JSON 树：长十六进制字段可展开、复制，并解码为 UTF-8
+- 网络参数与手续费表、图表统计、隐私转账统计
+- 6 种界面语言（英语、简体中文、繁体中文、韩语、俄语、日语；`en` / `zh-CN` / `zh-TW` / `ko` / `ru` / `ja`），按浏览器语言自动选择，数字和日期按对应 locale 格式化
+- 主网 / 测试网切换，浅色 / Dim / 黑色主题
 
 ### 本地开发
 
@@ -30,6 +39,7 @@ BitSharesScan 是一个纯前端静态站点（React 19 + TypeScript + Vite + Ta
 
 ```bash
 git clone https://github.com/xiao93/bitsharescan.git
+# 或 git clone https://github.com/bitsharescan/bitsharescan.github.io.git
 cd bitsharescan
 npm ci
 npm run dev        # http://127.0.0.1:43123
@@ -47,7 +57,12 @@ npm run lint       # oxlint
 
 ### 部署
 
-把 `dist/` 里的文件上传到任意静态托管即可（GitHub Pages、Nginx、对象存储等）。线上站点用的是 deed.page：
+把 `dist/` 里的文件上传到任意静态托管即可（GitHub Pages、Nginx、对象存储等）。
+
+当前线上部署：
+
+- **GitHub Pages：** <https://bitsharescan.github.io/>。把 `main` 推到 [`bitsharescan/bitsharescan.github.io`](https://github.com/bitsharescan/bitsharescan.github.io) 后，`.github/workflows/deploy-pages.yml` 会自动执行 `npm ci && npm run build` 并发布 `dist/`。同一工作流在 [`xiao93/bitsharescan`](https://github.com/xiao93/bitsharescan) 上会跳过，不会重复部署。
+- **deed.page：** <https://bitsharescan.deed.page/>。手动发布示例：
 
 ```bash
 npm run build
@@ -92,10 +107,11 @@ node proxy/server.mjs
 
 ### P2P 快照
 
-`scripts/p2p-crawl.py` 走 Graphene P2P 握手，生成 `public/data/p2p-nodes.json`，节点追踪页读取这个快照。需要 `coincurve` 和 `cryptography`：
+`scripts/p2p-crawl.py` 走 Graphene P2P 握手，生成主网快照 `public/data/p2p-nodes.json` 和测试网快照 `public/data/p2p-nodes-testnet.json`，节点追踪页读取这些快照。需要 `coincurve` 和 `cryptography`：
 
 ```bash
-python3 scripts/p2p-crawl.py
+python3 scripts/p2p-crawl.py                  # 主网
+python3 scripts/p2p-crawl.py --network testnet
 ```
 
 ### 首页广告位
@@ -105,6 +121,7 @@ python3 scripts/p2p-crawl.py
 ### 目录结构
 
 ```
+.github/workflows/deploy-pages.yml  GitHub Pages 自动部署
 src/App.tsx            路由（页面按需加载）
 src/components/        布局、搜索框、通用组件
 src/pages/             各页面
@@ -124,17 +141,20 @@ scripts/p2p-crawl.py   P2P 快照脚本
 
 BitSharesScan is a static front-end (React 19 + TypeScript + Vite + Tailwind CSS) that reads BitShares mainnet and testnet data straight from public API nodes and the public Elasticsearch index. It only reads public chain data; it holds no keys and never broadcasts transactions.
 
-This repository is the **original project source**. `npm run build` produces exactly what is deployed to the live site.
+This repository is the **original project source**. `npm run build` produces exactly what is deployed to the live site. The same code is maintained at [`xiao93/bitsharescan`](https://github.com/xiao93/bitsharescan) and [`bitsharescan/bitsharescan.github.io`](https://github.com/bitsharescan/bitsharescan.github.io).
 
 ### Features
 
-- Blocks, transactions, operations; latest blocks and transactions
+- Blocks, transactions, operations; latest blocks and transactions; all 78 BitShares operation types, with an accurate `From` / `fee_payer()` field mapping
 - Accounts: balances, open orders, debt positions, votes, authorities, whitelists, relations, full operation history (pages past 10,000 entries work) and data export
 - Asset list and details: supply, holders, feeds, markets
 - Governance: witnesses, committee, workers, **proposals (1.10.x) list and detail**
 - DEX markets and order books; liquidity pools, credit offers/deals, SameT flash loans, locking (tickets)
-- Node tracker (public API nodes and a P2P snapshot), chain parameters and fee schedule, charts, confidential transfer stats
-- English / Chinese, mainnet / testnet, light / dim / black themes
+- Node tracker: public API nodes plus mainnet and testnet P2P snapshots and a map, produced by `scripts/p2p-crawl.py`
+- Interactive JSON tree: expand, copy, and UTF-8-decode long hex fields
+- Chain parameters and fee schedule, charts, confidential transfer stats
+- Six UI languages (English, Simplified Chinese, Traditional Chinese, Korean, Russian, Japanese; `en` / `zh-CN` / `zh-TW` / `ko` / `ru` / `ja`), with automatic browser language detection and locale-aware number and date formatting
+- Mainnet / testnet switching, light / dim / black themes
 
 ### Develop
 
@@ -142,6 +162,7 @@ Requires Node.js 20.19+ or 22.12+.
 
 ```bash
 git clone https://github.com/xiao93/bitsharescan.git
+# or git clone https://github.com/bitsharescan/bitsharescan.github.io.git
 cd bitsharescan
 npm ci
 npm run dev        # http://127.0.0.1:43123
@@ -159,7 +180,12 @@ npm run lint       # oxlint
 
 ### Deploy
 
-Upload the contents of `dist/` to any static host (GitHub Pages, Nginx, object storage, ...). The live site uses deed.page:
+Upload the contents of `dist/` to any static host (GitHub Pages, Nginx, object storage, ...).
+
+Current live deployments:
+
+- **GitHub Pages:** <https://bitsharescan.github.io/>. Pushing `main` to [`bitsharescan/bitsharescan.github.io`](https://github.com/bitsharescan/bitsharescan.github.io) runs `.github/workflows/deploy-pages.yml`, which builds with `npm ci && npm run build` and publishes `dist/`. The same workflow is skipped on [`xiao93/bitsharescan`](https://github.com/xiao93/bitsharescan) so it does not deploy twice.
+- **deed.page:** <https://bitsharescan.deed.page/>. Manual publish example:
 
 ```bash
 npm run build
@@ -204,10 +230,11 @@ Then set **Optional HTTP RPC proxy** to `http://127.0.0.1:8787` in settings.
 
 ### P2P snapshot
 
-`scripts/p2p-crawl.py` speaks the Graphene P2P handshake and writes `public/data/p2p-nodes.json`, which the node tracker reads. It needs `coincurve` and `cryptography`:
+`scripts/p2p-crawl.py` speaks the Graphene P2P handshake and writes the mainnet snapshot `public/data/p2p-nodes.json` and the testnet snapshot `public/data/p2p-nodes-testnet.json`, which the node tracker reads. It needs `coincurve` and `cryptography`:
 
 ```bash
-python3 scripts/p2p-crawl.py
+python3 scripts/p2p-crawl.py                  # mainnet
+python3 scripts/p2p-crawl.py --network testnet
 ```
 
 ### Home page banner
@@ -217,6 +244,7 @@ python3 scripts/p2p-crawl.py
 ### Layout
 
 ```
+.github/workflows/deploy-pages.yml  GitHub Pages auto-deploy
 src/App.tsx            routes (pages load on demand)
 src/components/        layout, search, shared widgets
 src/pages/             one file per page
