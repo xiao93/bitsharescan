@@ -1,5 +1,5 @@
 import * as Dialog from "@radix-ui/react-dialog"
-import { ChevronDown, Menu, Settings, X } from "lucide-react"
+import { ChevronDown, Globe, Menu, Settings, X } from "lucide-react"
 import { Suspense, useEffect, useLayoutEffect, useRef, useState, type FormEvent, type ReactNode } from "react"
 import { NavLink, Outlet, useLocation } from "react-router-dom"
 import { loadConfig, saveConfig, type AppConfig } from "../lib/config.ts"
@@ -7,7 +7,7 @@ import { getNode, retryNode, type NodeStatus } from "../lib/node.ts"
 import { NETWORKS, currentNetwork, networkInfo, switchNetwork, type NetworkId } from "../lib/network.ts"
 import { getTheme, setTheme, subscribeTheme, type ThemeChoice } from "../lib/theme.ts"
 import { useI18n } from "../lib/i18n.tsx"
-import { isLang, LANG_OPTIONS } from "../lib/locale.ts"
+import { LANG_OPTIONS } from "../lib/locale.ts"
 import { cn } from "../lib/utils.ts"
 import { Logo } from "./Logo.tsx"
 import { NowProvider, useTimeMode } from "./Now.tsx"
@@ -117,8 +117,102 @@ function NavDropdown({ label, items }: { label: string; items: { label: string; 
   )
 }
 
-export function Layout() {
+function LanguageMenu() {
   const { t, lang, setLang } = useI18n()
+  const [open, setOpen] = useState(false)
+  const rootRef = useRef<HTMLDivElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
+  const current = LANG_OPTIONS.find((option) => option.id === lang) ?? LANG_OPTIONS[0]
+  const pathname = useLocation().pathname
+
+  useEffect(() => {
+    setOpen(false)
+  }, [pathname])
+
+  useLayoutEffect(() => {
+    if (!open) return
+    const menu = menuRef.current
+    if (!menu) return
+    function place() {
+      const node = menuRef.current
+      if (!node) return
+      node.style.transform = ""
+      const box = node.getBoundingClientRect()
+      const margin = 8
+      let shift = 0
+      if (box.left < margin) shift += margin - box.left
+      if (box.right + shift > window.innerWidth - margin) shift -= box.right + shift - (window.innerWidth - margin)
+      node.style.transform = shift ? `translateX(${shift}px)` : ""
+    }
+    place()
+    window.addEventListener("resize", place)
+    return () => window.removeEventListener("resize", place)
+  }, [open, lang])
+
+  useEffect(() => {
+    if (!open) return
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false)
+    }
+    const onPointer = (event: PointerEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) setOpen(false)
+    }
+    window.addEventListener("keydown", onKey)
+    window.addEventListener("pointerdown", onPointer)
+    return () => {
+      window.removeEventListener("keydown", onKey)
+      window.removeEventListener("pointerdown", onPointer)
+    }
+  }, [open])
+
+  return (
+    <div ref={rootRef} className="relative">
+      <button
+        type="button"
+        className="inline-flex h-7 w-auto items-center gap-1 rounded-md border border-line bg-card px-2 text-xs text-ink"
+        aria-label={t("Language")}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => setOpen((value) => !value)}
+      >
+        <Globe className="h-3.5 w-3.5 shrink-0 text-muted" aria-hidden />
+        <span className="whitespace-nowrap">{current.label}</span>
+        <ChevronDown className={cn("h-3 w-3 shrink-0 opacity-70 transition-transform", open && "rotate-180")} aria-hidden />
+      </button>
+      {open ? (
+        <div ref={menuRef} className="absolute end-0 top-full z-50 pt-1">
+          <div
+            role="listbox"
+            aria-label={t("Language")}
+            className="grid w-72 max-h-64 max-w-[calc(100vw-1rem)] grid-cols-2 gap-1 overflow-y-auto rounded-lg border border-line bg-card p-1.5 shadow-lg"
+          >
+            {LANG_OPTIONS.map((option) => (
+              <button
+                key={option.id}
+                type="button"
+                role="option"
+                aria-selected={lang === option.id}
+                onClick={() => {
+                  setLang(option.id)
+                  setOpen(false)
+                }}
+                className={cn(
+                  "rounded-md px-2 py-1.5 text-start text-xs leading-tight",
+                  lang === option.id ? "bg-tint font-medium text-link" : "text-ink hover:bg-canvas",
+                )}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
+export function Layout() {
+  const { t } = useI18n()
   const location = useLocation()
   const [open, setOpen] = useState(false)
   const [status, setStatus] = useState<NodeStatus>("connecting")
@@ -198,21 +292,7 @@ export function Layout() {
                 <option value="dim">{t("Dim")}</option>
                 <option value="black">{t("Black")}</option>
               </select>
-              <label className="inline-flex items-center gap-1">
-                <span className="sr-only">{t("Language")}</span>
-                <select
-                  value={lang}
-                  aria-label={t("Language")}
-                  onChange={(event) => {
-                    if (isLang(event.target.value)) setLang(event.target.value)
-                  }}
-                  className="h-7 max-w-[14rem] rounded-md border border-line bg-card px-2 text-xs text-ink"
-                >
-                  {LANG_OPTIONS.map((option) => (
-                    <option key={option.id} value={option.id}>{option.label}</option>
-                  ))}
-                </select>
-              </label>
+              <LanguageMenu />
               <button type="button" className="hover:text-link" onClick={() => { setSettingsOpen(false); setEndpointsOpen(true) }}>
                 {t("API endpoints")}
               </button>
