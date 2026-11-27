@@ -200,11 +200,21 @@ export function Empty({ title, body }: { title: string; body?: string }) {
 }
 
 export function LoadingBlock({ lines = 6 }: { lines?: number }) {
+  const widths = [100, 92, 100, 84, 96, 88]
   return (
-    <div className="space-y-3 p-4" aria-busy="true" aria-live="polite">
-      {Array.from({ length: lines }, (_, index) => (
-        <div key={index} className="h-8 animate-pulse rounded-md bg-canvas" />
-      ))}
+    <div className="overflow-hidden rounded-xl border border-line bg-card shadow-sm" aria-busy="true" aria-live="polite">
+      <div className="border-b border-line px-4 py-3">
+        <div className="h-5 w-40 max-w-[50%] animate-pulse rounded-md bg-canvas" />
+      </div>
+      <div className="space-y-3 p-4">
+        {Array.from({ length: lines }, (_, index) => (
+          <div
+            key={index}
+            className="h-8 animate-pulse rounded-md bg-canvas"
+            style={{ width: `${widths[index % widths.length]}%` }}
+          />
+        ))}
+      </div>
     </div>
   )
 }

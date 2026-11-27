@@ -1,27 +1,38 @@
 import { useEffect, useState } from "react"
 import { useI18n } from "../lib/i18n.tsx"
+import { getCached, makeQueryKey, setCached, sharedFetch } from "../lib/queryCache.ts"
 import { cleanError } from "../lib/utils.ts"
 
 export function useQuery<T>(fn: () => Promise<T>, deps: unknown[]) {
-  const [data, setData] = useState<T | null>(null)
+  const key = makeQueryKey(fn, deps)
+  const [data, setData] = useState<T | null>(() => getCached<T>(key) ?? null)
   const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(() => getCached<T>(key) === undefined)
   const [reloadToken, setReloadToken] = useState(0)
 
   useEffect(() => {
     let cancel = false
-    setLoading(true)
-    setError(null)
-    fn().then(
+    const hit = getCached<T>(key)
+    if (hit !== undefined) {
+      setData(hit)
+      setError(null)
+      setLoading(false)
+    } else {
+      setLoading(true)
+      setError(null)
+    }
+    sharedFetch(key, fn).then(
       (value) => {
         if (!cancel) {
+          setCached(key, value)
           setData(value)
+          setError(null)
           setLoading(false)
         }
       },
       (err: unknown) => {
         if (!cancel) {
-          setData(null)
+          if (hit === undefined) setData(null)
           setError(cleanError(err))
           setLoading(false)
         }
@@ -30,9 +41,9 @@ export function useQuery<T>(fn: () => Promise<T>, deps: unknown[]) {
     return () => {
       cancel = true
     }
-    // Caller-supplied deps are the refetch inputs.
+    // Caller-supplied deps are the refetch inputs; key already encodes them.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [...deps, reloadToken])
+  }, [...deps, reloadToken, key])
 
   return { data, error, loading, reload: () => setReloadToken((value) => value + 1) }
 }

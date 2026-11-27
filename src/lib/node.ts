@@ -1,6 +1,7 @@
 import { loadConfig } from "./config.ts"
 import { parseChainJson } from "./json.ts"
 import { currentNetwork, networkInfo, type NetworkId } from "./network.ts"
+import { clearQueryCache } from "./queryCache.ts"
 import { cleanError } from "./utils.ts"
 
 export type NodeStatus = "connecting" | "online" | "http" | "offline"
@@ -315,12 +316,14 @@ export function getNode(): NodeClient {
   const cfg = loadConfig()
   if (!client || client.baseUrl !== cfg.ws || client.httpUrl !== cfg.http) {
     client?.close()
+    clearQueryCache()
     client = new NodeClient(cfg.ws, cfg.http)
   }
   return client
 }
 
 export function retryNode() {
+  clearQueryCache()
   getNode().retry()
 }
 

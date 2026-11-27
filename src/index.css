@@ -293,3 +293,43 @@ code,
   direction: ltr;
   unicode-bidi: isolate;
 }
+
+/* Top-of-viewport 2px navigation progress bar. */
+@keyframes nav-progress-slide {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(320%); }
+}
+.nav-progress-bar {
+  position: fixed;
+  top: 0;
+  inset-inline: 0;
+  z-index: 60;
+  height: 2px;
+  overflow: hidden;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--color-link) 22%, transparent);
+}
+.nav-progress-bar > span {
+  display: block;
+  height: 100%;
+  width: 35%;
+  background: var(--color-link);
+  animation: nav-progress-slide 1.05s ease-in-out infinite;
+}
+.nav-flyout {
+  transition-property: opacity, transform, visibility;
+  transition-duration: 150ms;
+  transition-timing-function: ease-out;
+}
+.nav-flyout[data-open="false"] {
+  transition-delay: 0s, 0s, 150ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-progress-bar > span {
+    animation: none;
+    width: 100%;
+  }
+  .nav-flyout {
+    transition: none;
+  }
+}
