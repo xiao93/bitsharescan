@@ -13,10 +13,47 @@ export type Lang =
   | "ar"
   | "fa"
   | "uk"
+  | "tr"
+  | "de"
+  | "hi"
+  | "th"
+  | "it"
+  | "pl"
+  | "nl"
+  | "ur"
+  | "he"
+  | "bn"
+  | "ms"
 
-export const LANGS: Lang[] = ["en", "zh", "zh-TW", "ko", "ru", "ja", "vi", "id", "es", "pt", "fr", "ar", "fa", "uk"]
+export const LANGS: Lang[] = [
+  "en",
+  "zh",
+  "zh-TW",
+  "ko",
+  "ru",
+  "ja",
+  "vi",
+  "id",
+  "es",
+  "pt",
+  "fr",
+  "ar",
+  "fa",
+  "uk",
+  "tr",
+  "de",
+  "hi",
+  "th",
+  "it",
+  "pl",
+  "nl",
+  "ur",
+  "he",
+  "bn",
+  "ms",
+]
 
-export const RTL_LANGS = new Set<Lang>(["ar", "fa"])
+export const RTL_LANGS = new Set<Lang>(["ar", "fa", "ur", "he"])
 
 export const LANG_OPTIONS: { id: Lang; label: string; locale: string }[] = [
   { id: "en", label: "English", locale: "en-US" },
@@ -33,6 +70,17 @@ export const LANG_OPTIONS: { id: Lang; label: string; locale: string }[] = [
   { id: "ar", label: "العربية", locale: "ar-u-nu-latn" },
   { id: "fa", label: "فارسی", locale: "fa-IR-u-nu-latn-ca-gregory" },
   { id: "uk", label: "Українська", locale: "uk-UA" },
+  { id: "tr", label: "Türkçe", locale: "tr-TR" },
+  { id: "de", label: "Deutsch", locale: "de-DE" },
+  { id: "hi", label: "हिन्दी", locale: "hi-IN-u-nu-latn-ca-gregory" },
+  { id: "th", label: "ไทย", locale: "th-TH-u-nu-latn-ca-gregory" },
+  { id: "it", label: "Italiano", locale: "it-IT" },
+  { id: "pl", label: "Polski", locale: "pl-PL" },
+  { id: "nl", label: "Nederlands", locale: "nl-NL" },
+  { id: "ur", label: "اردو", locale: "ur-PK-u-nu-latn-ca-gregory" },
+  { id: "he", label: "עברית", locale: "he-IL-u-nu-latn-ca-gregory" },
+  { id: "bn", label: "বাংলা", locale: "bn-BD-u-nu-latn-ca-gregory" },
+  { id: "ms", label: "Bahasa Melayu", locale: "ms-MY" },
 ]
 
 export const LOCALE_TAGS: Record<Lang, string> = {
@@ -50,11 +98,32 @@ export const LOCALE_TAGS: Record<Lang, string> = {
   ar: "ar-u-nu-latn",
   fa: "fa-IR-u-nu-latn-ca-gregory",
   uk: "uk-UA",
+  tr: "tr-TR",
+  de: "de-DE",
+  hi: "hi-IN-u-nu-latn-ca-gregory",
+  th: "th-TH-u-nu-latn-ca-gregory",
+  it: "it-IT",
+  pl: "pl-PL",
+  nl: "nl-NL",
+  ur: "ur-PK-u-nu-latn-ca-gregory",
+  he: "he-IL-u-nu-latn-ca-gregory",
+  bn: "bn-BD-u-nu-latn-ca-gregory",
+  ms: "ms-MY",
 }
 
 const KEY = "bitscan.lang"
-const RTL_FONT_ID = "bitscan-rtl-fonts"
+const SCRIPT_FONT_ID = "bitscan-script-fonts"
 const listeners = new Set<(lang: Lang) => void>()
+
+const SCRIPT_FONTS: Partial<Record<Lang, string>> = {
+  ar: "family=Noto+Sans+Arabic:wght@400;500;600;700",
+  fa: "family=Vazirmatn:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700",
+  ur: "family=Noto+Sans+Arabic:wght@400;500;600;700",
+  he: "family=Noto+Sans+Hebrew:wght@400;500;600;700",
+  hi: "family=Noto+Sans+Devanagari:wght@400;500;600;700",
+  th: "family=Noto+Sans+Thai:wght@400;500;600;700",
+  bn: "family=Noto+Sans+Bengali:wght@400;500;600;700",
+}
 
 export function isLang(value: string): value is Lang {
   return (LANGS as string[]).includes(value)
@@ -76,7 +145,8 @@ function browserLang(): Lang {
   for (const raw of tags) {
     if (!raw) continue
     const tag = raw.toLowerCase().replace(/_/g, "-")
-    const base = tag.split("-")[0]
+    let base = tag.split("-")[0]
+    if (base === "iw") base = "he"
     if (base === "zh") {
       if (tag.includes("hant") || tag.startsWith("zh-tw") || tag.startsWith("zh-hk") || tag.startsWith("zh-mo")) {
         return "zh-TW"
@@ -104,17 +174,20 @@ export function getLanguage(): Lang {
   return current
 }
 
-function applyRtlFonts(lang: Lang) {
+function applyScriptFonts(lang: Lang) {
   if (typeof document === "undefined") return
-  const needed = isRtl(lang)
-  let link = document.getElementById(RTL_FONT_ID) as HTMLLinkElement | null
-  if (needed && !link) {
-    link = document.createElement("link")
-    link.id = RTL_FONT_ID
-    link.rel = "stylesheet"
-    link.href = "https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&family=Vazirmatn:wght@400;500;600;700&display=swap"
-    document.head.appendChild(link)
-  } else if (!needed && link) {
+  const query = SCRIPT_FONTS[lang]
+  let link = document.getElementById(SCRIPT_FONT_ID) as HTMLLinkElement | null
+  if (query) {
+    const href = `https://fonts.googleapis.com/css2?${query}&display=swap`
+    if (!link) {
+      link = document.createElement("link")
+      link.id = SCRIPT_FONT_ID
+      link.rel = "stylesheet"
+      document.head.appendChild(link)
+    }
+    if (link.href !== href) link.href = href
+  } else if (link) {
     link.remove()
   }
 }
@@ -123,7 +196,7 @@ function applyDocumentLang(lang: Lang) {
   if (typeof document === "undefined") return
   document.documentElement.lang = localeTag(lang)
   document.documentElement.dir = isRtl(lang) ? "rtl" : "ltr"
-  applyRtlFonts(lang)
+  applyScriptFonts(lang)
 }
 
 export function setLanguage(lang: Lang) {

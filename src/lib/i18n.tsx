@@ -17,6 +17,17 @@ const loaders: Record<Exclude<Lang, "en">, () => Promise<Dict>> = {
   ar: () => import("./locales/ar.ts").then((m) => m.ar),
   fa: () => import("./locales/fa.ts").then((m) => m.fa),
   uk: () => import("./locales/uk.ts").then((m) => m.uk),
+  tr: () => import("./locales/tr.ts").then((m) => m.tr),
+  de: () => import("./locales/de.ts").then((m) => m.de),
+  hi: () => import("./locales/hi.ts").then((m) => m.hi),
+  th: () => import("./locales/th.ts").then((m) => m.th),
+  it: () => import("./locales/it.ts").then((m) => m.it),
+  pl: () => import("./locales/pl.ts").then((m) => m.pl),
+  nl: () => import("./locales/nl.ts").then((m) => m.nl),
+  ur: () => import("./locales/ur.ts").then((m) => m.ur),
+  he: () => import("./locales/he.ts").then((m) => m.he),
+  bn: () => import("./locales/bn.ts").then((m) => m.bn),
+  ms: () => import("./locales/ms.ts").then((m) => m.ms),
 }
 
 const loaded: Partial<Record<Lang, Dict>> = {}

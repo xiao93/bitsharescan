@@ -184,7 +184,7 @@ function LanguageMenu() {
           <div
             role="listbox"
             aria-label={t("Language")}
-            className="grid w-72 max-h-64 max-w-[calc(100vw-1rem)] grid-cols-2 gap-1 overflow-y-auto rounded-lg border border-line bg-card p-1.5 shadow-lg"
+            className="grid w-72 max-h-[70vh] max-w-[calc(100vw-1rem)] grid-cols-2 gap-1 overflow-y-auto rounded-lg border border-line bg-card p-1.5 shadow-lg sm:w-[26rem] sm:grid-cols-3"
           >
             {LANG_OPTIONS.map((option) => (
               <button
@@ -480,7 +480,7 @@ function SettingsMenu({ onEndpoints }: { onEndpoints: () => void }) {
   useEffect(() => subscribeTheme(setThemeChoice), [])
   return (
     <div className="absolute end-0 top-full z-50 w-80 max-w-[calc(100vw-1.5rem)] pt-1" role="dialog" aria-label={t("Settings")}>
-      <div className="rounded-lg border border-line bg-card p-3 shadow-lg">
+      <div className="max-h-[70vh] overflow-y-auto rounded-lg border border-line bg-card p-3 shadow-lg">
         <Segmented
           label={t("Theme")}
           value={theme}
@@ -503,7 +503,7 @@ function SettingsMenu({ onEndpoints }: { onEndpoints: () => void }) {
         />
         <div className="mb-2.5">
           <div className="mb-1 text-[11px] font-medium uppercase tracking-wide text-muted">{t("Language")}</div>
-          <div className="grid max-h-64 grid-cols-2 gap-1 overflow-y-auto pe-0.5" role="listbox" aria-label={t("Language")}>
+          <div className="grid max-h-[min(20rem,40vh)] grid-cols-2 gap-1 overflow-y-auto pe-0.5" role="listbox" aria-label={t("Language")}>
             {LANG_OPTIONS.map((option) => (
               <button
                 key={option.id}

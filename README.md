@@ -30,7 +30,7 @@ BitSharesScan 是一个纯前端静态站点（React 19 + TypeScript + Vite + Ta
 - 节点追踪：主网与测试网的公共 API 节点，以及由 `scripts/p2p-crawl.py` 生成的 P2P 节点快照和地图
 - 交互式 JSON 树：长十六进制字段可展开、复制，并解码为 UTF-8
 - 网络参数与手续费表、图表统计、隐私转账统计
-- 14 种界面语言（英语、简体中文、繁体中文、韩语、俄语、日语、越南语、印尼语、西班牙语、葡萄牙语、法语、阿拉伯语、波斯语、乌克兰语；`en` / `zh-CN` / `zh-TW` / `ko` / `ru` / `ja` / `vi` / `id` / `es` / `pt` / `fr` / `ar` / `fa` / `uk`），按浏览器语言自动选择，数字和日期按对应 locale 格式化；阿拉伯语与波斯语为从右到左排版
+- 25 种界面语言（英语、简体中文、繁体中文、韩语、俄语、日语、越南语、印尼语、西班牙语、葡萄牙语、法语、阿拉伯语、波斯语、乌克兰语、土耳其语、德语、印地语、泰语、意大利语、波兰语、荷兰语、乌尔都语、希伯来语、孟加拉语、马来语；`en` / `zh-CN` / `zh-TW` / `ko` / `ru` / `ja` / `vi` / `id` / `es` / `pt` / `fr` / `ar` / `fa` / `uk` / `tr` / `de` / `hi` / `th` / `it` / `pl` / `nl` / `ur` / `he` / `bn` / `ms`），按浏览器语言自动选择，数字和日期按对应 locale 格式化（泰语等使用公历与西式数字）；阿拉伯语、波斯语、乌尔都语与希伯来语为从右到左排版
 - 主网 / 测试网切换，浅色 / Dim / 黑色主题
 
 ### 本地开发
@@ -153,7 +153,7 @@ This repository is the **original project source**. `npm run build` produces exa
 - Node tracker: public API nodes plus mainnet and testnet P2P snapshots and a map, produced by `scripts/p2p-crawl.py`
 - Interactive JSON tree: expand, copy, and UTF-8-decode long hex fields
 - Chain parameters and fee schedule, charts, confidential transfer stats
-- Fourteen UI languages (English, Simplified Chinese, Traditional Chinese, Korean, Russian, Japanese, Vietnamese, Indonesian, Spanish, Portuguese, French, Arabic, Persian, and Ukrainian; `en` / `zh-CN` / `zh-TW` / `ko` / `ru` / `ja` / `vi` / `id` / `es` / `pt` / `fr` / `ar` / `fa` / `uk`), with automatic browser language detection and locale-aware number and date formatting; Arabic and Persian use a right-to-left layout
+- Twenty-five UI languages (English, Simplified Chinese, Traditional Chinese, Korean, Russian, Japanese, Vietnamese, Indonesian, Spanish, Portuguese, French, Arabic, Persian, Ukrainian, Turkish, German, Hindi, Thai, Italian, Polish, Dutch, Urdu, Hebrew, Bengali, and Malay; `en` / `zh-CN` / `zh-TW` / `ko` / `ru` / `ja` / `vi` / `id` / `es` / `pt` / `fr` / `ar` / `fa` / `uk` / `tr` / `de` / `hi` / `th` / `it` / `pl` / `nl` / `ur` / `he` / `bn` / `ms`), with automatic browser language detection and locale-aware number and date formatting (Gregorian calendar and Western digits, including Thai); Arabic, Persian, Urdu, and Hebrew use a right-to-left layout
 - Mainnet / testnet switching, light / dim / black themes
 
 ### Develop

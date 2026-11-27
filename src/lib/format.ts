@@ -209,6 +209,17 @@ const MEMBERSHIP: Record<Lang, { lifetime: string; basic: string; annual: string
   ar: { lifetime: "مدى الحياة", basic: "أساسي", annual: "سنوي" },
   fa: { lifetime: "مادام‌العمر", basic: "پایه", annual: "سالانه" },
   uk: { lifetime: "Довічний", basic: "Базовий", annual: "Річний" },
+  tr: { lifetime: "Ömür boyu", basic: "Temel", annual: "Yıllık" },
+  de: { lifetime: "Lebenslang", basic: "Basis", annual: "Jährlich" },
+  hi: { lifetime: "आजीवन", basic: "सामान्य", annual: "वार्षिक" },
+  th: { lifetime: "ตลอดชีพ", basic: "ทั่วไป", annual: "รายปี" },
+  it: { lifetime: "A vita", basic: "Base", annual: "Annuale" },
+  pl: { lifetime: "Dożywotnie", basic: "Podstawowe", annual: "Roczne" },
+  nl: { lifetime: "Levenslang", basic: "Basis", annual: "Jaarlijks" },
+  ur: { lifetime: "تاحیات", basic: "بنیادی", annual: "سالانہ" },
+  he: { lifetime: "לכל החיים", basic: "בסיסי", annual: "שנתי" },
+  bn: { lifetime: "আজীবন", basic: "সাধারণ", annual: "বার্ষিক" },
+  ms: { lifetime: "Sepanjang hayat", basic: "Asas", annual: "Tahunan" },
 }
 
 export function membershipOf(expiration: string | undefined): { label: string; className: string } {

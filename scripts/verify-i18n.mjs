@@ -28,6 +28,17 @@ const dicts = {
   ar: loadDict("ar.ts"),
   fa: loadDict("fa.ts"),
   uk: loadDict("uk.ts"),
+  tr: loadDict("tr.ts"),
+  de: loadDict("de.ts"),
+  hi: loadDict("hi.ts"),
+  th: loadDict("th.ts"),
+  it: loadDict("it.ts"),
+  pl: loadDict("pl.ts"),
+  nl: loadDict("nl.ts"),
+  ur: loadDict("ur.ts"),
+  he: loadDict("he.ts"),
+  bn: loadDict("bn.ts"),
+  ms: loadDict("ms.ts"),
 }
 
 const zhKeys = Object.keys(zh)
@@ -69,17 +80,69 @@ if (leftover.length) {
   for (const line of leftover) errors.push(`lingering zh-only branch: ${line}`)
 }
 
-
-const eastern = /[\u0660-\u0669\u06F0-\u06F9\u066B\u066C]/
-for (const file of ["ar.ts", "fa.ts"]) {
+// Eastern Arabic, Persian, Devanagari, Bengali, and Thai digits must not appear in locale files.
+const nonWestern = /[\u0660-\u0669\u06F0-\u06F9\u066B\u066C\u0966-\u096F\u09E6-\u09EF\u0E50-\u0E59]/
+const localeFiles = fs.readdirSync(path.join(srcRoot, "lib/locales")).filter((f) => f.endsWith(".ts"))
+for (const file of localeFiles) {
   const src = fs.readFileSync(path.join(srcRoot, "lib/locales", file), "utf8")
   const hits = []
   for (const [i, line] of src.split(/\n/).entries()) {
-    if (eastern.test(line)) hits.push(`${file}:${i + 1}`)
+    if (nonWestern.test(line)) hits.push(`${file}:${i + 1}`)
   }
-  if (hits.length) errors.push(`${file}: Eastern/Persian digits remain (${hits.length}), e.g. ${hits.slice(0, 5).join(", ")}`)
+  if (hits.length) errors.push(`${file}: non-Western digits remain (${hits.length}), e.g. ${hits.slice(0, 5).join(", ")}`)
+}
+
+const majorKeys = [
+  "Home",
+  "Blocks",
+  "Transactions",
+  "Confidential transfers",
+  "Assets",
+  "Governance",
+  "Witnesses",
+  "Committee",
+  "Workers",
+  "Markets",
+  "Liquidity pools",
+  "Lending",
+  "Flash loans",
+  "Locking",
+  "Network",
+  "Node tracker",
+  "Settings",
+  "Language",
+  "Theme",
+  "Search",
+  "Account",
+  "Overview",
+  "Balances",
+  "The BitShares Blockchain Explorer",
+  "BitShares (BTS) Blockchain Explorer",
+  "Last 12 months",
+  "No data yet.",
+  "Try again",
+  "Download CSV",
+  "Page not found",
+  "Breadcrumb",
+]
+const leakAllowExact = new Set([
+  // Legitimate loanwords / identical forms kept as industry terms.
+  'fr:Transactions',
+  'de:Assets',
+  'de:Governance',
+  'it:Governance',
+  'nl:Assets',
+  'nl:Account',
+])
+for (const [lang, dict] of Object.entries(dicts)) {
+  const leaks = []
+  for (const key of majorKeys) {
+    if (!(key in dict)) continue
+    if (dict[key] === key && !leakAllowExact.has(`${lang}:${key}`)) leaks.push(key)
+  }
+  if (leaks.length) errors.push(`${lang}: untranslated English leaks on major UI keys: ${leaks.join(", ")}`)
 }
 
 const ok = errors.length === 0
-console.log(JSON.stringify({ ok, zhKeys: zhKeys.length, counts, leftoverBranches: leftover, errors }, null, 2))
+console.log(JSON.stringify({ ok, zhKeys: zhKeys.length, localeCount: Object.keys(dicts).length + 1, counts, leftoverBranches: leftover, errors }, null, 2))
 if (!ok) process.exit(1)

@@ -13,8 +13,9 @@
           document.documentElement.style.colorScheme = theme === "light" ? "light" : "dark"
         } catch (e) {}
         try {
-          var langs = ["en","zh","zh-TW","ko","ru","ja","vi","id","es","pt","fr","ar","fa","uk"]
-          var tags = {"en":"en-US","zh":"zh-CN","zh-TW":"zh-TW","ko":"ko-KR","ru":"ru-RU","ja":"ja-JP","vi":"vi-VN","id":"id-ID","es":"es-ES","pt":"pt-BR","fr":"fr-FR","ar":"ar-u-nu-latn","fa":"fa-IR-u-nu-latn-ca-gregory","uk":"uk-UA"}
+          var langs = ["en","zh","zh-TW","ko","ru","ja","vi","id","es","pt","fr","ar","fa","uk","tr","de","hi","th","it","pl","nl","ur","he","bn","ms"]
+          var tags = {"en":"en-US","zh":"zh-CN","zh-TW":"zh-TW","ko":"ko-KR","ru":"ru-RU","ja":"ja-JP","vi":"vi-VN","id":"id-ID","es":"es-ES","pt":"pt-BR","fr":"fr-FR","ar":"ar-u-nu-latn","fa":"fa-IR-u-nu-latn-ca-gregory","uk":"uk-UA","tr":"tr-TR","de":"de-DE","hi":"hi-IN-u-nu-latn-ca-gregory","th":"th-TH-u-nu-latn-ca-gregory","it":"it-IT","pl":"pl-PL","nl":"nl-NL","ur":"ur-PK-u-nu-latn-ca-gregory","he":"he-IL-u-nu-latn-ca-gregory","bn":"bn-BD-u-nu-latn-ca-gregory","ms":"ms-MY"}
+          var fonts = {"ar":"family=Noto+Sans+Arabic:wght@400;500;600;700","fa":"family=Vazirmatn:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700","ur":"family=Noto+Sans+Arabic:wght@400;500;600;700","he":"family=Noto+Sans+Hebrew:wght@400;500;600;700","hi":"family=Noto+Sans+Devanagari:wght@400;500;600;700","th":"family=Noto+Sans+Thai:wght@400;500;600;700","bn":"family=Noto+Sans+Bengali:wght@400;500;600;700"}
           var saved = localStorage.getItem("bitscan.lang")
           var lang = saved && langs.indexOf(saved) >= 0 ? saved : ""
           if (!lang) {
@@ -26,6 +27,7 @@
               if (!raw) continue
               var tag = String(raw).toLowerCase().replace(/_/g, "-")
               var base = tag.split("-")[0]
+              if (base === "iw") base = "he"
               if (base === "zh") {
                 lang = tag.indexOf("hant") >= 0 || tag.indexOf("zh-tw") === 0 || tag.indexOf("zh-hk") === 0 || tag.indexOf("zh-mo") === 0 ? "zh-TW" : "zh"
                 break
@@ -35,7 +37,14 @@
           }
           if (!lang) lang = "en"
           document.documentElement.lang = tags[lang] || lang
-          document.documentElement.dir = lang === "ar" || lang === "fa" ? "rtl" : "ltr"
+          document.documentElement.dir = lang === "ar" || lang === "fa" || lang === "ur" || lang === "he" ? "rtl" : "ltr"
+          if (fonts[lang]) {
+            var fontLink = document.createElement("link")
+            fontLink.id = "bitscan-script-fonts"
+            fontLink.rel = "stylesheet"
+            fontLink.href = "https://fonts.googleapis.com/css2?" + fonts[lang] + "&display=swap"
+            document.head.appendChild(fontLink)
+          }
         } catch (e) {}
       })()
     </script>
