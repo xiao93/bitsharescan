@@ -33,13 +33,12 @@ SEEDS = [
     "seed2.xbts.io:1776",
     "seed4.xbts.io:1776",
     "seeds.btsnodes.com:1776",
-    "seed.bitshares.eu:1776",
-    "seed.bitsharesnodes.com:1776",
 ]
 OUT = Path(__file__).resolve().parents[1] / "public" / "data" / "p2p-nodes.json"
-MAX_NODES = 80
+MAX_NODES = 250
 TIMEOUT = 6
-DEADLINE = time.time() + 180
+DEADLINE_SECS = 420
+DEADLINE = time.time() + DEADLINE_SECS
 
 K0 = 0xC3A5C85C97CB3127
 K1 = 0xB492B66FBE98F273
@@ -371,22 +370,90 @@ def handshake(ip, port, via):
         sock.close()
 
 
+def is_unusable_ip(ip):
+    """Skip RFC1918, loopback, CGNAT, and 198.18/15 benchmark/fake-IP ranges."""
+    parts = (ip or "").split(".")
+    if len(parts) != 4 or not all(p.isdigit() for p in parts):
+        return True
+    a, b = int(parts[0]), int(parts[1])
+    if a == 0 or a == 10 or a == 127 or a >= 224:
+        return True
+    if a == 169 and b == 254:
+        return True
+    if a == 192 and b == 168:
+        return True
+    if a == 172 and 16 <= b <= 31:
+        return True
+    if a == 100 and 64 <= b <= 127:
+        return True
+    if a == 198 and 18 <= b <= 19:
+        return True
+    return False
+
+
+def doh_a_records(host):
+    """Resolve A records via DNS-over-HTTPS, bypassing fake-IP system resolvers."""
+    url = f"https://1.1.1.1/dns-query?name={host}&type=A"
+    req = urllib.request.Request(url, headers={"accept": "application/dns-json"})
+    try:
+        data = json.load(urllib.request.urlopen(req, timeout=15))
+    except Exception:
+        url = f"https://dns.google/resolve?name={host}&type=A"
+        req = urllib.request.Request(url, headers={"accept": "application/dns-json"})
+        data = json.load(urllib.request.urlopen(req, timeout=15))
+    ips = []
+    for ans in data.get("Answer") or []:
+        if ans.get("type") == 1 and ans.get("data"):
+            ips.append(ans["data"])
+    return ips
+
+
 def resolve_seed(seed):
     host, port = seed.rsplit(":", 1)
+    port = int(port)
+    ips = []
     try:
-        infos = socket.getaddrinfo(host, int(port), socket.AF_INET, socket.SOCK_STREAM)
-    except socket.gaierror:
-        return []
-    return [(item[4][0], int(port), seed) for item in infos]
+        ips = doh_a_records(host)
+    except Exception:
+        ips = []
+    if not ips:
+        try:
+            infos = socket.getaddrinfo(host, port, socket.AF_INET, socket.SOCK_STREAM)
+            ips = [item[4][0] for item in infos]
+        except socket.gaierror:
+            ips = []
+    out = []
+    seen = set()
+    for ip in ips:
+        if is_unusable_ip(ip) or ip in seen:
+            continue
+        seen.add(ip)
+        out.append((ip, port, seed))
+    return out
+
+
+def ip_api_addr():
+    try:
+        ips = [ip for ip in doh_a_records("ip-api.com") if not is_unusable_ip(ip)]
+        if ips:
+            return ips[0]
+    except Exception:
+        pass
+    return "208.95.112.1"
 
 
 def geolocate(ips):
     found = {}
-    batch = list(ips)
+    batch = [ip for ip in ips if not is_unusable_ip(ip)]
+    api = ip_api_addr()
     for start in range(0, len(batch), 80):
         chunk = batch[start:start + 80]
         body = json.dumps([{"query": ip, "fields": "status,country,countryCode,city,as,query"} for ip in chunk]).encode()
-        req = urllib.request.Request("http://ip-api.com/batch", data=body, headers={"Content-Type": "application/json"})
+        req = urllib.request.Request(
+            f"http://{api}/batch",
+            data=body,
+            headers={"Content-Type": "application/json", "Host": "ip-api.com"},
+        )
         try:
             rows = json.load(urllib.request.urlopen(req, timeout=30))
         except Exception:
@@ -415,7 +482,7 @@ def main():
             "testnet-seed.xbts.io:1778",
         ]
         OUT = Path(__file__).resolve().parents[1] / "public" / "data" / "p2p-nodes-testnet.json"
-    DEADLINE = time.time() + 180
+    DEADLINE = time.time() + DEADLINE_SECS
     queue = []
     seen = set()
     for seed in SEEDS:
@@ -424,6 +491,22 @@ def main():
             if key not in seen:
                 seen.add(key)
                 queue.append((ip, port, f"seed:{via}"))
+    # Re-check previously reachable peers even if seeds do not advertise them this run.
+    if OUT.exists():
+        try:
+            prev = json.loads(OUT.read_text())
+        except Exception:
+            prev = {}
+        for row in prev.get("nodes", []):
+            if not row.get("reachable"):
+                continue
+            ip, port = row.get("ip"), int(row.get("port") or 0)
+            if not ip or port <= 0 or is_unusable_ip(ip):
+                continue
+            key = f"{ip}:{port}"
+            if key not in seen:
+                seen.add(key)
+                queue.append((ip, port, "previous"))
     results = []
     index = 0
     with ThreadPoolExecutor(max_workers=6) as pool:
@@ -439,14 +522,12 @@ def main():
             pending.pop(done)
             record = done.result()
             peers = record.pop("peers", [])
+            if is_unusable_ip(record["ip"]):
+                continue
             results.append(record)
             if record["reachable"]:
                 for peer in peers:
-                    parts = peer["ip"].split(".")
-                    private = (
-                        not peer["ip"] or peer["port"] <= 0 or peer["ip"].startswith(("10.", "127.", "192.168.", "0.", "100.64."))
-                        or (len(parts) == 4 and parts[0] == "172" and parts[1].isdigit() and 16 <= int(parts[1]) <= 31)
-                    )
+                    private = not peer["ip"] or peer["port"] <= 0 or is_unusable_ip(peer["ip"])
                     if private:
                         continue
                     key = f"{peer['ip']}:{peer['port']}"

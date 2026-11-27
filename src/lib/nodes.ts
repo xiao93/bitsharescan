@@ -25,8 +25,6 @@ export const SEED_NODES = [
   { host: "seed2.xbts.io:1776", location: "Unknown" },
   { host: "seed4.xbts.io:1776", location: "Unknown" },
   { host: "seeds.btsnodes.com:1776", location: "Unknown" },
-  { host: "seed.bitshares.eu:1776", location: "Unknown" },
-  { host: "seed.bitsharesnodes.com:1776", location: "Unknown" },
 ]
 
 /** bitshares-ui app/api/apiConfig.js entries marked TESTNET. */

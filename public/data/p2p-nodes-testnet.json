@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-11-20T12:30:39Z",
+  "generated_at": "2026-11-27T11:44:36Z",
   "chain_id": "39f5e2ede1f8bc1a3a54a7914414e3779e33193f1f5693510e73cb7a87617447",
   "seeds": [
     "bts-testnet-seed1.abit-more.com:1779",
     "testnet-seed.xbts.io:1778"
   ],
   "summary": {
-    "discovered": 7,
-    "reachable": 1,
-    "countries": 5
+    "discovered": 10,
+    "reachable": 2,
+    "countries": 6
   },
   "nodes": [
     {
@@ -20,13 +20,30 @@
       "platform": "linux",
       "bitness": "64",
       "head_block": null,
-      "last_seen": "2026-11-20T12:30:39Z",
+      "last_seen": "2026-11-27T11:44:36Z",
       "first_via": "seed:bts-testnet-seed1.abit-more.com:1779",
       "error": "",
       "country": "Canada",
       "country_code": "CA",
       "city": "Montreal",
       "asn": "AS16509 Amazon.com, Inc."
+    },
+    {
+      "ip": "51.38.56.13",
+      "port": 58020,
+      "reachable": false,
+      "user_agent": "",
+      "fc_git_revision": "",
+      "platform": "",
+      "bitness": "",
+      "head_block": null,
+      "last_seen": null,
+      "first_via": "15.156.130.30",
+      "error": "ConnectionRefusedError: [Errno 111] Connection refused",
+      "country": "France",
+      "country_code": "FR",
+      "city": "Roubaix",
+      "asn": "AS16276 OVH SAS"
     },
     {
       "ip": "54.37.157.123",
@@ -46,8 +63,25 @@
       "asn": "AS16276 OVH SAS"
     },
     {
+      "ip": "43.167.238.79",
+      "port": 1779,
+      "reachable": true,
+      "user_agent": "BitShares Reference Implementation",
+      "fc_git_revision": "3ea07ea3e201bcfbf6665c300a50e0f9e2a8b2d3",
+      "platform": "linux",
+      "bitness": "64",
+      "head_block": null,
+      "last_seen": "2026-11-27T11:44:36Z",
+      "first_via": "previous",
+      "error": "",
+      "country": "Japan",
+      "country_code": "JP",
+      "city": "Tokyo",
+      "asn": "AS132203 Tencent Building, Kejizhongyi Avenue"
+    },
+    {
       "ip": "51.38.56.13",
-      "port": 58020,
+      "port": 33361,
       "reachable": false,
       "user_agent": "",
       "fc_git_revision": "",
@@ -55,7 +89,24 @@
       "bitness": "",
       "head_block": null,
       "last_seen": null,
-      "first_via": "15.156.130.30",
+      "first_via": "43.167.238.79",
+      "error": "ConnectionRefusedError: [Errno 111] Connection refused",
+      "country": "France",
+      "country_code": "FR",
+      "city": "Roubaix",
+      "asn": "AS16276 OVH SAS"
+    },
+    {
+      "ip": "54.37.157.123",
+      "port": 11727,
+      "reachable": false,
+      "user_agent": "",
+      "fc_git_revision": "",
+      "platform": "",
+      "bitness": "",
+      "head_block": null,
+      "last_seen": null,
+      "first_via": "43.167.238.79",
       "error": "ConnectionRefusedError: [Errno 111] Connection refused",
       "country": "France",
       "country_code": "FR",
@@ -81,7 +132,7 @@
     },
     {
       "ip": "47.120.16.124",
-      "port": 39940,
+      "port": 34652,
       "reachable": false,
       "user_agent": "",
       "fc_git_revision": "",
