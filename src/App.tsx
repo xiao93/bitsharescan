@@ -43,6 +43,8 @@ function AppShell() {
             <Route index element={<Home />} />
             <Route path="charts" element={<pages.Charts />} />
             <Route path="charts/:id" element={<pages.ChartDetail />} />
+            <Route path="large-transfers" element={<pages.LargeTransfers />} />
+            <Route path="accounts" element={<pages.Accounts />} />
             <Route path="blocks" element={<pages.Blocks />} />
             <Route path="block/:num" element={<pages.BlockDetail />} />
             <Route path="txs" element={<pages.Transactions />} />

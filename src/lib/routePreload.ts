@@ -9,6 +9,8 @@ const load = {
   Blocks: () => import("../pages/Blocks.tsx"),
   ChartDetail: () => import("../pages/ChartDetail.tsx"),
   Charts: () => import("../pages/Charts.tsx"),
+  LargeTransfers: () => import("../pages/LargeTransfers.tsx"),
+  Accounts: () => import("../pages/Accounts.tsx"),
   Committee: () => import("../pages/Committee.tsx"),
   Confidential: () => import("../pages/Confidential.tsx"),
   Lending: () => import("../pages/Lending.tsx"),
@@ -45,6 +47,8 @@ export const BlockDetail = lazyPage(load.BlockDetail)
 export const Blocks = lazyPage(load.Blocks)
 export const ChartDetail = lazyPage(load.ChartDetail)
 export const Charts = lazyPage(load.Charts)
+export const LargeTransfers = lazyPage(load.LargeTransfers)
+export const Accounts = lazyPage(load.Accounts)
 export const Committee = lazyPage(load.Committee)
 export const Confidential = lazyPage(load.Confidential)
 export const Lending = lazyPage(load.Lending)
@@ -80,6 +84,8 @@ const STATIC_ROUTES: Record<string, Loader> = {
   "/txs": load.Transactions,
   "/confidential": load.Confidential,
   "/charts": load.Charts,
+  "/large-transfers": load.LargeTransfers,
+  "/accounts": load.Accounts,
   "/nodetracker": load.NodeTracker,
   "/assets": load.Assets,
   "/markets": load.Markets,

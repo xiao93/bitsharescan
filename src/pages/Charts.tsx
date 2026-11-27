@@ -46,6 +46,19 @@ export default function Charts() {
         className="mt-4 h-10 w-full max-w-md rounded-lg border border-line bg-card px-3 text-sm text-ink outline-none focus:border-link"
         aria-label={t("Find a chart")}
       />
+      <section className="mt-6">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted">{t("Live data")}</h2>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Link to="/large-transfers" className="block rounded-xl border border-line bg-card p-4 hover:border-link">
+            <div className="text-sm font-medium text-ink">{t("24h Large Transfers")}</div>
+            <p className="mt-1 text-sm text-muted">{t("The largest transfer operations in the last 24 hours, with amounts, USD estimates, and account links.")}</p>
+          </Link>
+          <Link to="/accounts" className="block rounded-xl border border-line bg-card p-4 hover:border-link">
+            <div className="text-sm font-medium text-ink">{t("Accounts")}</div>
+            <p className="mt-1 text-sm text-muted">{t("24h transfer, order-book, and pool activity leaders, plus current account totals and top BTS holders.")}</p>
+          </Link>
+        </div>
+      </section>
       {!networkHasEs() ? <div className="mt-4"><ErrorBox message={networkNotice} /></div> : null}
       {CATEGORIES.map((category) => {
         const cards = visible.filter((chart) => chart.category === category)

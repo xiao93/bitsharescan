@@ -25,6 +25,8 @@ const NAV: Array<{ label: string; to?: string; children?: { label: string; to: s
     children: [
       { label: "Blocks", to: "/blocks" },
       { label: "Transactions", to: "/txs" },
+      { label: "Accounts", to: "/accounts" },
+      { label: "24h Large Transfers", to: "/large-transfers" },
       { label: "Confidential transfers", to: "/confidential" },
       { label: "Charts", to: "/charts" },
       { label: "Node tracker", to: "/nodetracker" },
@@ -565,7 +567,10 @@ export function Layout({ children }: { children: ReactNode }) {
             <FooterCol title={t("Explore")}>
               <FooterLink to="/blocks">{t("Blocks")}</FooterLink>
               <FooterLink to="/txs">{t("Transactions")}</FooterLink>
+              <FooterLink to="/accounts">{t("Accounts")}</FooterLink>
+              <FooterLink to="/large-transfers">{t("24h Large Transfers")}</FooterLink>
               <FooterLink to="/confidential">{t("Confidential transfers")}</FooterLink>
+              <FooterLink to="/charts">{t("Charts")}</FooterLink>
               <FooterLink to="/assets">{t("Assets")}</FooterLink>
               <FooterLink to="/markets">{t("Markets")}</FooterLink>
             </FooterCol>
