@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import { AccountLink, Crumbs, ErrorBox, LoadingBlock, OpTable, Panel } from "../components/widgets.tsx"
 import { fetchAllFunds, fetchRecentOps } from "../lib/defi.ts"
 import { peekAsset, resolveAccounts, resolveAssets } from "../lib/directory.ts"
-import { formatRaw, protocolPercent } from "../lib/format.ts"
+import { feeRatePercent, formatRaw } from "../lib/format.ts"
 import { linkClass } from "../lib/utils.ts"
 import { useQuery, useTitle } from "../hooks/useQuery.ts"
 import { useI18n } from "../lib/i18n.tsx"
@@ -28,7 +28,7 @@ export default function FlashLoans() {
       <Crumbs items={[{ label: "Home", to: "/" }, { label: "Flash loans" }]} />
       <h1 className="text-2xl font-semibold">{t("Flash loans")}</h1>
       <p className="mb-4 mt-1 max-w-3xl text-sm text-muted">
-        {t("SameT funds (1.20.x) lend an asset inside one transaction. The borrower must repay principal plus the fund fee before the transaction closes. Fee rate uses the chain scale where 10,000 equals 100%.")}
+        {t("SameT funds (1.20.x) lend an asset inside one transaction. The borrower must repay principal plus the fund fee before the transaction closes. Fee rate uses the chain scale where 1,000,000 equals 100%.")}
       </p>
       <div className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-3">
         <Mini label={t("Funds")} value={query.data ? String(query.data.funds.length) : "—"} hint={t("Live samet_fund objects")} />
@@ -39,14 +39,13 @@ export default function FlashLoans() {
       <Panel title={t("Funds")} className="mb-4">
         {query.loading && !query.data ? <LoadingBlock /> : null}
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[720px] text-left text-sm">
+          <table className="w-full min-w-[640px] text-left text-sm">
             <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
               <tr>
                 <th className="px-4 py-2.5 font-medium">{t("Fund")}</th>
                 <th className="px-4 py-2.5 font-medium">{t("Owner")}</th>
                 <th className="px-4 py-2.5 font-medium">{t("Balance")}</th>
                 <th className="px-4 py-2.5 font-medium">{t("Fee")}</th>
-                <th className="px-4 py-2.5 font-medium">{t("Unpaid")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-line">
@@ -57,8 +56,7 @@ export default function FlashLoans() {
                     <td className="px-4 py-3"><Link to={`/samet/${fund.id}`} className={`${linkClass} font-mono text-xs`}>{fund.id}</Link></td>
                     <td className="px-4 py-3"><AccountLink id={fund.owner_account} /></td>
                     <td className="px-4 py-3">{formatRaw(fund.balance, asset?.precision ?? 5)} {asset?.symbol ?? ""}</td>
-                    <td className="px-4 py-3">{protocolPercent(fund.fee_rate)}</td>
-                    <td className="px-4 py-3">{formatRaw(fund.unpaid_amount, asset?.precision ?? 5)}</td>
+                    <td className="px-4 py-3">{feeRatePercent(fund.fee_rate)}</td>
                   </tr>
                 )
               })}

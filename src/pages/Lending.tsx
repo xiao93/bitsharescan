@@ -4,7 +4,7 @@ import { TimeAgo } from "../components/Now.tsx"
 import { fetchAllDeals, fetchAllOffers, fetchRecentOps } from "../lib/defi.ts"
 import type { CreditDeal, CreditOffer } from "../lib/defi.ts"
 import { peekAsset, resolveAccounts, resolveAssets } from "../lib/directory.ts"
-import { formatDuration, formatRaw, protocolPercent } from "../lib/format.ts"
+import { feeRatePercent, formatDuration, formatRaw } from "../lib/format.ts"
 import { linkClass } from "../lib/utils.ts"
 import { useQuery, useTitle } from "../hooks/useQuery.ts"
 import { useI18n } from "../lib/i18n.tsx"
@@ -53,7 +53,7 @@ export default function Lending() {
       <Crumbs items={[{ label: "Home", to: "/" }, { label: "Lending" }]} />
       <h1 className="text-2xl font-semibold">{t("Lending")}</h1>
       <p className="mb-4 mt-1 max-w-3xl text-sm text-muted">
-        {t("Credit offers (1.21.x) and outstanding credit deals (1.22.x). Fee rate uses the chain scale where 10,000 equals 100%. Margin call orders are not globally indexed; they show on the account that holds them.")}
+        {t("Credit offers (1.21.x) and outstanding credit deals (1.22.x). Fee rate uses the chain scale where 1,000,000 equals 100%. Margin call orders are not globally indexed; they show on the account that holds them.")}
       </p>
       <div className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Mini label={t("Offers")} value={query.data ? String(query.data.offerTotal) : "—"} hint={query.data ? t("{n} enabled", { n: query.data.enabled }) : ""} />
@@ -120,7 +120,7 @@ function OfferTable({ rows }: { rows: CreditOffer[] }) {
                 <td className="px-4 py-3"><Link to={`/credit-offer/${offer.id}`} className={`${linkClass} font-mono text-xs`}>{offer.id}</Link></td>
                 <td className="px-4 py-3"><AccountLink id={offer.owner_account} /></td>
                 <td className="px-4 py-3">{formatRaw(offer.current_balance, asset?.precision ?? 5)} {asset?.symbol ?? ""}</td>
-                <td className="px-4 py-3">{protocolPercent(offer.fee_rate)}</td>
+                <td className="px-4 py-3">{feeRatePercent(offer.fee_rate)}</td>
                 <td className="px-4 py-3">{formatDuration(offer.max_duration_seconds)}</td>
                 <td className="px-4 py-3">{offer.enabled ? <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-success">{t("Enabled")}</span> : <span className="rounded-full bg-canvas px-2 py-0.5 text-xs text-muted">{t("Disabled")}</span>}</td>
               </tr>

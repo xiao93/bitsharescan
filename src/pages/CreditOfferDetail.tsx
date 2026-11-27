@@ -3,7 +3,7 @@ import { AccountLink, Crumbs, ErrorBox, KeyValue, LoadingBlock, Panel } from "..
 import { TimeAgo } from "../components/Now.tsx"
 import { borrowerIds, fetchDealsForOffer, fetchOffer } from "../lib/defi.ts"
 import { assetSymbol, peekAsset } from "../lib/directory.ts"
-import { formatDuration, formatRaw, formatTime, protocolPercent } from "../lib/format.ts"
+import { feeRatePercent, formatDuration, formatRaw, formatTime } from "../lib/format.ts"
 import { linkClass } from "../lib/utils.ts"
 import { useQuery, useTitle } from "../hooks/useQuery.ts"
 import { useI18n } from "../lib/i18n.tsx"
@@ -38,7 +38,7 @@ export default function CreditOfferDetail() {
               { label: "Lender", value: <AccountLink id={offer.owner_account} /> },
               { label: "Asset", value: <Link className={linkClass} to={`/asset/${assetSymbol(offer.asset_type)}`}>{assetSymbol(offer.asset_type)}</Link> },
               { label: "Available", value: `${formatRaw(offer.current_balance, asset?.precision ?? 5)} of ${formatRaw(offer.total_balance, asset?.precision ?? 5)}` },
-              { label: "Fee rate", value: protocolPercent(offer.fee_rate) },
+              { label: "Fee rate", value: feeRatePercent(offer.fee_rate) },
               { label: "Minimum deal", value: formatRaw(offer.min_deal_amount, asset?.precision ?? 5) },
               { label: "Maximum term", value: formatDuration(offer.max_duration_seconds) },
               { label: "Auto disable", value: <>{formatTime(offer.auto_disable_time)} · <TimeAgo time={offer.auto_disable_time} /></> },

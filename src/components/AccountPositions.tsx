@@ -11,7 +11,7 @@ import {
   poolTvlBts,
 } from "../lib/defi.ts"
 import { assetSymbol, peekAsset } from "../lib/directory.ts"
-import { formatDuration, formatRaw, protocolPercent } from "../lib/format.ts"
+import { feeRatePercent, formatDuration, formatRaw, protocolPercent } from "../lib/format.ts"
 import type { Amount } from "../lib/directory.ts"
 import { linkClass } from "../lib/utils.ts"
 import { useQuery } from "../hooks/useQuery.ts"
@@ -74,7 +74,7 @@ export function AccountPositions({
               rows={data.offers.map((offer) => [
                 <Link key="id" className={`${linkClass} font-mono text-xs`} to={`/credit-offer/${offer.id}`}>{offer.id}</Link>,
                 `${formatRaw(offer.current_balance, peekAsset(offer.asset_type)?.precision ?? 5)} ${assetSymbol(offer.asset_type)}`,
-                protocolPercent(offer.fee_rate),
+                feeRatePercent(offer.fee_rate),
                 offer.enabled ? t("Enabled") : t("Disabled"),
               ])}
             />
@@ -96,7 +96,7 @@ export function AccountPositions({
               rows={data.funds.map((fund) => [
                 <Link key="id" className={`${linkClass} font-mono text-xs`} to={`/samet/${fund.id}`}>{fund.id}</Link>,
                 `${formatRaw(fund.balance, peekAsset(fund.asset_type)?.precision ?? 5)} ${assetSymbol(fund.asset_type)}`,
-                protocolPercent(fund.fee_rate),
+                feeRatePercent(fund.fee_rate),
               ])}
             />
           </Section>

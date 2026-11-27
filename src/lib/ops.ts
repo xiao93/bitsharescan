@@ -1,7 +1,7 @@
 import { accountLabel, assetSymbol, peekAsset, resolveAccounts, resolveAssets } from "./directory.ts"
 import type { Amount } from "./directory.ts"
 import { feePayerOf } from "./feePayer.ts"
-import { formatRaw, protocolPercent } from "./format.ts"
+import { feeRatePercent, formatRaw } from "./format.ts"
 import { translate } from "./i18n.tsx"
 import { parseChainJson } from "./json.ts"
 
@@ -350,21 +350,25 @@ export function summarizeBits(type: number, body: Record<string, unknown>): Summ
     case 63:
       return phrase("Swap {sell} for at least {receive} in {pool}", { sell: moneyBits(body.amount_to_sell), receive: moneyBits(body.min_to_receive), pool: objectBit(body.pool, "pool") })
     case 64:
-      return phrase("Create flash fund {amount} · fee {fee}", { amount: namedAmountBits(body, "balance", "asset_type"), fee: protocolPercent(body.fee_rate as number) })
+      return phrase("Create flash fund {amount} · fee {fee}", { amount: namedAmountBits(body, "balance", "asset_type"), fee: feeRatePercent(body.fee_rate as number) })
     case 65:
       return phrase("Delete flash fund {id}", { id: objectBit(body.fund_id, "") })
     case 66:
-      return phrase("Update flash fund {id}", { id: objectBit(body.fund_id, "") })
+      return body.new_fee_rate != null
+        ? phrase("Update flash fund {id} · fee {fee}", { id: objectBit(body.fund_id, ""), fee: feeRatePercent(body.new_fee_rate as number) })
+        : phrase("Update flash fund {id}", { id: objectBit(body.fund_id, "") })
     case 67:
       return phrase("Flash borrow {amount} from {fund}", { amount: moneyBits(body.borrow_amount), fund: objectBit(body.fund_id, "fund") })
     case 68:
       return phrase("Flash repay {amount} to {fund}", { amount: moneyBits(body.repay_amount), fund: objectBit(body.fund_id, "fund") })
     case 69:
-      return phrase("Lend {amount} · rate {fee}", { amount: namedAmountBits(body, "balance", "asset_type"), fee: protocolPercent(body.fee_rate as number) })
+      return phrase("Lend {amount} · rate {fee}", { amount: namedAmountBits(body, "balance", "asset_type"), fee: feeRatePercent(body.fee_rate as number) })
     case 70:
       return phrase("Delete credit offer {id}", { id: objectBit(body.offer_id, "") })
     case 71:
-      return phrase("Update credit offer {id}", { id: objectBit(body.offer_id, "") })
+      return body.fee_rate != null
+        ? phrase("Update credit offer {id} · rate {fee}", { id: objectBit(body.offer_id, ""), fee: feeRatePercent(body.fee_rate as number) })
+        : phrase("Update credit offer {id}", { id: objectBit(body.offer_id, "") })
     case 72:
       return phrase("Borrow {amount} against {collateral} from {offer}", { amount: moneyBits(body.borrow_amount), collateral: moneyBits(body.collateral), offer: objectBit(body.offer_id, "offer") })
     case 73:

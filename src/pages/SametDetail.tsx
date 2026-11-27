@@ -2,7 +2,7 @@ import { Link, useParams } from "react-router-dom"
 import { AccountLink, Crumbs, ErrorBox, KeyValue, LoadingBlock, Panel } from "../components/widgets.tsx"
 import { fetchFund } from "../lib/defi.ts"
 import { assetSymbol, peekAsset } from "../lib/directory.ts"
-import { formatRaw, protocolPercent } from "../lib/format.ts"
+import { feeRatePercent, formatRaw } from "../lib/format.ts"
 import { linkClass } from "../lib/utils.ts"
 import { useQuery, useTitle } from "../hooks/useQuery.ts"
 
@@ -30,7 +30,7 @@ export default function SametDetail() {
             { label: "Owner", value: <AccountLink id={fund.owner_account} /> },
             { label: "Asset", value: <Link className={linkClass} to={`/asset/${assetSymbol(fund.asset_type)}`}>{assetSymbol(fund.asset_type)}</Link> },
             { label: "Balance", value: formatRaw(fund.balance, asset?.precision ?? 5) },
-            { label: "Fee rate", value: protocolPercent(fund.fee_rate) },
+            { label: "Fee rate", value: feeRatePercent(fund.fee_rate) },
             { label: "Unpaid amount", value: formatRaw(fund.unpaid_amount, asset?.precision ?? 5) },
           ]} />
         </Panel>

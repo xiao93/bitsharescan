@@ -181,11 +181,18 @@ export function percentFromScale(value: number, denom = 10000): string {
   return `${(value / denom) * 100}%`
 }
 
-/** BitShares fee rates use 10,000 = 100%. Pool fees, SameT fees, and credit rates share this scale. */
+/** GRAPHENE_100_PERCENT = 10,000 = 100%. Use for liquidity pool fees and asset market fees, not SameT or Credit. */
 export function protocolPercent(value: number | string | null | undefined): string {
   const n = typeof value === "number" ? value : Number(value)
   if (!Number.isFinite(n)) return "—"
   return `${(n / 100).toLocaleString(numberLocale(), { maximumFractionDigits: 2 })}%`
+}
+
+/** GRAPHENE_FEE_RATE_DENOM = 1,000,000 = 100%. Use for SameT and Credit `fee_rate` (10,000 = 1%). */
+export function feeRatePercent(value: number | string | null | undefined): string {
+  const n = typeof value === "number" ? value : Number(value)
+  if (!Number.isFinite(n)) return "—"
+  return `${(n / 10000).toLocaleString(numberLocale(), { maximumFractionDigits: 4 })}%`
 }
 
 const MEMBERSHIP: Record<Lang, { lifetime: string; basic: string; annual: string }> = {
