@@ -1,5 +1,5 @@
 import { Check, ChevronLeft, ChevronRight, CircleHelp, Copy } from "lucide-react"
-import { useEffect, useId, useRef, useState, type MouseEvent, type ReactNode } from "react"
+import { useEffect, useId, useMemo, useRef, useState, type MouseEvent, type ReactNode } from "react"
 import { createPortal } from "react-dom"
 import { Link } from "react-router-dom"
 import { accountLabel, accountPath, assetSymbol, peekAsset } from "../lib/directory.ts"
@@ -13,14 +13,14 @@ import { networkHasEs } from "../lib/network.ts"
 import { cn, linkClass, routeForObject } from "../lib/utils.ts"
 import { TimeAgo } from "./Now.tsx"
 
-export function CopyButton({ value }: { value: string }) {
+export function CopyButton({ value, label }: { value: string; label?: string }) {
   const { t } = useI18n()
   const [done, setDone] = useState(false)
   return (
     <button
       type="button"
       className="inline-flex h-6 w-6 items-center justify-center rounded text-muted hover:bg-canvas hover:text-link"
-      aria-label={t("Copy {value}", { value })}
+      aria-label={label ?? t("Copy {value}", { value })}
       onClick={(event) => {
         event.preventDefault()
         event.stopPropagation()
@@ -535,12 +535,185 @@ export function KeyValue({ rows }: { rows: { label: string; value: ReactNode; hi
   )
 }
 
+const CONTROL_CHARS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g
+
+function isControlChar(char: string): boolean {
+  const code = char.codePointAt(0) ?? 0
+  return code <= 0x08 || code === 0x0b || code === 0x0c || (code >= 0x0e && code <= 0x1f)
+}
+
+function formatByteSize(bytes: number): string {
+  if (bytes < 1000) return `${bytes} B`
+  const value = bytes < 1_000_000 ? bytes / 1000 : bytes / 1_000_000
+  const unit = bytes < 1_000_000 ? "KB" : "MB"
+  return `${value.toFixed(1).replace(/\.0$/, "")} ${unit}`
+}
+
+function hexToBytes(hex: string): Uint8Array | null {
+  if (hex.length % 2 !== 0) return null
+  const out = new Uint8Array(hex.length / 2)
+  for (let i = 0; i < out.length; i++) {
+    const n = Number.parseInt(hex.slice(i * 2, i * 2 + 2), 16)
+    if (Number.isNaN(n)) return null
+    out[i] = n
+  }
+  return out
+}
+
+function isPrintableAscii(byte: number): boolean {
+  return byte === 0x09 || byte === 0x0a || byte === 0x0d || (byte >= 0x20 && byte <= 0x7e)
+}
+
+function utf8SequenceLength(lead: number): number {
+  if ((lead & 0xe0) === 0xc0) return 2
+  if ((lead & 0xf0) === 0xe0) return 3
+  if ((lead & 0xf8) === 0xf0) return 4
+  return 0
+}
+
+function printableUtf8Ratio(bytes: Uint8Array): number {
+  const decoder = new TextDecoder("utf-8", { fatal: false })
+  let printable = 0
+  let i = 0
+  while (i < bytes.length) {
+    const lead = bytes[i]!
+    if (isPrintableAscii(lead)) {
+      printable += 1
+      i += 1
+      continue
+    }
+    const length = utf8SequenceLength(lead)
+    if (!length || i + length > bytes.length) {
+      i += 1
+      continue
+    }
+    let valid = true
+    for (let j = 1; j < length; j++) {
+      if ((bytes[i + j]! & 0xc0) !== 0x80) {
+        valid = false
+        break
+      }
+    }
+    if (!valid) {
+      i += 1
+      continue
+    }
+    const char = decoder.decode(bytes.subarray(i, i + length))
+    if (char && char !== "\uFFFD" && !isControlChar(char)) printable += length
+    i += length
+  }
+  return printable / bytes.length
+}
+
+function extractJsonValue(text: string): string | null {
+  let i = 0
+  while (i < text.length && text[i] !== "{" && text[i] !== "[") i += 1
+  if (i >= text.length) return null
+  const open = text[i]!
+  const close = open === "{" ? "}" : "]"
+  let depth = 0
+  let inString = false
+  let escape = false
+  for (let j = i; j < text.length; j++) {
+    const char = text[j]!
+    if (inString) {
+      if (escape) escape = false
+      else if (char === "\\") escape = true
+      else if (char === '"') inString = false
+      continue
+    }
+    if (char === '"') {
+      inString = true
+      continue
+    }
+    if (char === open) depth += 1
+    else if (char === close) {
+      depth -= 1
+      if (depth === 0) return text.slice(i, j + 1)
+    }
+  }
+  return null
+}
+
+function decodeUtf8View(hex: string): string | null {
+  const bytes = hexToBytes(hex)
+  if (!bytes?.length || printableUtf8Ratio(bytes) < 0.5) return null
+  const text = new TextDecoder("utf-8", { fatal: false }).decode(bytes)
+  const cleaned = text.replace(CONTROL_CHARS, "·")
+  const jsonStart = ["{", "["]
+    .map((char) => text.indexOf(char))
+    .filter((index) => index >= 0)
+    .sort((a, b) => a - b)[0]
+  if (jsonStart != null) {
+    const extracted = extractJsonValue(text.slice(jsonStart))
+    if (extracted) {
+      try {
+        const pretty = JSON.stringify(JSON.parse(extracted), null, 2)
+        const prefix = cleaned.slice(0, jsonStart).replace(/·+/g, "\n").trim()
+        const suffix = cleaned.slice(jsonStart + extracted.length).replace(/·+/g, "\n").trim()
+        return [prefix, pretty, suffix].filter(Boolean).join("\n")
+      } catch {
+        // Fall through to the cleaned UTF-8 view.
+      }
+    }
+  }
+  return cleaned
+}
+
+function HexString({ value }: { value: string }) {
+  const { t } = useI18n()
+  const [expanded, setExpanded] = useState(false)
+  const [utf8, setUtf8] = useState(false)
+  const decoded = useMemo(() => decodeUtf8View(value), [value])
+  const sizeLabel = value.length % 2 === 0 ? formatByteSize(value.length / 2) : t("{n} chars", { n: value.length })
+  const preview = `"${value.slice(0, 10)}…${value.slice(-6)}"`
+  const showingUtf8 = Boolean(utf8 && decoded)
+  const display = showingUtf8 ? decoded! : value
+  return (
+    <span className="inline-flex min-w-0 max-w-full flex-col align-top">
+      <span className="inline-flex min-w-0 flex-wrap items-center gap-1">
+        <span className="text-emerald-700">{preview}</span>
+        <span className="text-[11px] text-muted">{sizeLabel}</span>
+        <CopyButton value={display} label={showingUtf8 ? t("Copy text") : t("Copy hex")} />
+        <button
+          type="button"
+          className="rounded px-1.5 py-0.5 text-[11px] font-medium text-muted hover:bg-canvas hover:text-link"
+          onClick={(event) => {
+            event.preventDefault()
+            event.stopPropagation()
+            setExpanded((open) => !open)
+          }}
+        >
+          {expanded ? t("Collapse") : t("Expand")}
+        </button>
+        {decoded ? (
+          <button
+            type="button"
+            className="rounded px-1.5 py-0.5 text-[11px] font-medium text-muted hover:bg-canvas hover:text-link"
+            onClick={(event) => {
+              event.preventDefault()
+              event.stopPropagation()
+              setUtf8((on) => !on)
+              if (!utf8) setExpanded(true)
+            }}
+          >
+            {showingUtf8 ? t("Hex") : t("UTF-8")}
+          </button>
+        ) : null}
+      </span>
+      {expanded ? (
+        <pre className="mt-1.5 max-h-96 overflow-auto rounded border border-line bg-canvas p-2 font-mono text-xs break-all whitespace-pre-wrap text-ink">{display}</pre>
+      ) : null}
+    </span>
+  )
+}
+
 export function JsonTree({ value, depth = 0 }: { value: unknown; depth?: number }) {
   if (value == null) return <span className="text-muted">null</span>
   if (typeof value === "string") {
     if (/^\d+\.\d+\.\d+$/.test(value)) return <IdLink id={value} />
     if (value.length > 24 && /^[0-9a-fA-F]+$/.test(value)) {
-      return <span className="text-emerald-700" title={value}>"{value.slice(0, 10)}…{value.slice(-6)}"</span>
+      return <HexString value={value} />
     }
     return <span className="text-emerald-700">"{value}"</span>
   }
