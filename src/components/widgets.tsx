@@ -9,6 +9,7 @@ import { isVirtualType, opLabel, opSummaryBits } from "../lib/ops.ts"
 import type { SummaryBit } from "../lib/ops.ts"
 import type { OpView } from "../lib/ops.ts"
 import { useI18n } from "../lib/i18n.tsx"
+import { localeTag } from "../lib/locale.ts"
 import { networkHasEs } from "../lib/network.ts"
 import { cn, linkClass, routeForObject } from "../lib/utils.ts"
 import { TimeAgo } from "./Now.tsx"
@@ -372,7 +373,7 @@ export function LineChart({
           : t("Daily close ({unit})", { unit })
       : t("{date}: {value} {unit}", {
           date: /^\d{4}-\d{2}-\d{2}/.test(points[hover]!.date) ? formatTime(`${points[hover]!.date.slice(0, 10)}T00:00:00Z`) : points[hover]!.date,
-          value: unit === "operations" ? formatInt(points[hover]!.value) : points[hover]!.value.toLocaleString(undefined, { maximumFractionDigits: 8 }),
+          value: unit === "operations" ? formatInt(points[hover]!.value) : points[hover]!.value.toLocaleString(localeTag(), { maximumFractionDigits: 8 }),
           unit: unit === "operations" ? t("operations") : unit,
         })
 

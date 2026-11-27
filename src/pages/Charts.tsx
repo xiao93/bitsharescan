@@ -5,6 +5,7 @@ import { CATEGORIES, CHARTS, loadChart, loadSnapshots, networkNotice, type Chart
 import { networkHasEs } from "../lib/network.ts"
 import { useTitle } from "../hooks/useQuery.ts"
 import { useI18n } from "../lib/i18n.tsx"
+import { localeTag } from "../lib/locale.ts"
 
 export default function Charts() {
   const { t } = useI18n()
@@ -177,7 +178,7 @@ function formatCompact(value: number, digits: number) {
   const abs = Math.abs(value)
   if (abs >= 1_000_000) return `${(value / 1_000_000).toFixed(abs >= 10_000_000 ? 0 : 1)}M`
   if (abs >= 1000) return `${(value / 1000).toFixed(abs >= 10_000 ? 0 : 1)}k`
-  return digits ? value.toLocaleString(undefined, { maximumFractionDigits: digits }) : Math.round(value).toLocaleString()
+  return digits ? value.toLocaleString(localeTag(), { maximumFractionDigits: digits }) : Math.round(value).toLocaleString(localeTag())
 }
 
 function Spark({ points }: { points: Point[] }) {

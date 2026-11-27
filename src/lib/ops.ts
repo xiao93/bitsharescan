@@ -2,7 +2,6 @@ import { accountLabel, assetSymbol, peekAsset, resolveAccounts, resolveAssets } 
 import type { Amount } from "./directory.ts"
 import { formatRaw, protocolPercent } from "./format.ts"
 import { translate } from "./i18n.tsx"
-import { getLanguage } from "./locale.ts"
 import { parseChainJson } from "./json.ts"
 
 function lockLabel(type: unknown): string {
@@ -117,91 +116,10 @@ export const OPERATIONS: { slug: string; label: string; virtual?: boolean }[] = 
   { slug: "limit_order_update", label: "Limit Order Update" },
 ]
 
-const OP_ZH: Record<string, string> = {
-  transfer: "转账",
-  limit_order_create: "创建限价单",
-  limit_order_cancel: "取消限价单",
-  call_order_update: "调整保证金",
-  fill_order: "订单成交",
-  account_create: "创建账户",
-  account_update: "更新账户",
-  account_whitelist: "账户白名单",
-  account_upgrade: "升级账户",
-  account_transfer: "转移账户",
-  asset_create: "创建资产",
-  asset_update: "更新资产",
-  asset_update_bitasset: "更新智能资产",
-  asset_update_feed_producers: "更新喂价者",
-  asset_issue: "发行资产",
-  asset_reserve: "销毁资产",
-  asset_fund_fee_pool: "注资手续费池",
-  asset_settle: "资产清算",
-  asset_global_settle: "全局清算",
-  asset_publish_feed: "发布喂价",
-  witness_create: "创建见证人",
-  witness_update: "更新见证人",
-  proposal_create: "创建提案",
-  proposal_update: "更新提案",
-  proposal_delete: "删除提案",
-  withdraw_permission_create: "创建提取授权",
-  withdraw_permission_update: "更新提取授权",
-  withdraw_permission_claim: "提取授权转账",
-  withdraw_permission_delete: "删除提取授权",
-  committee_member_create: "创建理事会成员",
-  committee_member_update: "更新理事会成员",
-  committee_member_update_global_parameters: "更新链参数",
-  vesting_balance_create: "创建待解冻余额",
-  vesting_balance_withdraw: "提取待解冻余额",
-  worker_create: "创建预算提案",
-  custom: "自定义操作",
-  assert: "断言",
-  balance_claim: "领取余额",
-  override_transfer: "强制转账",
-  transfer_to_blind: "转入隐私",
-  blind_transfer: "隐私转账",
-  transfer_from_blind: "转出隐私",
-  asset_settle_cancel: "取消清算",
-  asset_claim_fees: "领取资产手续费",
-  fba_distribute: "手续费分成",
-  bid_collateral: "抵押竞拍",
-  execute_bid: "执行竞拍",
-  asset_claim_pool: "领取资产池",
-  asset_update_issuer: "更换发行人",
-  htlc_create: "创建哈希时间锁",
-  htlc_redeem: "赎回哈希时间锁",
-  htlc_redeemed: "哈希时间锁已赎回",
-  htlc_extend: "延长哈希时间锁",
-  htlc_refund: "哈希时间锁退款",
-  custom_authority_create: "创建自定义权限",
-  custom_authority_update: "更新自定义权限",
-  custom_authority_delete: "删除自定义权限",
-  ticket_create: "创建锁仓",
-  ticket_update: "更新锁仓",
-  liquidity_pool_create: "创建流动性池",
-  liquidity_pool_delete: "删除流动性池",
-  liquidity_pool_deposit: "添加流动性",
-  liquidity_pool_withdraw: "移除流动性",
-  liquidity_pool_exchange: "池内兑换",
-  samet_fund_create: "创建闪电贷资金",
-  samet_fund_delete: "删除闪电贷资金",
-  samet_fund_update: "更新闪电贷资金",
-  samet_fund_borrow: "闪电贷借入",
-  samet_fund_repay: "闪电贷偿还",
-  credit_offer_create: "创建借贷报价",
-  credit_offer_delete: "删除借贷报价",
-  credit_offer_update: "更新借贷报价",
-  credit_offer_accept: "接受借贷",
-  credit_deal_repay: "偿还借贷",
-  credit_deal_expired: "借贷到期",
-  liquidity_pool_update: "更新流动性池",
-  credit_deal_update: "更新借贷合约",
-  limit_order_update: "更新限价单",
-}
-
 export function opLabel(type: number): string {
   const op = OPERATIONS[type]
   if (!op) return translate("Operation {n}", { n: type })
-  return getLanguage() === "zh" ? (OP_ZH[op.slug] ?? op.label) : op.label
+  return translate(op.label)
 }
 
 export function isVirtualType(type: number): boolean {

@@ -5,6 +5,7 @@ import { poolPrice } from "../lib/defi.ts"
 import { peekAsset } from "../lib/directory.ts"
 import { asBig, compactNumber, formatRaw, formatSignificant, percentFromScale, toFloat } from "../lib/format.ts"
 import { useI18n } from "../lib/i18n.tsx"
+import { localeTag } from "../lib/locale.ts"
 import { KeyValue, Panel } from "./widgets.tsx"
 
 const CHARGE_MARKET_FEE = 0x01
@@ -126,11 +127,11 @@ function formatImpact(impact: number): string {
   if (!Number.isFinite(impact) || impact <= 0) return "<0.01%"
   const pct = impact * 100
   if (pct < 0.01) return `${formatSignificant(pct, 3)}%`
-  return `${pct.toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}%`
+  return `${pct.toLocaleString(localeTag(), { maximumFractionDigits: 2, minimumFractionDigits: 2 })}%`
 }
 
 function formatUsd(value: number): string {
-  if (value >= 0.01) return `$${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  if (value >= 0.01) return `$${value.toLocaleString(localeTag(), { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
   return `$${formatSignificant(value, 3)}`
 }
 

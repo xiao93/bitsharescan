@@ -7,6 +7,7 @@ import { getNode, retryNode, type NodeStatus } from "../lib/node.ts"
 import { NETWORKS, currentNetwork, networkInfo, switchNetwork, type NetworkId } from "../lib/network.ts"
 import { getTheme, setTheme, subscribeTheme, type ThemeChoice } from "../lib/theme.ts"
 import { useI18n } from "../lib/i18n.tsx"
+import { isLang, LANG_OPTIONS } from "../lib/locale.ts"
 import { cn } from "../lib/utils.ts"
 import { Logo } from "./Logo.tsx"
 import { NowProvider, useTimeMode } from "./Now.tsx"
@@ -197,11 +198,14 @@ export function Layout() {
                 <select
                   value={lang}
                   aria-label={t("Language")}
-                  onChange={(event) => setLang(event.target.value === "zh" ? "zh" : "en")}
-                  className="h-7 rounded-md border border-line bg-card px-2 text-xs text-ink"
+                  onChange={(event) => {
+                    if (isLang(event.target.value)) setLang(event.target.value)
+                  }}
+                  className="h-7 max-w-[10.5rem] rounded-md border border-line bg-card px-2 text-xs text-ink"
                 >
-                  <option value="en">English</option>
-                  <option value="zh">简体中文</option>
+                  {LANG_OPTIONS.map((option) => (
+                    <option key={option.id} value={option.id}>{option.label}</option>
+                  ))}
                 </select>
               </label>
               <button type="button" className="hover:text-link" onClick={() => { setSettingsOpen(false); setEndpointsOpen(true) }}>
@@ -412,15 +416,21 @@ function SettingsMenu({ onEndpoints }: { onEndpoints: () => void }) {
           onChange={(value) => setTimeMode(value === "local" ? "local" : "utc")}
           hint={`${localTimeZoneName()} · ${localOffsetLabel()}`}
         />
-        <Segmented
-          label={t("Language")}
-          value={lang}
-          options={[
-            { value: "en", label: "EN" },
-            { value: "zh", label: "中文" },
-          ]}
-          onChange={(value) => setLang(value === "zh" ? "zh" : "en")}
-        />
+        <div className="mb-2.5">
+          <div className="mb-1 text-[11px] font-medium uppercase tracking-wide text-muted">{t("Language")}</div>
+          <select
+            value={lang}
+            aria-label={t("Language")}
+            onChange={(event) => {
+              if (isLang(event.target.value)) setLang(event.target.value)
+            }}
+            className="h-8 w-full rounded-md border border-line bg-canvas px-2 text-xs text-ink"
+          >
+            {LANG_OPTIONS.map((option) => (
+              <option key={option.id} value={option.id}>{option.label}</option>
+            ))}
+          </select>
+        </div>
         <button type="button" className="mt-1 w-full rounded-md px-2 py-1.5 text-left text-xs font-medium text-link hover:bg-canvas" onClick={onEndpoints}>
           {t("API endpoints…")}
         </button>

@@ -7,6 +7,7 @@ import { useQuery } from "../hooks/useQuery.ts"
 import { formatInt } from "../lib/format.ts"
 import { fetchAccountActiveYears, fetchAccountActivityDays, type ActivityDay } from "../lib/history.ts"
 import { useI18n } from "../lib/i18n.tsx"
+import { localeTag } from "../lib/locale.ts"
 import { localOffsetLabel, localTimeZoneName } from "../lib/timePref.ts"
 import { cn } from "../lib/utils.ts"
 
@@ -114,7 +115,7 @@ export function AccountHeatmap({ accountId }: { accountId: string }) {
   const cuts = useMemo(() => thresholds(rows), [rows])
   const total = rows.reduce((sum, day) => sum + day.ops, 0)
   const busiest = rows.reduce<ActivityDay | null>((best, day) => (!best || day.ops > best.ops ? day : best), null)
-  const locale = lang === "zh" ? "zh-CN" : "en-US"
+  const locale = localeTag(lang)
   const monthFmt = new Intl.DateTimeFormat(locale, { month: "short", timeZone: "UTC" })
   const dayFmt = new Intl.DateTimeFormat(locale, { weekday: "short", year: "numeric", month: "short", day: "numeric", timeZone: "UTC" })
   const fmtDay = (date: string) => dayFmt.format(new Date(toMs(date)))

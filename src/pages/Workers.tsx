@@ -11,7 +11,7 @@ import { useI18n } from "../lib/i18n.tsx"
 type Tab = "active" | "proposed" | "expired"
 
 export default function Workers() {
-  const { t, lang } = useI18n()
+  const { t } = useI18n()
   useTitle("Workers")
   const [params, setParams] = useSearchParams()
   const tab: Tab = params.get("tab") === "proposed" || params.get("tab") === "expired" ? params.get("tab") as Tab : "active"
@@ -48,7 +48,7 @@ export default function Workers() {
         <div className="flex gap-1 overflow-x-auto border-b border-line px-2">
           {(["active", "proposed", "expired"] as const).map((item) => (
             <button key={item} type="button" onClick={() => setTab(item)} className={`shrink-0 border-b-2 px-3 py-2.5 text-sm font-medium ${tab === item ? "border-link text-link" : "border-transparent text-muted"}`}>
-              {tabLabel(item, lang, t)}{query.data ? ` (${counts[item]})` : ""}
+              {tabLabel(item, t)}{query.data ? ` (${counts[item]})` : ""}
             </button>
           ))}
         </div>
@@ -136,8 +136,8 @@ function usdText(value: number): string {
   return compactUsd(value)
 }
 
-function tabLabel(item: Tab, lang: string, t: (text: string) => string): string {
-  if (item === "active") return lang === "zh" ? t("Active now") : "Active"
+function tabLabel(item: Tab, t: (text: string) => string): string {
+  if (item === "active") return t("Active now")
   return t(item === "proposed" ? "Proposed" : "Expired")
 }
 

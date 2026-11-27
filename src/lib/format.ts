@@ -1,12 +1,13 @@
-import { getLanguage } from "./locale.ts"
+import { getLanguage, localeTag, type Lang } from "./locale.ts"
 import { getTimeMode, timeZoneSuffix } from "./timePref.ts"
 
-function isZh() {
-  return getLanguage() === "zh"
+function numberLocale() {
+  return localeTag()
 }
 
-function numberLocale() {
-  return isZh() ? "zh-CN" : "en-US"
+function isCjk() {
+  const lang = getLanguage()
+  return lang === "zh" || lang === "zh-TW" || lang === "ja" || lang === "ko"
 }
 
 export function asBig(value: string | number | bigint | null | undefined): bigint {
@@ -107,19 +108,11 @@ export function formatDecimal(value: string | number | null | undefined, maxDigi
 
 export function compactNumber(value: number): string {
   if (!Number.isFinite(value)) return "—"
-  const sign = value < 0 ? "-" : ""
-  const v = Math.abs(value)
-  if (isZh()) {
-    if (v >= 1e8) return `${sign}${(v / 1e8).toFixed(2)}亿`
-    if (v >= 1e4) return `${sign}${(v / 1e4).toFixed(v >= 1e6 ? 2 : 2)}万`
-    return `${sign}${v.toLocaleString("zh-CN", { maximumFractionDigits: 2 })}`
-  }
-  const unit = (div: number, suffix: string, places: number) => `${sign}${(v / div).toFixed(places)}${suffix}`
-  if (v >= 1e12) return unit(1e12, "T", 2)
-  if (v >= 1e9) return unit(1e9, "B", v >= 10e9 ? 2 : 3)
-  if (v >= 1e6) return unit(1e6, "M", 2)
-  if (v >= 1e3) return unit(1e3, "K", v >= 10e3 ? 1 : 2)
-  return `${sign}${v.toLocaleString("en-US", { maximumFractionDigits: 2 })}`
+  const lang = getLanguage()
+  const loc = numberLocale()
+  const compactFrom = lang === "en" || lang === "ru" ? 1e3 : 1e4
+  if (Math.abs(value) < compactFrom) return value.toLocaleString(loc, { maximumFractionDigits: 2 })
+  return new Intl.NumberFormat(loc, { notation: "compact", compactDisplay: "short", maximumFractionDigits: 2 }).format(value)
 }
 
 export function compactUsd(value: number): string {
@@ -140,8 +133,8 @@ export function formatTime(iso: string | null | undefined): string {
   const when = new Date(t)
   const formatted = when.toLocaleString(numberLocale(), {
     year: "numeric",
-    month: isZh() ? "2-digit" : "short",
-    day: isZh() ? "2-digit" : "numeric",
+    month: isCjk() ? "2-digit" : "short",
+    day: isCjk() ? "2-digit" : "numeric",
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
@@ -155,23 +148,14 @@ export function timeAgo(iso: string | null | undefined, now = Date.now()): strin
   const t = parseChainTime(iso)
   if (!Number.isFinite(t)) return "—"
   const sec = Math.max(0, Math.round((now - t) / 1000))
-  if (isZh()) {
-    if (sec < 60) return `${sec} 秒前`
-    const min = Math.floor(sec / 60)
-    if (min < 60) return `${min} 分钟前`
-    const hr = Math.floor(min / 60)
-    if (hr < 48) return `${hr} 小时前`
-    const day = Math.floor(hr / 24)
-    if (day < 60) return `${day} 天前`
-    return formatTime(iso)
-  }
-  if (sec < 60) return `${sec} sec${sec === 1 ? "" : "s"} ago`
+  const rtf = new Intl.RelativeTimeFormat(numberLocale(), { numeric: "always" })
+  if (sec < 60) return rtf.format(-sec, "second")
   const min = Math.floor(sec / 60)
-  if (min < 60) return `${min} min${min === 1 ? "" : "s"} ago`
+  if (min < 60) return rtf.format(-min, "minute")
   const hr = Math.floor(min / 60)
-  if (hr < 48) return `${hr} hr${hr === 1 ? "" : "s"} ago`
+  if (hr < 48) return rtf.format(-hr, "hour")
   const day = Math.floor(hr / 24)
-  if (day < 60) return `${day} day${day === 1 ? "" : "s"} ago`
+  if (day < 60) return rtf.format(-day, "day")
   return formatTime(iso)
 }
 
@@ -183,20 +167,13 @@ export function shortHash(value: string | null | undefined, left = 10, right = 8
 
 export function formatDuration(seconds: number): string {
   if (!Number.isFinite(seconds)) return "—"
-  const zh = isZh()
-  if (seconds % 86400 === 0 && seconds >= 86400) {
-    const days = seconds / 86400
-    return zh ? `${days} 天` : `${days} day${days === 1 ? "" : "s"}`
-  }
-  if (seconds % 3600 === 0 && seconds >= 3600) {
-    const hours = seconds / 3600
-    return zh ? `${hours} 小时` : `${hours} hour${hours === 1 ? "" : "s"}`
-  }
-  if (seconds % 60 === 0 && seconds >= 60) {
-    const mins = seconds / 60
-    return zh ? `${mins} 分钟` : `${mins} min`
-  }
-  return zh ? `${seconds} 秒` : `${seconds} sec`
+  const loc = numberLocale()
+  const unit = (count: number, name: "day" | "hour" | "minute" | "second") =>
+    new Intl.NumberFormat(loc, { style: "unit", unit: name, unitDisplay: "long" }).format(count)
+  if (seconds % 86400 === 0 && seconds >= 86400) return unit(seconds / 86400, "day")
+  if (seconds % 3600 === 0 && seconds >= 3600) return unit(seconds / 3600, "hour")
+  if (seconds % 60 === 0 && seconds >= 60) return unit(seconds / 60, "minute")
+  return unit(seconds, "second")
 }
 
 export function percentFromScale(value: number, denom = 10000): string {
@@ -208,16 +185,26 @@ export function percentFromScale(value: number, denom = 10000): string {
 export function protocolPercent(value: number | string | null | undefined): string {
   const n = typeof value === "number" ? value : Number(value)
   if (!Number.isFinite(n)) return "—"
-  return `${(n / 100).toLocaleString("en-US", { maximumFractionDigits: 2 })}%`
+  return `${(n / 100).toLocaleString(numberLocale(), { maximumFractionDigits: 2 })}%`
+}
+
+const MEMBERSHIP: Record<Lang, { lifetime: string; basic: string; annual: string }> = {
+  en: { lifetime: "Lifetime", basic: "Basic", annual: "Annual" },
+  zh: { lifetime: "终身", basic: "普通", annual: "年费" },
+  "zh-TW": { lifetime: "終身", basic: "普通", annual: "年費" },
+  ko: { lifetime: "평생", basic: "일반", annual: "연간" },
+  ru: { lifetime: "Пожизненный", basic: "Базовый", annual: "Годовой" },
+  ja: { lifetime: "生涯会員", basic: "一般", annual: "年会費" },
 }
 
 export function membershipOf(expiration: string | undefined): { label: string; className: string } {
   const t = parseChainTime(expiration)
+  const labels = MEMBERSHIP[getLanguage()]
   if (!expiration || expiration.startsWith("2106") || (Number.isFinite(t) && new Date(t).getUTCFullYear() >= 2100)) {
-    return { label: isZh() ? "终身" : "Lifetime", className: "bg-[#e7f6ef] text-success" }
+    return { label: labels.lifetime, className: "bg-[#e7f6ef] text-success" }
   }
   if (!Number.isFinite(t) || t < Date.now()) {
-    return { label: isZh() ? "普通" : "Basic", className: "bg-canvas text-muted" }
+    return { label: labels.basic, className: "bg-canvas text-muted" }
   }
-  return { label: isZh() ? "年费" : "Annual", className: "bg-[#e8f4fb] text-link" }
+  return { label: labels.annual, className: "bg-[#e8f4fb] text-link" }
 }
