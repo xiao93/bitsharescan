@@ -60,21 +60,28 @@ export default function Network() {
               <table className="w-full min-w-[640px] text-start text-sm">
                 <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
                   <tr>
-                    <th className="px-4 py-2.5 font-medium">{t("Operation")}</th>
-                    <th className="px-4 py-2.5 font-medium">{t("Component")}</th>
-                    <th className="px-4 py-2.5 font-medium">{t("Amount")}</th>
+                    <th className="w-px px-4 py-2.5 text-start font-medium whitespace-nowrap">{t("Op")}</th>
+                    <th className="px-4 py-2.5 text-start font-medium">{t("Operation")}</th>
+                    <th className="px-4 py-2.5 text-start font-medium">{t("Component")}</th>
+                    <th className="px-4 py-2.5 text-end font-medium whitespace-nowrap">{t("Amount")}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-line">
-                  {(fees?.parameters ?? []).flatMap(([index, fields]) =>
-                    Object.entries(fields).map(([field, amount]) => (
+                  {(fees?.parameters ?? []).flatMap(([index, fields]) => {
+                    const entries = Object.entries(fields)
+                    return entries.map(([field, amount], offset) => (
                       <tr key={`${index}-${field}`}>
-                        <td className="px-4 py-2.5">{opLabel(index)}</td>
-                        <td className="px-4 py-2.5 text-muted">{field.replaceAll("_", " ")}</td>
-                        <td className="px-4 py-2.5">{formatFee(amount, Number(fees?.scale ?? 10000))}</td>
+                        {offset === 0 ? (
+                          <>
+                            <td rowSpan={entries.length} className="w-px px-4 py-2.5 align-top text-start whitespace-nowrap text-muted"><span className="font-mono text-xs tabular-nums">{index}</span></td>
+                            <td rowSpan={entries.length} className="px-4 py-2.5 align-top text-start">{opLabel(index)}</td>
+                          </>
+                        ) : null}
+                        <td className="px-4 py-2.5 text-start text-muted">{field.replaceAll("_", " ")}</td>
+                        <td className="px-4 py-2.5 text-end whitespace-nowrap"><span className="font-mono tabular-nums">{formatFee(amount, Number(fees?.scale ?? 10000))}</span></td>
                       </tr>
-                    )),
-                  )}
+                    ))
+                  })}
                 </tbody>
               </table>
             </div>

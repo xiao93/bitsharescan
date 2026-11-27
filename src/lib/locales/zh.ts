@@ -593,6 +593,7 @@ export const zh: Record<string, string> = {
   "Witness budget left": "剩余见证人预算",
   "Parameters": "参数",
   "Fee schedule · scale {scale}": "手续费表 · 倍率 {scale}",
+  "Op": "操作号",
   "Component": "项目",
   "Amount": "数量",
   "Block producers. {active} active of {total} registered.": "出块节点。已注册 {total} 名，其中 {active} 名活跃。",

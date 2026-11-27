@@ -593,6 +593,7 @@ export const ar: Record<string, string> = {
   "Witness budget left": "ميزانية الشهود المتبقية",
   "Parameters": "المعلمات",
   "Fee schedule · scale {scale}": "جدول الرسوم · المقياس {scale}",
+  "Op": "Op",
   "Component": "المكوّن",
   "Amount": "المبلغ",
   "Block producers. {active} active of {total} registered.": "منتجو الكتل. {active} نشطون من أصل {total} مسجَّلًا.",

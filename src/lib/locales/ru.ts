@@ -593,6 +593,7 @@ export const ru: Record<string, string> = {
   "Witness budget left": "Остаток бюджета свидетелей",
   "Parameters": "Параметры",
   "Fee schedule · scale {scale}": "Таблица комиссий · масштаб {scale}",
+  "Op": "Op",
   "Component": "Компонент",
   "Amount": "Сумма",
   "Block producers. {active} active of {total} registered.": "Производители блоков. Активны {active} из {total} зарегистрированных.",

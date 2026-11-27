@@ -593,6 +593,7 @@ export const pt: Record<string, string> = {
   "Witness budget left": "Orçamento de testemunhas restante",
   "Parameters": "Parâmetros",
   "Fee schedule · scale {scale}": "Tabela de taxas · escala {scale}",
+  "Op": "Op",
   "Component": "Componente",
   "Amount": "Valor",
   "Block producers. {active} active of {total} registered.": "Produtores de blocos. {active} ativos de {total} registrados.",

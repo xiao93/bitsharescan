@@ -593,6 +593,7 @@ export const fa: Record<string, string> = {
   "Witness budget left": "بودجه باقی‌مانده شاهدان",
   "Parameters": "پارامترها",
   "Fee schedule · scale {scale}": "جدول کارمزد · مقیاس {scale}",
+  "Op": "Op",
   "Component": "جزء",
   "Amount": "مبلغ",
   "Block producers. {active} active of {total} registered.": "تولیدکنندگان بلاک. {active} فعال از {total} ثبت‌شده.",

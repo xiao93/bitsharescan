@@ -593,6 +593,7 @@ export const nl: Record<string, string> = {
   "Witness budget left": "Resterend getuigenbudget",
   "Parameters": "Parameters",
   "Fee schedule · scale {scale}": "Vergedingenschema · schaal {scale}",
+  "Op": "Op",
   "Component": "Onderdeel",
   "Amount": "Bedrag",
   "Block producers. {active} active of {total} registered.": "Blokproducenten. {active} actief van {total} geregistreerd.",

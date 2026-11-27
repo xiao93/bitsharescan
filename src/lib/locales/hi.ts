@@ -593,6 +593,7 @@ export const hi: Record<string, string> = {
   "Witness budget left": "शेष साक्षी बजट",
   "Parameters": "पैरामीटर",
   "Fee schedule · scale {scale}": "शुल्क अनुसूची · पैमाना {scale}",
+  "Op": "Op",
   "Component": "घटक",
   "Amount": "राशि",
   "Block producers. {active} active of {total} registered.": "ब्लॉक उत्पादक। पंजीकृत {total} में से {active} सक्रिय।",

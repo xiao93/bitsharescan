@@ -593,6 +593,7 @@ export const zhTW: Record<string, string> = {
   "Witness budget left": "剩餘見證人預算",
   "Parameters": "參數",
   "Fee schedule · scale {scale}": "手續費表 · 倍率 {scale}",
+  "Op": "操作號",
   "Component": "專案",
   "Amount": "數量",
   "Block producers. {active} active of {total} registered.": "出塊節點。已註冊 {total} 名，其中 {active} 名活躍。",

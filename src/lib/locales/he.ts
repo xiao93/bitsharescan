@@ -593,6 +593,7 @@ export const he: Record<string, string> = {
   "Witness budget left": "תקציב עדים שנותר",
   "Parameters": "פרמטרים",
   "Fee schedule · scale {scale}": "לוח עמלות · סולם {scale}",
+  "Op": "Op",
   "Component": "רכיב",
   "Amount": "סכום",
   "Block producers. {active} active of {total} registered.": "יצרני בלוקים. {active} פעילים מתוך {total} רשומים.",

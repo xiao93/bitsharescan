@@ -593,6 +593,7 @@ export const ko: Record<string, string> = {
   "Witness budget left": "남은 증인 예산",
   "Parameters": "파라미터",
   "Fee schedule · scale {scale}": "수수료표 · 배율 {scale}",
+  "Op": "Op",
   "Component": "항목",
   "Amount": "금액",
   "Block producers. {active} active of {total} registered.": "블록 생성자. 등록 {total}명 중 {active}명이 활동 중입니다.",

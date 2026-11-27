@@ -593,6 +593,7 @@ export const ja: Record<string, string> = {
   "Witness budget left": "証人予算の残り",
   "Parameters": "パラメータ",
   "Fee schedule · scale {scale}": "手数料表 · 倍率 {scale}",
+  "Op": "Op",
   "Component": "内訳",
   "Amount": "金額",
   "Block producers. {active} active of {total} registered.": "ブロック生成者。登録 {total} 名のうち {active} 名が在任です。",

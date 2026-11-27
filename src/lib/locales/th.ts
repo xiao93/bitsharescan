@@ -593,6 +593,7 @@ export const th: Record<string, string> = {
   "Witness budget left": "งบประมาณพยานที่เหลือ",
   "Parameters": "พารามิเตอร์",
   "Fee schedule · scale {scale}": "ตารางค่าธรรมเนียม · มาตราส่วน {scale}",
+  "Op": "Op",
   "Component": "องค์ประกอบ",
   "Amount": "จำนวน",
   "Block producers. {active} active of {total} registered.": "ผู้ผลิตบล็อก {active} ใช้งานอยู่จาก {total} ที่ลงทะเบียน",

@@ -593,6 +593,7 @@ export const bn: Record<string, string> = {
   "Witness budget left": "সাক্ষী বাজেট অবশিষ্ট",
   "Parameters": "প্যারামিটার",
   "Fee schedule · scale {scale}": "ফি তালিকা · স্কেল {scale}",
+  "Op": "Op",
   "Component": "উপাদান",
   "Amount": "পরিমাণ",
   "Block producers. {active} active of {total} registered.": "ব্লক উৎপাদক। {total} নিবন্ধিতের মধ্যে {active} সক্রিয়।",

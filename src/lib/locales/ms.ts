@@ -593,6 +593,7 @@ export const ms: Record<string, string> = {
   "Witness budget left": "Sisa anggaran saksi",
   "Parameters": "Parameter",
   "Fee schedule · scale {scale}": "Jadual yuran · skala {scale}",
+  "Op": "Op",
   "Component": "Komponen",
   "Amount": "Jumlah",
   "Block producers. {active} active of {total} registered.": "Produsen blok. {active} aktif dari {total} berdaftar.",

@@ -593,6 +593,7 @@ export const vi: Record<string, string> = {
   "Witness budget left": "Ngân sách nhân chứng còn lại",
   "Parameters": "Tham số",
   "Fee schedule · scale {scale}": "Bảng phí · hệ số {scale}",
+  "Op": "Op",
   "Component": "Thành phần",
   "Amount": "Số tiền",
   "Block producers. {active} active of {total} registered.": "Người sản xuất khối. {active} đang hoạt động trong {total} đã đăng ký.",

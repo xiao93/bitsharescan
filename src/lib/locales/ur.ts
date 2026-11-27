@@ -593,6 +593,7 @@ export const ur: Record<string, string> = {
   "Witness budget left": "گواہ بجٹ باقی",
   "Parameters": "پیرامیٹرز",
   "Fee schedule · scale {scale}": "فیس شیڈول · پیمانہ {scale}",
+  "Op": "Op",
   "Component": "جزو",
   "Amount": "رقم",
   "Block producers. {active} active of {total} registered.": "بلاک پیدا کنندگان۔ {total} رجسٹرڈ میں سے {active} فعال۔",

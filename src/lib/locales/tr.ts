@@ -593,6 +593,7 @@ export const tr: Record<string, string> = {
   "Witness budget left": "Kalan tanık bütçesi",
   "Parameters": "Parametreler",
   "Fee schedule · scale {scale}": "Ücret tarifesi · ölçek {scale}",
+  "Op": "Op",
   "Component": "Bileşen",
   "Amount": "Tutar",
   "Block producers. {active} active of {total} registered.": "Blok üreticileri. Kayıtlı {total} içinden {active} aktif.",
