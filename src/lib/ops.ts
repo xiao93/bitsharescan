@@ -3,6 +3,7 @@ import type { Amount } from "./directory.ts"
 import { feePayerOf } from "./feePayer.ts"
 import { feeRatePercent, formatRaw } from "./format.ts"
 import { translate } from "./i18n.tsx"
+import { isRtl } from "./locale.ts"
 import { parseChainJson } from "./json.ts"
 
 function lockLabel(type: unknown): string {
@@ -144,16 +145,42 @@ export type SummaryBit =
   | { kind: "account-name"; name: string }
   | { kind: "asset-symbol"; symbol: string }
   | { kind: "object"; id: string }
+  | { kind: "arrow" }
+
+const LRI = "\u2066"
+const PDI = "\u2069"
+
+function ltrText(value: string): string {
+  if (!value || !isRtl()) return value
+  return `${LRI}${value}${PDI}`
+}
 
 function summaryText(bits: SummaryBit[]): string {
   return bits.map((bit) => {
     if (typeof bit === "string") return bit
-    if (bit.kind === "account") return accountLabel(bit.id)
-    if (bit.kind === "asset") return assetSymbol(bit.id)
-    if (bit.kind === "account-name") return bit.name
-    if (bit.kind === "asset-symbol") return bit.symbol
-    return bit.id
+    if (bit.kind === "arrow") return isRtl() ? " ← " : " → "
+    if (bit.kind === "account") return ltrText(accountLabel(bit.id))
+    if (bit.kind === "asset") return ltrText(assetSymbol(bit.id))
+    if (bit.kind === "account-name") return ltrText(bit.name)
+    if (bit.kind === "asset-symbol") return ltrText(bit.symbol)
+    return ltrText(bit.id)
   }).join("")
+}
+
+function textBits(value: string): SummaryBit[] {
+  if (!value) return []
+  const parts = value.split(/(\s*→\s*)/)
+  const bits: SummaryBit[] = []
+  for (const part of parts) {
+    if (!part) continue
+    if (/→/.test(part)) bits.push({ kind: "arrow" })
+    else bits.push(isRtl() && isLtrToken(part) ? `${LRI}${part}${PDI}` : part)
+  }
+  return bits
+}
+
+function isLtrToken(value: string): boolean {
+  return /^[\s0-9.,+\-−$%#A-Za-z][\s0-9.,+\-−$%#A-Za-z:/]*$/.test(value) && /[0-9A-Za-z]/.test(value)
 }
 
 function phrase(template: string, vars: Record<string, SummaryBit | SummaryBit[]>): SummaryBit[] {
@@ -163,13 +190,13 @@ function phrase(template: string, vars: Record<string, SummaryBit | SummaryBit[]
   let last = 0
   for (const match of text.matchAll(pattern)) {
     const index = match.index ?? 0
-    if (index > last) bits.push(text.slice(last, index))
+    if (index > last) bits.push(...textBits(text.slice(last, index)))
     const value = vars[match[1] ?? ""]
     if (Array.isArray(value)) bits.push(...value)
     else if (value) bits.push(value)
     last = index + match[0].length
   }
-  if (last < text.length) bits.push(text.slice(last))
+  if (last < text.length) bits.push(...textBits(text.slice(last)))
   return bits
 }
 
@@ -186,7 +213,8 @@ function moneyBits(value: unknown): SummaryBit[] {
   if (!amount) return ["—"]
   const asset = peekAsset(amount.asset_id)
   const qty = asset ? formatRaw(amount.amount, asset.precision) : String(amount.amount)
-  return [`${qty} `, { kind: "asset", id: amount.asset_id }]
+  const qtyText = `${qty} `
+  return [isRtl() ? `${LRI}${qtyText}${PDI}` : qtyText, { kind: "asset", id: amount.asset_id }]
 }
 
 function namedAmountBits(body: Record<string, unknown>, amountKey: string, assetKey: string): SummaryBit[] {
@@ -433,7 +461,7 @@ export function opSummaryBits(op: OpView): SummaryBit[] {
   // Only proposal_create (22) surfaces its newly created object id here.
   // Other create ops (account/asset/limit-order create) must not leak theirs.
   if (op.type !== 22 && resultIsObjectId(op.result)) return text
-  return [...text, " → ", ...result]
+  return [...text, { kind: "arrow" }, ...result]
 }
 
 export function opSummary(op: OpView): string {

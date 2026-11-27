@@ -1013,4 +1013,6 @@ export const vi: Record<string, string> = {
   "Pool Update": "Cập nhật bể",
   "Credit Deal Update": "Cập nhật hợp đồng tín dụng",
   "Limit Order Update": "Cập nhật lệnh giới hạn",
+  "BitShares (BTS) Blockchain Explorer": "Trình khám phá chuỗi khối BitShares (BTS)",
+  "Breadcrumb": "Đường dẫn",
 }

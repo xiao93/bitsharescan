@@ -303,7 +303,7 @@ function Breakdown({ rows }: { rows: Array<[string, number]> }) {
       <ul className="min-w-0 flex-1 space-y-1 text-sm">
         {rows.map(([label, count], index) => (
           <li key={label} className="flex items-center justify-between gap-3">
-            <span className="inline-flex min-w-0 items-center gap-2"><span className="h-2 w-2 shrink-0 rounded-full" style={{ background: COLORS[index % COLORS.length] }} /><span className="truncate">{label}</span></span>
+            <span className="inline-flex min-w-0 items-center gap-2"><span className="h-2 w-2 shrink-0 rounded-full" style={{ background: COLORS[index % COLORS.length] }} /><span className="truncate">{t(label)}</span></span>
             <span className="font-mono tabular-nums">{count}</span>
           </li>
         ))}

@@ -188,16 +188,18 @@ export default function Home() {
       <section className="hero-band mb-3 rounded-xl border border-line px-4 py-2.5">
         <div className="flex flex-col gap-2 md:flex-row md:items-end md:gap-4">
           <div className="min-w-0 md:w-2/3">
-            <div className="mb-1.5 flex min-w-0 items-center gap-2">
-              <span className="relative flex h-2 w-2 shrink-0">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+            <div className="mb-1.5 flex min-w-0 flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
+              <span className="inline-flex min-w-0 items-center gap-2">
+                <span className="relative flex h-2 w-2 shrink-0">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                </span>
+                <span className="shrink-0 text-xs font-medium text-link">
+                  {t(net.label)}
+                  {chainId ? <span className="font-mono font-normal text-muted"> {chainId.slice(0, 8)}…{chainId.slice(-4)}</span> : null}
+                </span>
               </span>
-              <span className="shrink-0 text-xs font-medium text-link">
-                {t(net.label)}
-                {chainId ? <span className="font-normal text-muted"> {chainId.slice(0, 8)}…{chainId.slice(-4)}</span> : null}
-              </span>
-              <h1 className="truncate text-base font-semibold tracking-tight text-ink sm:text-lg">{t("The BitShares Blockchain Explorer")}</h1>
+              <h1 className="text-base font-semibold leading-snug tracking-tight text-ink sm:truncate sm:text-lg">{t("The BitShares Blockchain Explorer")}</h1>
             </div>
             <SearchBar id="hero-search" />
           </div>

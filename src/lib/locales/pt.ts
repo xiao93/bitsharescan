@@ -1013,4 +1013,6 @@ export const pt: Record<string, string> = {
   "Pool Update": "Atualizar pool",
   "Credit Deal Update": "Atualizar contrato de crédito",
   "Limit Order Update": "Atualizar ordem limitada",
+  "BitShares (BTS) Blockchain Explorer": "Explorador da blockchain BitShares (BTS)",
+  "Breadcrumb": "Trilha de navegação",
 }

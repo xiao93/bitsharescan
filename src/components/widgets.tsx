@@ -154,7 +154,7 @@ export function Panel({
 export function Crumbs({ items }: { items: { label: string; to?: string }[] }) {
   const { t } = useI18n()
   return (
-    <nav className="mb-3 flex flex-wrap items-center gap-1 text-sm text-muted" aria-label="Breadcrumb">
+    <nav className="mb-3 flex flex-wrap items-center gap-1 text-sm text-muted" aria-label={t("Breadcrumb")}>
       {items.map((item, index) => (
         <span key={`${item.label}-${index}`} className="inline-flex items-center gap-1">
           {index > 0 ? <span className="text-line">/</span> : null}
@@ -252,20 +252,29 @@ export function OpSummary({ op }: { op: OpView }) {
   return <SummaryBits bits={opSummaryBits(op)} />
 }
 
+export function DirArrow({ className }: { className?: string } = {}) {
+  return <span className={cn("inline-block rtl:rotate-180", className)} aria-hidden="true">→</span>
+}
+
+function ltrWrap(key: number, children: ReactNode) {
+  return <span key={key} dir="ltr" className="ltr-isolate">{children}</span>
+}
+
 export function SummaryBits({ bits }: { bits: SummaryBit[] }) {
   return (
     <>
       {bits.map((bit, index) => {
         if (typeof bit === "string" || !bit) return <span key={index}>{bit}</span>
-        if (bit.kind === "account") return <AccountLink key={index} id={bit.id} />
-        if (bit.kind === "asset") return <AssetLink key={index} id={bit.id} />
+        if (bit.kind === "arrow") return <span key={index}> <DirArrow /> </span>
+        if (bit.kind === "account") return ltrWrap(index, <AccountLink id={bit.id} />)
+        if (bit.kind === "asset") return ltrWrap(index, <AssetLink id={bit.id} />)
         if (bit.kind === "account-name") {
-          return <Link key={index} to={`/account/${encodeURIComponent(bit.name)}`} className={linkClass}>{bit.name}</Link>
+          return ltrWrap(index, <Link to={`/account/${encodeURIComponent(bit.name)}`} className={linkClass}>{bit.name}</Link>)
         }
         if (bit.kind === "asset-symbol") {
-          return <Link key={index} to={`/asset/${encodeURIComponent(bit.symbol)}`} className={linkClass}>{bit.symbol}</Link>
+          return ltrWrap(index, <Link to={`/asset/${encodeURIComponent(bit.symbol)}`} className={linkClass}>{bit.symbol}</Link>)
         }
-        return <Link key={index} to={routeForObject(bit.id)} className={linkClass}>{bit.id}</Link>
+        return ltrWrap(index, <Link to={routeForObject(bit.id)} className={linkClass}>{bit.id}</Link>)
       })}
     </>
   )

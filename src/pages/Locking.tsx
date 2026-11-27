@@ -1,5 +1,5 @@
 import { Link, useSearchParams } from "react-router-dom"
-import { AccountLink, Crumbs, ErrorBox, LoadingBlock, OpTable, Pager, Panel } from "../components/widgets.tsx"
+import { AccountLink, Crumbs, DirArrow, ErrorBox, LoadingBlock, OpTable, Pager, Panel } from "../components/widgets.tsx"
 import { fetchAllTickets, fetchRecentOps, lockInfo } from "../lib/defi.ts"
 import type { Ticket } from "../lib/defi.ts"
 import { peekAsset, resolveAccounts, resolveAssets } from "../lib/directory.ts"
@@ -141,7 +141,7 @@ function TicketTable({ rows }: { rows: Ticket[] }) {
                 <td className="px-4 py-3"><Link to={`/ticket/${ticket.id}`} className={`${linkClass} font-mono text-xs`}>{ticket.id}</Link></td>
                 <td className="px-4 py-3"><AccountLink id={ticket.account} /></td>
                 <td className="px-4 py-3">{formatRaw(ticket.amount?.amount, asset?.precision ?? 5)} {asset?.symbol ?? "BTS"}</td>
-                <td className="px-4 py-3">{info.label}{ticket.target_type !== ticket.current_type ? ` → ${lockInfo(ticket.target_type).label}` : ""}</td>
+                <td className="px-4 py-3">{info.label}{ticket.target_type !== ticket.current_type ? <> <DirArrow /> {lockInfo(ticket.target_type).label}</> : ""}</td>
                 <td className="px-4 py-3">{formatRaw(ticket.value, 5)} <span className="text-muted">{info.power}</span></td>
                 <td className="px-4 py-3">{ticket.status === "stable" ? <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-success">{t("Stable")}</span> : <span className="rounded-full bg-amber-50 px-2 py-0.5 text-xs text-amber-700">{t(ticket.status)}</span>}</td>
               </tr>

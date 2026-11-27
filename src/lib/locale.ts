@@ -31,7 +31,7 @@ export const LANG_OPTIONS: { id: Lang; label: string; locale: string }[] = [
   { id: "pt", label: "Português", locale: "pt-BR" },
   { id: "fr", label: "Français", locale: "fr-FR" },
   { id: "ar", label: "العربية", locale: "ar-u-nu-latn" },
-  { id: "fa", label: "فارسی", locale: "fa-IR-u-nu-latn" },
+  { id: "fa", label: "فارسی", locale: "fa-IR-u-nu-latn-ca-gregory" },
   { id: "uk", label: "Українська", locale: "uk-UA" },
 ]
 
@@ -48,7 +48,7 @@ export const LOCALE_TAGS: Record<Lang, string> = {
   pt: "pt-BR",
   fr: "fr-FR",
   ar: "ar-u-nu-latn",
-  fa: "fa-IR-u-nu-latn",
+  fa: "fa-IR-u-nu-latn-ca-gregory",
   uk: "uk-UA",
 }
 

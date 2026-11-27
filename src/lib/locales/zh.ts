@@ -1013,5 +1013,6 @@ export const zh: Record<string, string> = {
   "Pool Update": "更新流动性池",
   "Credit Deal Update": "更新借贷合约",
   "Limit Order Update": "更新限价单",
+  "BitShares (BTS) Blockchain Explorer": "比特股 (BTS) 区块链浏览器",
+  "Breadcrumb": "面包屑导航",
 }
-

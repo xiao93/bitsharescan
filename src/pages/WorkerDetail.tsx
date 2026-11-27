@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom"
-import { AccountLink, Crumbs, ErrorBox, KeyValue, LoadingBlock, Panel } from "../components/widgets.tsx"
+import { AccountLink, Crumbs, DirArrow, ErrorBox, KeyValue, LoadingBlock, Panel } from "../components/widgets.tsx"
 import { fetchWorkers } from "../lib/chain.ts"
 import type { WorkerRow } from "../lib/chain.ts"
 import { esSearch, esTotal, objectIndex } from "../lib/es.ts"
@@ -9,6 +9,7 @@ import { fetchBtsUsd } from "../lib/usd.ts"
 import { linkClass } from "../lib/utils.ts"
 import { useQuery, useTitle } from "../hooks/useQuery.ts"
 import { useI18n } from "../lib/i18n.tsx"
+import { localeTag } from "../lib/locale.ts"
 
 export default function WorkerDetail() {
   const { id = "" } = useParams()
@@ -48,7 +49,7 @@ export default function WorkerDetail() {
               { label: "Account", value: <AccountLink id={row.account} /> },
               { label: "URL", value: safeUrl(row.url) ? <a className={linkClass} href={safeUrl(row.url)!} target="_blank" rel="noreferrer">{row.url}</a> : "—" },
               { label: "Daily pay", value: payText(row, btsUsd, core) },
-              { label: "Period", value: `${formatTime(row.begin)} → ${formatTime(row.end)}` },
+              { label: "Period", value: <span className="inline-flex flex-wrap items-center gap-1"><bdi>{formatTime(row.begin)}</bdi> <DirArrow /> <bdi>{formatTime(row.end)}</bdi></span> },
               { label: "Votes for", value: `${formatStake(row.votesFor)} ${core}` },
               { label: "Votes against", value: `${formatStake(row.votesAgainst)} ${core}` },
               { label: "Status", value: statusText(row, t) },
@@ -91,7 +92,7 @@ function VoterList({ title, voters, loading, error }: { title: string; voters?: 
       {voters && !voters.rows.length ? <p className="px-4 py-6 text-sm text-muted">{t("No voters in the account index.")}</p> : null}
       {voters?.rows.length ? (
         <>
-          <p className="px-4 pt-3 text-xs text-muted">{t("{n} accounts", { n: voters.total.toLocaleString() })}</p>
+          <p className="px-4 pt-3 text-xs text-muted">{t("{n} accounts", { n: voters.total.toLocaleString(localeTag()) })}</p>
           <ul className="divide-y divide-line">
             {voters.rows.map((voter) => (
               <li key={voter.id} className="px-4 py-2 text-sm"><Link className={linkClass} to={`/account/${voter.name}`}>{voter.name}</Link></li>

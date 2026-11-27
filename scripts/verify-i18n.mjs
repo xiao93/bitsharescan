@@ -69,6 +69,17 @@ if (leftover.length) {
   for (const line of leftover) errors.push(`lingering zh-only branch: ${line}`)
 }
 
+
+const eastern = /[\u0660-\u0669\u06F0-\u06F9\u066B\u066C]/
+for (const file of ["ar.ts", "fa.ts"]) {
+  const src = fs.readFileSync(path.join(srcRoot, "lib/locales", file), "utf8")
+  const hits = []
+  for (const [i, line] of src.split(/\n/).entries()) {
+    if (eastern.test(line)) hits.push(`${file}:${i + 1}`)
+  }
+  if (hits.length) errors.push(`${file}: Eastern/Persian digits remain (${hits.length}), e.g. ${hits.slice(0, 5).join(", ")}`)
+}
+
 const ok = errors.length === 0
 console.log(JSON.stringify({ ok, zhKeys: zhKeys.length, counts, leftoverBranches: leftover, errors }, null, 2))
 if (!ok) process.exit(1)

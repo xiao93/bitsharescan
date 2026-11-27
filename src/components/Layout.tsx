@@ -355,7 +355,7 @@ export function Layout() {
             </div>
           ) : null}
           {open ? (
-            <nav className="shell border-t border-line py-2 lg:hidden" aria-label={t("Mobile")}>
+            <nav className="shell max-h-[calc(100dvh-13rem)] overflow-y-auto border-t border-line py-2 pb-8 lg:hidden" aria-label={t("Mobile")}>
               {NAV.map((item) => (
                 <div key={item.label} className="py-1">
                   {item.to ? (
@@ -479,7 +479,7 @@ function SettingsMenu({ onEndpoints }: { onEndpoints: () => void }) {
   const timeMode = useTimeMode()
   useEffect(() => subscribeTheme(setThemeChoice), [])
   return (
-    <div className="absolute end-0 top-full z-50 w-72 pt-1" role="dialog" aria-label={t("Settings")}>
+    <div className="absolute end-0 top-full z-50 w-80 max-w-[calc(100vw-1.5rem)] pt-1" role="dialog" aria-label={t("Settings")}>
       <div className="rounded-lg border border-line bg-card p-3 shadow-lg">
         <Segmented
           label={t("Theme")}
@@ -521,7 +521,7 @@ function SettingsMenu({ onEndpoints }: { onEndpoints: () => void }) {
             ))}
           </div>
         </div>
-        <button type="button" className="mt-1 w-full rounded-md px-2 py-1.5 text-start text-xs font-medium text-link hover:bg-canvas" onClick={onEndpoints}>
+        <button type="button" className="mt-1 w-full whitespace-normal rounded-md px-2 py-1.5 text-start text-xs font-medium leading-snug text-link hover:bg-canvas" onClick={onEndpoints}>
           {t("API endpoints…")}
         </button>
       </div>

@@ -51,14 +51,16 @@ const I18nContext = createContext<{ lang: Lang; setLang: (lang: Lang) => void; t
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>(getLanguage())
-  const [, setReady] = useState(0)
+  const [revision, setRevision] = useState(0)
   useEffect(() => subscribeLanguage(setLangState), [])
   useEffect(() => {
     if (lang === "en") return
     if (loaded[lang]) return
     let cancelled = false
-    void loadLocale(lang).then(() => {
-      if (!cancelled) setReady((n) => n + 1)
+    const requested = lang
+    void loadLocale(requested).then(() => {
+      if (cancelled || getLanguage() !== requested) return
+      setRevision((n) => n + 1)
     })
     return () => {
       cancelled = true
@@ -68,9 +70,9 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     () => ({
       lang,
       setLang: setLanguage,
-      t: translate,
+      t: (text: string, vars?: Record<string, string | number>) => translate(text, vars),
     }),
-    [lang],
+    [lang, revision],
   )
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>
 }

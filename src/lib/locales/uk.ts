@@ -1013,4 +1013,6 @@ export const uk: Record<string, string> = {
   "Pool Update": "Оновлення пулу",
   "Credit Deal Update": "Оновлення кредитної угоди",
   "Limit Order Update": "Оновлення лімітного ордера",
+  "BitShares (BTS) Blockchain Explorer": "Оглядач блокчейну BitShares (BTS)",
+  "Breadcrumb": "Навігаційний шлях",
 }

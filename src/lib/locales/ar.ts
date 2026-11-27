@@ -1013,4 +1013,6 @@ export const ar: Record<string, string> = {
   "Pool Update": "تحديث مجمع",
   "Credit Deal Update": "تحديث صفقة ائتمان",
   "Limit Order Update": "تحديث أمر حد",
+  "BitShares (BTS) Blockchain Explorer": "مستكشف سلسلة كتل BitShares (BTS)",
+  "Breadcrumb": "مسار التنقل",
 }

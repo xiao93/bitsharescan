@@ -1013,4 +1013,6 @@ export const id: Record<string, string> = {
   "Pool Update": "Perbarui kumpulan",
   "Credit Deal Update": "Perbarui kesepakatan kredit",
   "Limit Order Update": "Perbarui order limit",
+  "BitShares (BTS) Blockchain Explorer": "Penjelajah Blockchain BitShares (BTS)",
+  "Breadcrumb": "Jejak navigasi",
 }

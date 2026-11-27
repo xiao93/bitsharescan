@@ -15,6 +15,7 @@ import {
   snapshotRows,
 } from "../lib/exportData.ts"
 import { useI18n } from "../lib/i18n.tsx"
+import { localeTag } from "../lib/locale.ts"
 
 function csvEscape(value: string) {
   return `"${value.replaceAll("\"", "\"\"")}"`
@@ -139,13 +140,13 @@ export default function ExportData() {
         <label className="mt-3 block text-sm">
           <span className="mb-1 block text-muted">{t("Max rows")}</span>
           <select value={limit} onChange={(event) => setLimit(event.target.value)} className="h-10 w-full rounded-lg border border-line bg-card px-3 text-sm text-ink">
-            {["100", "1000", "5000", "10000"].map((value) => <option key={value} value={value}>{Number(value).toLocaleString()}</option>)}
+            {["100", "1000", "5000", "10000"].map((value) => <option key={value} value={value}>{Number(value).toLocaleString(localeTag())}</option>)}
           </select>
         </label>
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <button type="button" disabled={busy || !account.trim()} onClick={() => void preview()} className="h-10 rounded-lg border border-line px-3 text-sm font-medium text-ink disabled:opacity-40">{t("Preview count")}</button>
           <button type="button" disabled={busy || !account.trim()} onClick={() => void run()} className="h-10 rounded-lg bg-link px-3 text-sm font-medium text-white disabled:opacity-40">{busy ? t("Preparing") : t("Download")}</button>
-          {count != null ? <span className="text-sm text-muted">{t("{n} records", { n: count.toLocaleString() })}</span> : null}
+          {count != null ? <span className="text-sm text-muted">{t("{n} records", { n: count.toLocaleString(localeTag()) })}</span> : null}
         </div>
         {error ? <div className="mt-3"><ErrorBox message={error} /></div> : null}
       </div>

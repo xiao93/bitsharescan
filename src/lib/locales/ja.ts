@@ -1013,5 +1013,6 @@ export const ja: Record<string, string> = {
   "Pool Update": "流動性プールの更新",
   "Credit Deal Update": "貸付契約の更新",
   "Limit Order Update": "指値注文の更新",
+  "BitShares (BTS) Blockchain Explorer": "BitShares (BTS) ブロックチェーンエクスプローラー",
+  "Breadcrumb": "パンくずリスト",
 }
-

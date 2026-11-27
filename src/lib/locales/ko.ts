@@ -1013,5 +1013,6 @@ export const ko: Record<string, string> = {
   "Pool Update": "유동성 풀 업데이트",
   "Credit Deal Update": "신용 계약 업데이트",
   "Limit Order Update": "지정가 주문 업데이트",
+  "BitShares (BTS) Blockchain Explorer": "BitShares (BTS) 블록체인 탐색기",
+  "Breadcrumb": "탐색 경로",
 }
-

@@ -1,4 +1,5 @@
 import { formatTime } from "./format.ts"
+import { localeTag } from "./locale.ts"
 import { coreSymbol } from "./network.ts"
 import { db } from "./node.ts"
 
@@ -187,7 +188,7 @@ export function priceHint(
     })
   }
   if (value.kind === "dex" && value.dex) {
-    const vol = `$${Math.round(value.dex.volumeUsd).toLocaleString()}`
+    const vol = `$${Math.round(value.dex.volumeUsd).toLocaleString(localeTag())}`
     return value.thin
       ? t("Source: on-chain DEX, 24h volume ≈ {vol} (thin liquidity)", { vol })
       : t("Source: on-chain DEX, 24h volume ≈ {vol}", { vol })

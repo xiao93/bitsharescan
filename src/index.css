@@ -61,6 +61,14 @@ html {
   color: var(--color-ink);
 }
 
+html:lang(ar) {
+  --font-sans: "Noto Sans Arabic", "Inter", "Segoe UI", "Tahoma", "Geeza Pro", ui-sans-serif, system-ui, sans-serif;
+}
+
+html:lang(fa) {
+  --font-sans: "Vazirmatn", "Noto Sans Arabic", "Inter", "Segoe UI", "Tahoma", "Geeza Pro", ui-sans-serif, system-ui, sans-serif;
+}
+
 body {
   margin: 0;
   min-width: 320px;

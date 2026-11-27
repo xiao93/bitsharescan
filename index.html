@@ -14,7 +14,7 @@
         } catch (e) {}
         try {
           var langs = ["en","zh","zh-TW","ko","ru","ja","vi","id","es","pt","fr","ar","fa","uk"]
-          var tags = {"en":"en-US","zh":"zh-CN","zh-TW":"zh-TW","ko":"ko-KR","ru":"ru-RU","ja":"ja-JP","vi":"vi-VN","id":"id-ID","es":"es-ES","pt":"pt-BR","fr":"fr-FR","ar":"ar-u-nu-latn","fa":"fa-IR-u-nu-latn","uk":"uk-UA"}
+          var tags = {"en":"en-US","zh":"zh-CN","zh-TW":"zh-TW","ko":"ko-KR","ru":"ru-RU","ja":"ja-JP","vi":"vi-VN","id":"id-ID","es":"es-ES","pt":"pt-BR","fr":"fr-FR","ar":"ar-u-nu-latn","fa":"fa-IR-u-nu-latn-ca-gregory","uk":"uk-UA"}
           var saved = localStorage.getItem("bitscan.lang")
           var lang = saved && langs.indexOf(saved) >= 0 ? saved : ""
           if (!lang) {

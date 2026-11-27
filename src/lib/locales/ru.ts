@@ -1013,5 +1013,6 @@ export const ru: Record<string, string> = {
   "Pool Update": "Обновление пула",
   "Credit Deal Update": "Обновление кредитной сделки",
   "Limit Order Update": "Обновление лимитного ордера",
+  "BitShares (BTS) Blockchain Explorer": "Обозреватель блокчейна BitShares (BTS)",
+  "Breadcrumb": "Навигационная цепочка",
 }
-
