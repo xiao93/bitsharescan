@@ -219,7 +219,7 @@ export function PoolSwap({ pool, btsUsd }: { pool: Pool; btsUsd?: number | null 
       {gear ? (
         <div
           onPointerDown={(event) => event.stopPropagation()}
-          className="absolute right-3 top-12 z-20 w-[min(18rem,calc(100%-1.5rem))] rounded-lg border border-line bg-card p-3 shadow-lg"
+          className="absolute end-3 top-12 z-20 w-[min(18rem,calc(100%-1.5rem))] rounded-lg border border-line bg-card p-3 shadow-lg"
         >
           <div className="mb-2 text-xs text-muted">{t("Slippage tolerance")}</div>
           <div className="flex gap-2">
@@ -282,7 +282,7 @@ export function PoolSwap({ pool, btsUsd }: { pool: Pool; btsUsd?: number | null 
         />
         {rateLabel ? (
           <div className="flex items-center gap-2 text-sm">
-            <button type="button" onClick={() => setInverted((value) => !value)} className="inline-flex min-w-0 flex-1 items-center gap-2 text-left text-ink">
+            <button type="button" onClick={() => setInverted((value) => !value)} className="inline-flex min-w-0 flex-1 items-center gap-2 text-start text-ink">
               <ArrowLeftRight className="h-4 w-4 shrink-0 text-muted" />
               <span className="truncate font-mono text-xs">{rateLabel}</span>
             </button>
@@ -364,7 +364,7 @@ function AmountField({
           onChange={(event) => onChange(event.target.value.replace(/[^\d.]/g, ""))}
           className="h-full min-w-0 flex-1 bg-transparent px-3 font-mono text-sm text-ink outline-none"
         />
-        <span className="h-full border-l border-line px-3 font-mono text-sm leading-10 text-ink">{symbol}</span>
+        <span className="h-full border-s border-line px-3 font-mono text-sm leading-10 text-ink">{symbol}</span>
       </span>
       <span className="mt-1 block h-4 text-xs text-muted">{usd ?? ""}</span>
     </label>

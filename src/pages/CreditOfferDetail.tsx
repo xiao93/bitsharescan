@@ -42,14 +42,14 @@ export default function CreditOfferDetail() {
               { label: "Minimum deal", value: formatRaw(offer.min_deal_amount, asset?.precision ?? 5) },
               { label: "Maximum term", value: formatDuration(offer.max_duration_seconds) },
               { label: "Auto disable", value: <>{formatTime(offer.auto_disable_time)} · <TimeAgo time={offer.auto_disable_time} /></> },
-              { label: "Allowed borrowers", value: borrowerIds(offer).length ? borrowerIds(offer).map((account) => <span key={account} className="mr-3"><AccountLink id={account} /></span>) : "Anyone" },
+              { label: "Allowed borrowers", value: borrowerIds(offer).length ? borrowerIds(offer).map((account) => <span key={account} className="me-3"><AccountLink id={account} /></span>) : "Anyone" },
               { label: "Collateral", value: offer.acceptable_collateral?.length ? offer.acceptable_collateral.map(([assetId]) => assetSymbol(assetId)).join(", ") : "None listed" },
             ]} />
           </Panel>
           <Panel title={`Deals from this offer (${query.data.deals.length})`}>
             {query.data.deals.length ? (
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
+                <table className="w-full text-start text-sm">
                   <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
                     <tr>
                       <th className="px-4 py-2.5 font-medium">{t("Deal")}</th>

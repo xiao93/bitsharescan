@@ -57,7 +57,7 @@ export default function Workers() {
         {query.data && !rows.length ? <p className="px-4 py-8 text-center text-sm text-muted">{t("No workers in this tab.")}</p> : null}
         {rows.length ? (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[1100px] text-left text-sm">
+            <table className="w-full min-w-[1100px] text-start text-sm">
               <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
                 <tr>
                   <th className="px-4 py-2.5 font-medium">{t("ID")}</th>
@@ -65,8 +65,8 @@ export default function Workers() {
                   <th className="px-4 py-2.5 font-medium">{t("Account")}</th>
                   <th className="px-4 py-2.5 font-medium">{t("Daily pay")}</th>
                   <th className="px-4 py-2.5 font-medium">{t("Period")}</th>
-                  <th className="px-4 py-2.5 text-right font-medium">{t("Votes for")}</th>
-                  <th className="px-4 py-2.5 text-right font-medium">{t("Votes against")}</th>
+                  <th className="px-4 py-2.5 text-end font-medium">{t("Votes for")}</th>
+                  <th className="px-4 py-2.5 text-end font-medium">{t("Votes against")}</th>
                   <th className="px-4 py-2.5 font-medium">{t("Status")}</th>
                   <th className="px-4 py-2.5 font-medium">{t("Type")}</th>
                   <th className="px-4 py-2.5 font-medium">{t("Vesting balance")}</th>
@@ -107,8 +107,8 @@ function WorkerLine({ row, btsUsd, core }: { row: WorkerRow; btsUsd: number | nu
         <div className="text-xs text-muted">{usd == null ? "—" : usdText(usd)}</div>
       </td>
       <td className="px-4 py-3 text-xs text-muted">{formatTime(row.begin)}<br />{formatTime(row.end)}</td>
-      <td className="px-4 py-3 text-right font-mono tabular-nums">{formatStake(row.votesFor)} {core}</td>
-      <td className="px-4 py-3 text-right font-mono tabular-nums">{asBig(row.votesAgainst) === 0n ? "—" : `${formatStake(row.votesAgainst)} ${core}`}</td>
+      <td className="px-4 py-3 text-end font-mono tabular-nums">{formatStake(row.votesFor)} {core}</td>
+      <td className="px-4 py-3 text-end font-mono tabular-nums">{asBig(row.votesAgainst) === 0n ? "—" : `${formatStake(row.votesAgainst)} ${core}`}</td>
       <td className="px-4 py-3"><Status row={row} /></td>
       <td className="px-4 py-3">{t(row.type)}</td>
       <td className="px-4 py-3">{row.vestingId ? <Link to={`/object/${row.vestingId}`} className={`${linkClass} font-mono text-xs`}>{row.vestingId}</Link> : "—"}</td>

@@ -89,7 +89,7 @@ export function SearchBar({ size = "md", autoFocus = false, id }: { size?: "md" 
             aria-expanded={open}
             aria-label={t("All Filters")}
             onClick={() => setOpen((value) => !value)}
-            className={`flex h-full items-center gap-1 border-r border-line text-ink hover:bg-line/40 ${tall ? "px-3 text-sm" : "px-2.5 text-xs"}`}
+            className={`flex h-full items-center gap-1 border-e border-line text-ink hover:bg-line/40 ${tall ? "px-3 text-sm" : "px-2.5 text-xs"}`}
           >
             <span className={`truncate ${tall ? "max-w-[9rem]" : "max-w-[6.5rem]"}`}>{buttonLabel(filter)}</span>
             <ChevronDown className={`shrink-0 text-muted transition-transform duration-200 ${open ? "rotate-180" : ""} ${tall ? "h-4 w-4" : "h-3.5 w-3.5"}`} aria-hidden />
@@ -98,7 +98,7 @@ export function SearchBar({ size = "md", autoFocus = false, id }: { size?: "md" 
             <ul
               role="listbox"
               aria-label={t("All Filters")}
-              className="absolute left-0 top-full z-40 mt-1 min-w-[12rem] overflow-hidden rounded-lg border border-line bg-card py-1 shadow-lg"
+              className="absolute start-0 top-full z-40 mt-1 min-w-[12rem] overflow-hidden rounded-lg border border-line bg-card py-1 shadow-lg"
             >
               {FILTERS.map((item) => (
                 <li key={item.id} role="option" aria-selected={filter === item.id}>
@@ -108,7 +108,7 @@ export function SearchBar({ size = "md", autoFocus = false, id }: { size?: "md" 
                       setFilter(item.id)
                       setOpen(false)
                     }}
-                    className={`flex w-full px-3 py-1.5 text-left text-sm hover:bg-line/40 ${filter === item.id ? "bg-tint text-link" : "text-ink"}`}
+                    className={`flex w-full px-3 py-1.5 text-start text-sm hover:bg-line/40 ${filter === item.id ? "bg-tint text-link" : "text-ink"}`}
                   >
                     {t(item.label)}
                   </button>
@@ -125,13 +125,13 @@ export function SearchBar({ size = "md", autoFocus = false, id }: { size?: "md" 
             onChange={(event) => setQuery(event.target.value)}
             placeholder={t("Search by block, transaction, account, asset, or object ID")}
             title={t("Search by block, transaction, account, asset, or object ID")}
-            className={`bx-search h-full w-full border-0 bg-transparent pl-3 pr-14 text-ink outline-none placeholder:text-muted ${tall ? "text-base" : "text-sm"}`}
+            className={`bx-search h-full w-full border-0 bg-transparent ps-3 pe-14 text-ink outline-none placeholder:text-muted ${tall ? "text-base" : "text-sm"}`}
             aria-label={t("Search the BitShares blockchain")}
           />
           <button
             type="submit"
             disabled={busy}
-            className={`absolute top-1 right-1 flex items-center justify-center rounded-md bg-link text-white hover:bg-link-dark disabled:opacity-60 ${tall ? "h-10 w-12" : "h-8 w-10"}`}
+            className={`absolute top-1 end-1 flex items-center justify-center rounded-md bg-link text-white hover:bg-link-dark disabled:opacity-60 ${tall ? "h-10 w-12" : "h-8 w-10"}`}
             aria-label={t("Search")}
           >
             <Search className={tall ? "h-5 w-5" : "h-4 w-4"} />

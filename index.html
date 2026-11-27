@@ -12,6 +12,31 @@
           if (theme !== "light") document.documentElement.classList.add("dark")
           document.documentElement.style.colorScheme = theme === "light" ? "light" : "dark"
         } catch (e) {}
+        try {
+          var langs = ["en","zh","zh-TW","ko","ru","ja","vi","id","es","pt","fr","ar","fa","uk"]
+          var tags = {"en":"en-US","zh":"zh-CN","zh-TW":"zh-TW","ko":"ko-KR","ru":"ru-RU","ja":"ja-JP","vi":"vi-VN","id":"id-ID","es":"es-ES","pt":"pt-BR","fr":"fr-FR","ar":"ar-u-nu-latn","fa":"fa-IR-u-nu-latn","uk":"uk-UA"}
+          var saved = localStorage.getItem("bitscan.lang")
+          var lang = saved && langs.indexOf(saved) >= 0 ? saved : ""
+          if (!lang) {
+            var list = []
+            if (navigator.languages) list = list.concat(navigator.languages)
+            if (navigator.language) list.push(navigator.language)
+            for (var i = 0; i < list.length; i++) {
+              var raw = list[i]
+              if (!raw) continue
+              var tag = String(raw).toLowerCase().replace(/_/g, "-")
+              var base = tag.split("-")[0]
+              if (base === "zh") {
+                lang = tag.indexOf("hant") >= 0 || tag.indexOf("zh-tw") === 0 || tag.indexOf("zh-hk") === 0 || tag.indexOf("zh-mo") === 0 ? "zh-TW" : "zh"
+                break
+              }
+              if (langs.indexOf(base) >= 0) { lang = base; break }
+            }
+          }
+          if (!lang) lang = "en"
+          document.documentElement.lang = tags[lang] || lang
+          document.documentElement.dir = lang === "ar" || lang === "fa" ? "rtl" : "ltr"
+        } catch (e) {}
       })()
     </script>
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />

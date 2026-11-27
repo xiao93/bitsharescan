@@ -218,12 +218,12 @@ function RankView({ chartId, view, rows, grid, digits, unit }: { chartId: string
   }
   return (
     <div className="overflow-hidden rounded-xl border border-line bg-card">
-      <table className="w-full text-left text-sm">
+      <table className="w-full text-start text-sm">
         <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
           <tr>
             <th className="px-4 py-2 font-medium">{t("Name")}</th>
             <th className="px-4 py-2 font-medium">{view === "share" ? t("Share") : ""}</th>
-            <th className="px-4 py-2 text-right font-medium">{t("Amount")}</th>
+            <th className="px-4 py-2 text-end font-medium">{t("Amount")}</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-line">
@@ -239,7 +239,7 @@ function RankView({ chartId, view, rows, grid, digits, unit }: { chartId: string
                 </div>
               </td>
               <td className="px-4 py-2 font-mono text-xs tabular-nums text-muted">{view === "share" ? `${((row.value / total) * 100).toFixed(1)}%` : ""}</td>
-              <td className="px-4 py-2 text-right font-mono tabular-nums">{text(row.value)}</td>
+              <td className="px-4 py-2 text-end font-mono tabular-nums">{text(row.value)}</td>
             </tr>
           ))}
         </tbody>
@@ -292,18 +292,18 @@ function PriceTable({ points, digits }: { points: Point[]; digits: number }) {
   return (
     <div className="mt-6 overflow-hidden rounded-xl border border-line bg-card">
       <div className="max-h-[28rem] overflow-auto">
-        <table className="w-full text-left text-sm">
+        <table className="w-full text-start text-sm">
           <thead className="sticky top-0 bg-canvas text-[11px] uppercase tracking-wide text-muted">
             <tr>
               <th className="px-4 py-2 font-medium">{t("Date")}</th>
-              <th className="px-4 py-2 text-right font-medium">{t("Close price")}</th>
+              <th className="px-4 py-2 text-end font-medium">{t("Close price")}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-line">
             {rows.map((row) => (
               <tr key={row.date}>
                 <td className="px-4 py-2">{row.date}</td>
-                <td className="px-4 py-2 text-right font-mono tabular-nums">${formatDecimal(row.value, digits)}</td>
+                <td className="px-4 py-2 text-end font-mono tabular-nums">${formatDecimal(row.value, digits)}</td>
               </tr>
             ))}
           </tbody>
@@ -377,7 +377,7 @@ function AreaChart({ series, digits, bucket, onZoom }: { series: LineSeries[]; d
   }
 
   return (
-    <div ref={host} className="relative w-full rounded-xl border border-line bg-card p-2">
+    <div ref={host} dir="ltr" className="relative w-full rounded-xl border border-line bg-card p-2">
       <svg
         viewBox={`0 0 ${width} ${height}`}
         width="100%"

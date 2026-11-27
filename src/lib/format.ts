@@ -108,9 +108,8 @@ export function formatDecimal(value: string | number | null | undefined, maxDigi
 
 export function compactNumber(value: number): string {
   if (!Number.isFinite(value)) return "—"
-  const lang = getLanguage()
   const loc = numberLocale()
-  const compactFrom = lang === "en" || lang === "ru" ? 1e3 : 1e4
+  const compactFrom = isCjk() ? 1e4 : 1e3
   if (Math.abs(value) < compactFrom) return value.toLocaleString(loc, { maximumFractionDigits: 2 })
   return new Intl.NumberFormat(loc, { notation: "compact", compactDisplay: "short", maximumFractionDigits: 2 }).format(value)
 }
@@ -202,6 +201,14 @@ const MEMBERSHIP: Record<Lang, { lifetime: string; basic: string; annual: string
   ko: { lifetime: "평생", basic: "일반", annual: "연간" },
   ru: { lifetime: "Пожизненный", basic: "Базовый", annual: "Годовой" },
   ja: { lifetime: "生涯会員", basic: "一般", annual: "年会費" },
+  vi: { lifetime: "Trọn đời", basic: "Cơ bản", annual: "Hàng năm" },
+  id: { lifetime: "Seumur hidup", basic: "Dasar", annual: "Tahunan" },
+  es: { lifetime: "Vitalicio", basic: "Básico", annual: "Anual" },
+  pt: { lifetime: "Vitalício", basic: "Básico", annual: "Anual" },
+  fr: { lifetime: "À vie", basic: "Basique", annual: "Annuel" },
+  ar: { lifetime: "مدى الحياة", basic: "أساسي", annual: "سنوي" },
+  fa: { lifetime: "مادام‌العمر", basic: "پایه", annual: "سالانه" },
+  uk: { lifetime: "Довічний", basic: "Базовий", annual: "Річний" },
 }
 
 export function membershipOf(expiration: string | undefined): { label: string; className: string } {

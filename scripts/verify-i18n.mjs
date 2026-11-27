@@ -20,6 +20,14 @@ const dicts = {
   ko: loadDict("ko.ts"),
   ru: loadDict("ru.ts"),
   ja: loadDict("ja.ts"),
+  vi: loadDict("vi.ts"),
+  id: loadDict("id.ts"),
+  es: loadDict("es.ts"),
+  pt: loadDict("pt.ts"),
+  fr: loadDict("fr.ts"),
+  ar: loadDict("ar.ts"),
+  fa: loadDict("fa.ts"),
+  uk: loadDict("uk.ts"),
 }
 
 const zhKeys = Object.keys(zh)

@@ -72,9 +72,14 @@ function NavDropdown({ label, items }: { label: string; items: { label: string; 
     const trigger = root.getBoundingClientRect()
     const width = menu.offsetWidth
     const margin = 8
-    const overflowsRight = trigger.left + width > window.innerWidth - margin
-    const overflowsLeft = trigger.right - width < margin
-    setAlignEnd(overflowsRight && !overflowsLeft)
+    const rtl = getComputedStyle(root).direction === "rtl"
+    const overflowsEnd = rtl
+      ? trigger.right - width < margin
+      : trigger.left + width > window.innerWidth - margin
+    const overflowsStart = rtl
+      ? trigger.left + width > window.innerWidth - margin
+      : trigger.right - width < margin
+    setAlignEnd(overflowsEnd && !overflowsStart)
   }
 
   useLayoutEffect(() => {
@@ -97,7 +102,7 @@ function NavDropdown({ label, items }: { label: string; items: { label: string; 
         ref={menuRef}
         className={cn(
           "invisible absolute top-full z-20 min-w-44 pt-1 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100",
-          alignEnd ? "right-0" : "left-0",
+          alignEnd ? "end-0" : "start-0",
         )}
       >
         <div className="rounded-lg border border-line bg-card py-1 shadow-lg">
@@ -201,7 +206,7 @@ export function Layout() {
                   onChange={(event) => {
                     if (isLang(event.target.value)) setLang(event.target.value)
                   }}
-                  className="h-7 max-w-[10.5rem] rounded-md border border-line bg-card px-2 text-xs text-ink"
+                  className="h-7 max-w-[14rem] rounded-md border border-line bg-card px-2 text-xs text-ink"
                 >
                   {LANG_OPTIONS.map((option) => (
                     <option key={option.id} value={option.id}>{option.label}</option>
@@ -225,7 +230,7 @@ export function Layout() {
                 ) : null}
               </span>
             </NavLink>
-            <div className="ml-auto flex items-center gap-0.5">
+            <div className="ms-auto flex items-center gap-0.5">
               <nav className="hidden items-center gap-0.5 lg:flex" aria-label={t("Primary")}>
                 {NAV.map((item) =>
                   item.children ? (
@@ -281,7 +286,7 @@ export function Layout() {
                     <div className="px-2.5 pt-2 text-xs font-semibold tracking-wide text-muted">{t(item.label)}</div>
                   )}
                   {item.children?.map((child) => (
-                    <NavLink key={child.to} to={child.to} className={({ isActive }) => cn("block pl-4", navClass(isActive))}>
+                    <NavLink key={child.to} to={child.to} className={({ isActive }) => cn("block ps-4", navClass(isActive))}>
                       {t(child.label)}
                     </NavLink>
                   ))}
@@ -394,7 +399,7 @@ function SettingsMenu({ onEndpoints }: { onEndpoints: () => void }) {
   const timeMode = useTimeMode()
   useEffect(() => subscribeTheme(setThemeChoice), [])
   return (
-    <div className="absolute right-0 top-full z-50 w-72 pt-1" role="dialog" aria-label={t("Settings")}>
+    <div className="absolute end-0 top-full z-50 w-72 pt-1" role="dialog" aria-label={t("Settings")}>
       <div className="rounded-lg border border-line bg-card p-3 shadow-lg">
         <Segmented
           label={t("Theme")}
@@ -418,20 +423,25 @@ function SettingsMenu({ onEndpoints }: { onEndpoints: () => void }) {
         />
         <div className="mb-2.5">
           <div className="mb-1 text-[11px] font-medium uppercase tracking-wide text-muted">{t("Language")}</div>
-          <select
-            value={lang}
-            aria-label={t("Language")}
-            onChange={(event) => {
-              if (isLang(event.target.value)) setLang(event.target.value)
-            }}
-            className="h-8 w-full rounded-md border border-line bg-canvas px-2 text-xs text-ink"
-          >
+          <div className="grid max-h-64 grid-cols-2 gap-1 overflow-y-auto pe-0.5" role="listbox" aria-label={t("Language")}>
             {LANG_OPTIONS.map((option) => (
-              <option key={option.id} value={option.id}>{option.label}</option>
+              <button
+                key={option.id}
+                type="button"
+                role="option"
+                aria-selected={lang === option.id}
+                onClick={() => setLang(option.id)}
+                className={cn(
+                  "rounded-md px-2 py-1.5 text-start text-xs leading-tight",
+                  lang === option.id ? "bg-tint font-medium text-link" : "text-ink hover:bg-canvas",
+                )}
+              >
+                {option.label}
+              </button>
             ))}
-          </select>
+          </div>
         </div>
-        <button type="button" className="mt-1 w-full rounded-md px-2 py-1.5 text-left text-xs font-medium text-link hover:bg-canvas" onClick={onEndpoints}>
+        <button type="button" className="mt-1 w-full rounded-md px-2 py-1.5 text-start text-xs font-medium text-link hover:bg-canvas" onClick={onEndpoints}>
           {t("API endpoints…")}
         </button>
       </div>

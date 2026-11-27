@@ -122,13 +122,13 @@ export default function NodeTracker() {
       <Panel title={t("API nodes")} className="mb-4">
         {!probes ? <LoadingBlock /> : (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[760px] text-left text-sm">
+            <table className="w-full min-w-[760px] text-start text-sm">
               <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
                 <tr>
                   <th className="px-4 py-2 font-medium">{t("Node")}</th>
                   <th className="px-4 py-2 font-medium">{t("Status")}</th>
-                  <th className="px-4 py-2 text-right font-medium">{t("Latency")}</th>
-                  <th className="px-4 py-2 text-right font-medium">{t("Head block")}</th>
+                  <th className="px-4 py-2 text-end font-medium">{t("Latency")}</th>
+                  <th className="px-4 py-2 text-end font-medium">{t("Head block")}</th>
                   <th className="px-4 py-2 font-medium">{t("Chain id")}</th>
                   <th className="px-4 py-2 font-medium">{t("Version")}</th>
                   <th className="px-4 py-2 font-medium">{t("Location")}</th>
@@ -144,8 +144,8 @@ export default function NodeTracker() {
                         <div className="font-mono text-xs text-muted">{node.url}</div>
                       </td>
                       <td className={`px-4 py-2 ${probe?.online ? "text-success" : "text-danger"}`}>{probe ? (probe.online ? t("Online") : t("Offline")) : "…"}</td>
-                      <td className="px-4 py-2 text-right font-mono tabular-nums">{probe?.latency == null ? "—" : `${probe.latency} ms`}</td>
-                      <td className="px-4 py-2 text-right font-mono tabular-nums">{probe?.head ?? "—"}</td>
+                      <td className="px-4 py-2 text-end font-mono tabular-nums">{probe?.latency == null ? "—" : `${probe.latency} ms`}</td>
+                      <td className="px-4 py-2 text-end font-mono tabular-nums">{probe?.head ?? "—"}</td>
                       <td className="px-4 py-2 text-xs">{probe?.chainOk == null ? "—" : probe.chainOk ? t("Match") : t("Other chain")}</td>
                       <td className="px-4 py-2 font-mono text-xs">{probe?.version || "—"}</td>
                       <td className="px-4 py-2 text-muted">{placeLabel(places[hostnameOf(node.url)], t)}</td>
@@ -171,13 +171,13 @@ export default function NodeTracker() {
       <Panel title={t("Block producers")}>
         {!witnesses ? <LoadingBlock /> : (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[720px] text-left text-sm">
+            <table className="w-full min-w-[720px] text-start text-sm">
               <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
                 <tr>
                   <th className="px-4 py-2 font-medium">{t("Witness")}</th>
                   <th className="px-4 py-2 font-medium">{t("Status")}</th>
-                  <th className="px-4 py-2 text-right font-medium">{t("Last block")}</th>
-                  <th className="px-4 py-2 text-right font-medium">{t("Missed")}</th>
+                  <th className="px-4 py-2 text-end font-medium">{t("Last block")}</th>
+                  <th className="px-4 py-2 text-end font-medium">{t("Missed")}</th>
                   <th className="px-4 py-2 font-medium">{t("IP")}</th>
                   <th className="px-4 py-2 font-medium">{t("Country")}</th>
                   <th className="px-4 py-2 font-medium">{t("Source")}</th>
@@ -191,8 +191,8 @@ export default function NodeTracker() {
                     <tr key={row.id}>
                       <td className="px-4 py-2"><AccountLink id={row.account} /></td>
                       <td className="px-4 py-2 text-success">{t("Active witness")}</td>
-                      <td className="px-4 py-2 text-right font-mono tabular-nums">{row.lastBlock || "—"}</td>
-                      <td className="px-4 py-2 text-right font-mono tabular-nums">{row.missed}</td>
+                      <td className="px-4 py-2 text-end font-mono tabular-nums">{row.lastBlock || "—"}</td>
+                      <td className="px-4 py-2 text-end font-mono tabular-nums">{row.missed}</td>
                       <td className="px-4 py-2 font-mono text-xs">{endpoint && place ? `${endpoint.host} → ${place.ip}` : t("Unknown")}</td>
                       <td className="px-4 py-2">{placeLabel(place, t)}</td>
                       <td className="px-4 py-2 text-muted">{endpoint ? t(endpoint.source === "url" ? "Witness URL" : "Seed list") : t("Unknown")}</td>
@@ -237,11 +237,11 @@ function P2pSection({ snapshot }: { snapshot: P2pSnapshot | null }) {
         </div>
       </div>
       <div className="overflow-x-auto border-t border-line">
-        <table className="w-full min-w-[760px] text-left text-sm">
+        <table className="w-full min-w-[760px] text-start text-sm">
           <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
             <tr>
               <th className="px-4 py-2 font-medium">{t("IP")}</th>
-              <th className="px-4 py-2 text-right font-medium">{t("Port")}</th>
+              <th className="px-4 py-2 text-end font-medium">{t("Port")}</th>
               <th className="px-4 py-2 font-medium">{t("Country")}</th>
               <th className="px-4 py-2 font-medium">{t("Version")}</th>
               <th className="px-4 py-2 font-medium">{t("Last seen")}</th>
@@ -252,7 +252,7 @@ function P2pSection({ snapshot }: { snapshot: P2pSnapshot | null }) {
             {nodes.map((node) => (
               <tr key={`${node.ip}:${node.port}`}>
                 <td className="px-4 py-2 font-mono text-xs">{node.ip}</td>
-                <td className="px-4 py-2 text-right font-mono tabular-nums">{node.port}</td>
+                <td className="px-4 py-2 text-end font-mono tabular-nums">{node.port}</td>
                 <td className="px-4 py-2">{node.country ? `${flagEmoji(node.country_code)} ${t(node.country) === node.country ? node.country : t(node.country)}`.trim() : t("Unknown")}</td>
                 <td className="px-4 py-2 font-mono text-xs">{p2pVersion(node) || "—"}</td>
                 <td className="px-4 py-2 font-mono text-xs text-muted">{node.last_seen || "—"}</td>

@@ -78,9 +78,9 @@ export default function Proposals() {
           ) : null}
           {rows.length && !query.loading ? (
             <>
-              <p className="bx-swipe">{t("Swipe sideways to see all columns →")}</p>
+              <p className="bx-swipe">{t("Swipe sideways to see all columns →").replace(/\s*→\s*$/, "")} <span className="inline-block rtl:rotate-180" aria-hidden="true">→</span></p>
               <div className="bx-scroll overflow-x-auto">
-                <table className="w-full min-w-[720px] text-left text-sm">
+                <table className="w-full min-w-[720px] text-start text-sm">
                   <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
                     <tr>
                       {COLUMNS.map((label) => (

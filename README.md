@@ -30,7 +30,7 @@ BitSharesScan 是一个纯前端静态站点（React 19 + TypeScript + Vite + Ta
 - 节点追踪：主网与测试网的公共 API 节点，以及由 `scripts/p2p-crawl.py` 生成的 P2P 节点快照和地图
 - 交互式 JSON 树：长十六进制字段可展开、复制，并解码为 UTF-8
 - 网络参数与手续费表、图表统计、隐私转账统计
-- 6 种界面语言（英语、简体中文、繁体中文、韩语、俄语、日语；`en` / `zh-CN` / `zh-TW` / `ko` / `ru` / `ja`），按浏览器语言自动选择，数字和日期按对应 locale 格式化
+- 14 种界面语言（英语、简体中文、繁体中文、韩语、俄语、日语、越南语、印尼语、西班牙语、葡萄牙语、法语、阿拉伯语、波斯语、乌克兰语；`en` / `zh-CN` / `zh-TW` / `ko` / `ru` / `ja` / `vi` / `id` / `es` / `pt` / `fr` / `ar` / `fa` / `uk`），按浏览器语言自动选择，数字和日期按对应 locale 格式化；阿拉伯语与波斯语为从右到左排版
 - 主网 / 测试网切换，浅色 / Dim / 黑色主题
 
 ### 本地开发
@@ -153,7 +153,7 @@ This repository is the **original project source**. `npm run build` produces exa
 - Node tracker: public API nodes plus mainnet and testnet P2P snapshots and a map, produced by `scripts/p2p-crawl.py`
 - Interactive JSON tree: expand, copy, and UTF-8-decode long hex fields
 - Chain parameters and fee schedule, charts, confidential transfer stats
-- Six UI languages (English, Simplified Chinese, Traditional Chinese, Korean, Russian, Japanese; `en` / `zh-CN` / `zh-TW` / `ko` / `ru` / `ja`), with automatic browser language detection and locale-aware number and date formatting
+- Fourteen UI languages (English, Simplified Chinese, Traditional Chinese, Korean, Russian, Japanese, Vietnamese, Indonesian, Spanish, Portuguese, French, Arabic, Persian, and Ukrainian; `en` / `zh-CN` / `zh-TW` / `ko` / `ru` / `ja` / `vi` / `id` / `es` / `pt` / `fr` / `ar` / `fa` / `uk`), with automatic browser language detection and locale-aware number and date formatting; Arabic and Persian use a right-to-left layout
 - Mainnet / testnet switching, light / dim / black themes
 
 ### Develop

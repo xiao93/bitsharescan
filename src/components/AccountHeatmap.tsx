@@ -168,7 +168,7 @@ export function AccountHeatmap({ accountId }: { accountId: string }) {
               sub={busiest && !days.loading ? fmtDay(busiest.date) : periodLabel}
             />
           </div>
-          <div ref={scroller} className={cn("overflow-x-auto pb-2", days.loading && "animate-pulse opacity-60")}>
+          <div ref={scroller} dir="ltr" className={cn("overflow-x-auto pb-2", days.loading && "animate-pulse opacity-60")}>
             <div className="inline-block">
               <div className="relative ml-8 h-4 text-[10px] text-muted" style={{ width: weeks.length * (CELL + GAP) }}>
                 {monthLabels.map((month) => (

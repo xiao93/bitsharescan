@@ -43,8 +43,8 @@ export function AccountRelations({
               : canTotal
                 ? <>{t("Total proxied votes")}: …</>
                 : <>{t("Sum of this page")}: {stakes.loading ? "…" : formatDecimal(pageStake, 2)} {coreSymbol()}</>}
-            <span className="ml-2 text-xs">{t("Liquid and vesting BTS. Tickets are not included.")}</span>
-            {kind === "proxies" && total > PROXY_TOTAL_LIMIT ? <span className="ml-2 text-xs">{t("Too many proxies to total. Showing this page.")}</span> : null}
+            <span className="ms-2 text-xs">{t("Liquid and vesting BTS. Tickets are not included.")}</span>
+            {kind === "proxies" && total > PROXY_TOTAL_LIMIT ? <span className="ms-2 text-xs">{t("Too many proxies to total. Showing this page.")}</span> : null}
           </span>
         ) : null}
       </div>
@@ -53,7 +53,7 @@ export function AccountRelations({
       {list.data && !list.data.rows.length ? <Empty title="No accounts" body="Nothing matched this view yet." /> : null}
       {list.data?.rows.length ? (
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
+          <table className="w-full text-start text-sm">
             <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
               <tr>
                 <th className="px-4 py-2.5 font-medium">#</th>

@@ -68,7 +68,7 @@ export default function Locking() {
       <Panel title="Totals by lock type" className="mb-4" bodyClassName="">
         <p className="px-4 pt-3 text-xs text-muted">{t("Voting power is the ticket value field. Many lock_forever tickets currently store 0, so that total undercounts them.")}</p>
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
+          <table className="w-full text-start text-sm">
             <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
               <tr>
                 <th className="px-4 py-2.5 font-medium">{t("Lock")}</th>
@@ -121,7 +121,7 @@ function TicketTable({ rows }: { rows: Ticket[] }) {
   const { t } = useI18n()
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[760px] text-left text-sm">
+      <table className="w-full min-w-[760px] text-start text-sm">
         <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
           <tr>
             <th className="px-4 py-2.5 font-medium">{t("Ticket")}</th>

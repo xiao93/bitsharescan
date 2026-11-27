@@ -146,7 +146,7 @@ export function Panel({
         </header>
       ) : null}
       <div className={cn("min-h-0", bodyClassName)}>{children}</div>
-      {footer ? <div className="mt-auto shrink-0 border-t border-line px-4 py-3 text-right text-sm">{footer}</div> : null}
+      {footer ? <div className="mt-auto shrink-0 border-t border-line px-4 py-3 text-end text-sm">{footer}</div> : null}
     </section>
   )
 }
@@ -231,7 +231,7 @@ export function Pager({
         onClick={() => onPage(page - 1)}
         className="inline-flex items-center gap-1 rounded-lg border border-line px-3 py-1.5 font-medium text-ink disabled:opacity-40"
       >
-        <ChevronLeft className="h-4 w-4" /> {t("Previous")}
+        <ChevronLeft className="h-4 w-4 rtl:rotate-180" /> {t("Previous")}
       </button>
       <span className="text-muted">
         {totalLabel ? t("Page {page} · {total}", { page, total: t(totalLabel) }) : t("Page {page}", { page })}
@@ -242,7 +242,7 @@ export function Pager({
         onClick={() => onPage(page + 1)}
         className="inline-flex items-center gap-1 rounded-lg border border-line px-3 py-1.5 font-medium text-ink disabled:opacity-40"
       >
-        {t("Next")} <ChevronRight className="h-4 w-4" />
+        {t("Next")} <ChevronRight className="h-4 w-4 rtl:rotate-180" />
       </button>
     </div>
   )
@@ -285,7 +285,7 @@ export function OpTable({ rows }: { rows: OpView[] }) {
   }
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[860px] text-left text-sm">
+      <table className="w-full min-w-[860px] text-start text-sm">
         <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
           <tr>
             <th className="px-4 py-2.5 font-medium">{t("Txn")}</th>
@@ -710,6 +710,12 @@ function HexString({ value }: { value: string }) {
 }
 
 export function JsonTree({ value, depth = 0 }: { value: unknown; depth?: number }) {
+  const tree = <JsonTreeInner value={value} depth={depth} />
+  if (depth === 0) return <div className="font-mono" dir="ltr">{tree}</div>
+  return tree
+}
+
+function JsonTreeInner({ value, depth = 0 }: { value: unknown; depth?: number }) {
   if (value == null) return <span className="text-muted">null</span>
   if (typeof value === "string") {
     if (/^\d+\.\d+\.\d+$/.test(value)) return <IdLink id={value} />
@@ -727,7 +733,7 @@ export function JsonTree({ value, depth = 0 }: { value: unknown; depth?: number 
         {value.map((item, index) => (
           <div key={index} className="py-0.5">
             <span className="text-muted">{index}: </span>
-            <JsonTree value={item} depth={depth + 1} />
+            <JsonTreeInner value={item} depth={depth + 1} />
           </div>
         ))}
       </div>
@@ -741,7 +747,7 @@ export function JsonTree({ value, depth = 0 }: { value: unknown; depth?: number 
         {entries.map(([key, item]) => (
           <div key={key} className="py-0.5">
             <span className="text-muted">{key}: </span>
-            <JsonTree value={item} depth={depth + 1} />
+            <JsonTreeInner value={item} depth={depth + 1} />
           </div>
         ))}
       </div>

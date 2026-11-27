@@ -96,7 +96,7 @@ export default function TxDetail() {
                   hint: "The cryptographic signatures that authorize this transaction under the signing accounts\u2019 keys.",
                   value: data.signed?.signatures?.length
                     ? data.signed.signatures.map((sig) => (
-                        <span key={sig} className="mr-3 inline-flex items-center gap-1 font-mono text-xs">
+                        <span key={sig} className="me-3 inline-flex items-center gap-1 font-mono text-xs">
                           {shortHash(sig, 14, 8)} <CopyButton value={sig} />
                         </span>
                       ))

@@ -5,7 +5,7 @@
 @custom-variant black (&:where([data-theme="black"], [data-theme="black"] *));
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", "Noto Sans Arabic", "Vazirmatn", "Segoe UI", "Tahoma", "Geeza Pro", ui-sans-serif, system-ui, sans-serif;
   --color-link: #0784c3;
   --color-link-dark: #066a9c;
   --color-ink: #08131f;
@@ -254,4 +254,14 @@ code,
 /* Room under the footer so the host's fixed badge never covers the last links. */
 .site-footer {
   padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Keep hashes, object IDs, amounts, and code in logical Latin order under RTL. */
+[dir="rtl"] .font-mono,
+[dir="rtl"] code,
+[dir="rtl"] pre,
+[dir="rtl"] .mono,
+[dir="rtl"] .ltr-isolate {
+  direction: ltr;
+  unicode-bidi: isolate;
 }

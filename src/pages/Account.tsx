@@ -173,12 +173,12 @@ export default function AccountPage() {
                       <Empty title={t("No balances")} />
                     ) : filteredBalances.length ? (
                       <div className="max-h-80 overflow-auto">
-                        <table className="w-full text-left text-sm">
+                        <table className="w-full text-start text-sm">
                           <thead className="sticky top-0 bg-card text-[11px] uppercase tracking-wide text-muted">
                             <tr>
                               <th className="px-3 py-2 font-medium">{t("Asset")}</th>
                               <th className="px-3 py-2 font-medium">{t("Balance")}</th>
-                              <th className="px-3 py-2 text-right font-medium">{t("Value")}</th>
+                              <th className="px-3 py-2 text-end font-medium">{t("Value")}</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-line">
@@ -193,7 +193,7 @@ export default function AccountPage() {
                                   <div className="max-w-[9rem] truncate text-xs text-muted">{assetTitle(row.asset)}</div>
                                 </td>
                                 <td className="break-all px-3 py-2">{formatRaw(row.raw, row.asset.precision)}</td>
-                                <td className="px-3 py-2 text-right text-muted">{row.usd == null ? "—" : compactUsd(row.usd)}</td>
+                                <td className="px-3 py-2 text-end text-muted">{row.usd == null ? "—" : compactUsd(row.usd)}</td>
                               </tr>
                             ))}
                           </tbody>
@@ -269,7 +269,7 @@ export default function AccountPage() {
                 {ops.loading && !ops.data ? <LoadingBlock /> : null}
                 {ops.error ? <div className="p-4"><ErrorBox message={ops.error} onRetry={ops.reload} /></div> : null}
                 {ops.data ? <OpTable rows={ops.data.rows} /> : null}
-                <div className="border-t border-line px-4 py-3 text-left">
+                <div className="border-t border-line px-4 py-3 text-start">
                   <Link className="text-sm text-link hover:underline" to={`/export?type=operations&a=${encodeURIComponent(full.account.name)}`}>
                     [ {t("Download CSV Export")} ]
                   </Link>
@@ -366,7 +366,7 @@ function Dropdown({ label, children }: { label: ReactNode; children: ReactNode }
         type="button"
         aria-expanded={open}
         onClick={() => setOpen((value) => !value)}
-        className="flex w-full items-center justify-between gap-2 rounded-lg border border-line bg-card px-3 py-2 text-left text-sm hover:bg-line/40"
+        className="flex w-full items-center justify-between gap-2 rounded-lg border border-line bg-card px-3 py-2 text-start text-sm hover:bg-line/40"
       >
         <span>{label}</span>
         <ChevronDown className={`h-4 w-4 shrink-0 text-muted transition-transform duration-200 ${open ? "rotate-180" : ""}`} aria-hidden />
@@ -439,7 +439,7 @@ function OrderTable({ orders }: { orders: LimitOrder[] }) {
   const shown = orders.slice(0, 200)
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[720px] text-left text-sm">
+      <table className="w-full min-w-[720px] text-start text-sm">
         <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
           <tr>
             <th className="px-4 py-2.5 font-medium">{t("Order")}</th>

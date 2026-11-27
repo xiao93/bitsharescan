@@ -196,7 +196,7 @@ function Holders({ assetPrecision, supply, page, holders, onPage }: {
       {holders.loading && !holders.data ? <LoadingBlock /> : null}
       {holders.error ? <div className="p-4"><ErrorBox message={holders.error} onRetry={holders.reload} /></div> : null}
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm">
+        <table className="w-full text-start text-sm">
           <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
             <tr>
               <th className="px-4 py-2.5 font-medium">#</th>
@@ -249,7 +249,7 @@ function Feeds({ data }: { data: AssetPageData }) {
         { label: "Published", value: bit.current_feed_publication_time ? formatTime(bit.current_feed_publication_time) : "—" },
       ]} />
       <div className="overflow-x-auto border-t border-line">
-        <table className="w-full min-w-[720px] text-left text-sm">
+        <table className="w-full min-w-[720px] text-start text-sm">
           <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
             <tr>
               <th className="px-4 py-2 font-medium">{t("Publisher")}</th>
@@ -267,7 +267,7 @@ function Feeds({ data }: { data: AssetPageData }) {
               const expired = lifetime > 0 && Date.now() - parseChainTime(time) > lifetime * 1000
               return (
                 <tr key={publisher} className={expired ? "text-muted" : ""}>
-                  <td className="px-4 py-2"><AccountLink id={publisher} className={expired ? "text-muted hover:text-muted" : undefined} />{expired ? <span className="ml-2 text-xs uppercase tracking-wide">{t("Expired")}</span> : null}</td>
+                  <td className="px-4 py-2"><AccountLink id={publisher} className={expired ? "text-muted hover:text-muted" : undefined} />{expired ? <span className="ms-2 text-xs uppercase tracking-wide">{t("Expired")}</span> : null}</td>
                   <td className="px-4 py-2">{priceText(body.settlement_price)}</td>
                   <td className="px-4 py-2 font-mono">{ratio(body.maintenance_collateral_ratio)}</td>
                   <td className="px-4 py-2 font-mono">{ratio(body.maximum_short_squeeze_ratio)}</td>
@@ -297,7 +297,7 @@ function Positions({ data }: { data: AssetPageData }) {
   }
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[760px] text-left text-sm">
+      <table className="w-full min-w-[760px] text-start text-sm">
         <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
           <tr>
             <th className="px-4 py-2 font-medium">{t("Account")}</th>
@@ -311,9 +311,9 @@ function Positions({ data }: { data: AssetPageData }) {
           {rows.map((row) => (
             <tr key={row.id}>
               <td className="px-4 py-2"><AccountLink id={row.borrower} /></td>
-              <td className="px-4 py-2 text-right font-mono tabular-nums">{formatRaw(row.debt, data.asset.precision)} {data.asset.symbol}</td>
-              <td className="px-4 py-2 text-right font-mono tabular-nums">{formatRaw(row.collateral, collPrec)} {assetSymbol(backing)}</td>
-              <td className="px-4 py-2 text-right font-mono tabular-nums">{row.ratio == null ? "—" : `${(row.ratio * 100).toLocaleString("en-US", { maximumFractionDigits: 2 })}%`}</td>
+              <td className="px-4 py-2 text-end font-mono tabular-nums">{formatRaw(row.debt, data.asset.precision)} {data.asset.symbol}</td>
+              <td className="px-4 py-2 text-end font-mono tabular-nums">{formatRaw(row.collateral, collPrec)} {assetSymbol(backing)}</td>
+              <td className="px-4 py-2 text-end font-mono tabular-nums">{row.ratio == null ? "—" : `${(row.ratio * 100).toLocaleString("en-US", { maximumFractionDigits: 2 })}%`}</td>
               <td className="px-4 py-2">{formatCallPrice(row.callPrice, assetSymbol(backing), data.asset.symbol)}</td>
             </tr>
           ))}
@@ -345,7 +345,7 @@ function formatCallPrice(value: number | null, collateral: string, debt: string)
 
 function SortHead({ label, active, dir, align, onClick }: { label: string; active: boolean; dir: "asc" | "desc"; align: "left" | "right"; onClick: () => void }) {
   return (
-    <th className={`px-4 py-2 font-medium ${align === "right" ? "text-right" : ""}`}>
+    <th className={`px-4 py-2 font-medium ${align === "right" ? "text-end" : ""}`}>
       <button type="button" onClick={onClick} className={`inline-flex w-full items-center gap-1 uppercase tracking-wide ${align === "right" ? "justify-end" : ""}`}>
         {label}
         <span className={active ? "text-link" : "text-transparent"} aria-hidden>{dir === "asc" ? "↑" : "↓"}</span>

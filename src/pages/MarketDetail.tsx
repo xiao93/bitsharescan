@@ -80,7 +80,7 @@ export default function MarketDetail() {
   const amountDp = columnFractionDigits(peekAsset(left)?.precision ?? 4, mid(book.map((row) => row.amount)), "amount")
   const totalDp = columnFractionDigits(peekAsset(right)?.precision ?? 4, mid(book.map((row) => row.total)), "total")
   const volumeDp = columnFractionDigits(peekAsset(volumeAsset)?.precision ?? 4, Number(volume) || 0, "amount")
-  const num = "px-4 py-1.5 text-right font-mono tabular-nums"
+  const num = "px-4 py-1.5 text-end font-mono tabular-nums"
 
   return (
     <div>
@@ -96,7 +96,7 @@ export default function MarketDetail() {
           <button type="button" onClick={() => invert.togglePair(baseSymbol, quoteSymbol)} className="mt-2 h-8 rounded-md border border-line px-2 text-xs font-medium text-ink">{flipped ? t("Showing inverted") : t("Invert")}</button>
         </div>
         {data ? (
-          <div className="text-right">
+          <div className="text-end">
             <div className="font-mono text-2xl font-semibold tabular-nums">{shown(data.ticker.latest) == null ? "—" : formatFixed(shown(data.ticker.latest), priceDp)} {right}</div>
             <div className={change >= 0 ? "text-sm text-success" : "text-sm text-danger"}>
               {Number.isFinite(change) ? `${change >= 0 ? "+" : ""}${change.toFixed(2)}%` : "—"} · {t("24h volume")} {volume == null ? "—" : formatFixed(Number(volume), volumeDp)} {volumeAsset}
@@ -117,12 +117,12 @@ export default function MarketDetail() {
           </Panel>
           <div className="grid gap-4 lg:grid-cols-2">
             <Panel title="Order book">
-              <table className="w-full text-left text-sm">
+              <table className="w-full text-start text-sm">
                 <thead className="text-[11px] uppercase tracking-wide text-muted">
                   <tr>
-                    <th className="px-4 py-2 text-right font-medium">{t("Price")} ({right})</th>
-                    <th className="px-4 py-2 text-right font-medium">{t("Amount")} ({left})</th>
-                    <th className="px-4 py-2 text-right font-medium">{t("Total")} ({right})</th>
+                    <th className="px-4 py-2 text-end font-medium">{t("Price")} ({right})</th>
+                    <th className="px-4 py-2 text-end font-medium">{t("Amount")} ({left})</th>
+                    <th className="px-4 py-2 text-end font-medium">{t("Total")} ({right})</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -148,11 +148,11 @@ export default function MarketDetail() {
               </table>
             </Panel>
             <Panel title="Recent trades">
-              <table className="w-full text-left text-sm">
+              <table className="w-full text-start text-sm">
                 <thead className="text-[11px] uppercase tracking-wide text-muted">
                   <tr>
-                    <th className="px-4 py-2 text-right font-medium">{t("Price")} ({right})</th>
-                    <th className="px-4 py-2 text-right font-medium">{left}</th>
+                    <th className="px-4 py-2 text-end font-medium">{t("Price")} ({right})</th>
+                    <th className="px-4 py-2 text-end font-medium">{left}</th>
                     <th className="px-4 py-2 font-medium">{t("Side")}</th>
                     <th className="px-4 py-2 font-medium">{t("Account")}</th>
                     <th className="px-4 py-2 font-medium">{t("Age")}</th>

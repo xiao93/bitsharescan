@@ -33,7 +33,7 @@ export default function Witnesses() {
         {query.loading ? <LoadingBlock /> : null}
         {query.error ? <div className="p-4"><ErrorBox message={query.error} onRetry={query.reload} /></div> : null}
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[760px] text-left text-sm">
+          <table className="w-full min-w-[760px] text-start text-sm">
             <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
               <tr>
                 <th className="px-4 py-2.5 font-medium">#</th>
@@ -52,7 +52,7 @@ export default function Witnesses() {
                     <AccountLink id={row.account} />
                     <div className="text-xs text-muted">
                       <Link to={`/object/${row.id}`} className={linkClass}>{row.id}</Link>
-                      {row.active ? <span className="ml-2 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[10px] font-medium text-success">{t("Serving")}</span> : null}
+                      {row.active ? <span className="ms-2 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[10px] font-medium text-success">{t("Serving")}</span> : null}
                     </div>
                   </td>
                   <td className="px-4 py-3">{formatStake(row.votes)} {coreSymbol()}</td>
@@ -62,7 +62,7 @@ export default function Witnesses() {
                   </td>
                   <td className="px-4 py-3">
                     <span className="font-mono text-xs" title={row.signingKey}>{shortHash(row.signingKey, 8, 6)}</span>
-                    {row.url ? <a className="ml-2 text-xs text-link" href={row.url} target="_blank" rel="noreferrer">url</a> : null}
+                    {row.url ? <a className="ms-2 text-xs text-link" href={row.url} target="_blank" rel="noreferrer">url</a> : null}
                   </td>
                 </tr>
               ))}

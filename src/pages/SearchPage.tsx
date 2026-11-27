@@ -72,7 +72,7 @@ export default function SearchPage() {
             {data.keys.map((id) => (
               <li key={id} className="px-4 py-3 text-sm">
                 <AccountLink id={id} />
-                <span className="ml-2 font-mono text-xs text-muted">{accountLabel(id) === id ? "" : id}</span>
+                <span className="ms-2 font-mono text-xs text-muted">{accountLabel(id) === id ? "" : id}</span>
               </li>
             ))}
           </ul>

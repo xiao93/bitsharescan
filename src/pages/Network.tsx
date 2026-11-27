@@ -57,7 +57,7 @@ export default function Network() {
           </Panel>
           <Panel title={t("Fee schedule · scale {scale}", { scale: String(fees?.scale ?? "—") })}>
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[640px] text-left text-sm">
+              <table className="w-full min-w-[640px] text-start text-sm">
                 <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
                   <tr>
                     <th className="px-4 py-2.5 font-medium">{t("Operation")}</th>

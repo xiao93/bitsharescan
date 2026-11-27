@@ -65,7 +65,7 @@ export default function PoolDetail() {
           <Panel title={t("Recent deposits, withdrawals, and swaps")}>
             {data.history.length ? (
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[720px] text-left text-sm">
+                <table className="w-full min-w-[720px] text-start text-sm">
                   <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
                     <tr>
                       <th className="px-4 py-2.5 font-medium">{t("Age")}</th>

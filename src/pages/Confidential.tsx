@@ -81,7 +81,7 @@ export default function Confidential() {
         {list.data && !list.data.rows.length ? <p className="px-4 py-8 text-center text-sm text-muted">{t("No confidential operations in this view.")}</p> : null}
         {list.data?.rows.length ? (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[980px] text-left text-sm">
+            <table className="w-full min-w-[980px] text-start text-sm">
               <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
                 <tr>
                   <th className="px-4 py-2.5 font-medium">{t("Type")}</th>
@@ -89,7 +89,7 @@ export default function Confidential() {
                   <th className="px-4 py-2.5 font-medium">{t("Time")}</th>
                   <th className="px-4 py-2.5 font-medium">{t("Account")}</th>
                   <th className="px-4 py-2.5 font-medium">{t("Public amount")}</th>
-                  <th className="px-4 py-2.5 text-right font-medium">{t("Inputs / outputs")}</th>
+                  <th className="px-4 py-2.5 text-end font-medium">{t("Inputs / outputs")}</th>
                   <th className="px-4 py-2.5 font-medium">{t("Fee")}</th>
                 </tr>
               </thead>
@@ -103,7 +103,7 @@ export default function Confidential() {
                       <td className="px-4 py-3 text-xs text-muted">{formatTime(op.time)}</td>
                       <td className="px-4 py-3">{side.account ? <AccountLink id={side.account} /> : "—"}</td>
                       <td className="px-4 py-3">{side.amount ? <AmountView value={side.amount} /> : <span className="text-muted">{t("Hidden")}</span>}</td>
-                      <td className="px-4 py-3 text-right font-mono tabular-nums">{side.inputs} / {side.outputs}</td>
+                      <td className="px-4 py-3 text-end font-mono tabular-nums">{side.inputs} / {side.outputs}</td>
                       <td className="px-4 py-3"><AmountView value={op.fee} /></td>
                     </tr>
                   )

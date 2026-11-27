@@ -101,7 +101,7 @@ function OfferTable({ rows }: { rows: CreditOffer[] }) {
   const { t } = useI18n()
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[860px] text-left text-sm">
+      <table className="w-full min-w-[860px] text-start text-sm">
         <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
           <tr>
             <th className="px-4 py-2.5 font-medium">{t("Offer")}</th>
@@ -136,7 +136,7 @@ function DealTable({ rows }: { rows: CreditDeal[] }) {
   const { t } = useI18n()
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[860px] text-left text-sm">
+      <table className="w-full min-w-[860px] text-start text-sm">
         <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
           <tr>
             <th className="px-4 py-2.5 font-medium">{t("Deal")}</th>

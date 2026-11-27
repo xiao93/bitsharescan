@@ -43,17 +43,17 @@ export default function Markets() {
       <Panel>
         {query.loading ? <LoadingBlock /> : null}
         {query.error ? <div className="p-4"><ErrorBox message={query.error} onRetry={query.reload} /></div> : null}
-        <p className="bx-swipe">{t("Swipe sideways to see all columns →")}</p>
+        <p className="bx-swipe">{t("Swipe sideways to see all columns →").replace(/\s*→\s*$/, "")} <span className="inline-block rtl:rotate-180" aria-hidden="true">→</span></p>
         <div className="bx-scroll overflow-x-auto">
-          <table className="w-full min-w-[720px] text-left text-sm">
+          <table className="w-full min-w-[720px] text-start text-sm">
             <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
               <tr>
                 <th className="px-4 py-2.5 font-medium">{t("Market")}</th>
-                <th className="px-4 py-2.5 text-right font-medium">{t("Last")}</th>
-                <th className="px-4 py-2.5 text-right font-medium">{t("Bid")}</th>
-                <th className="px-4 py-2.5 text-right font-medium">{t("Ask")}</th>
-                <th className="px-4 py-2.5 text-right font-medium">{t("24h change")}</th>
-                <th className="px-4 py-2.5 text-right font-medium">{t("24h volume")}</th>
+                <th className="px-4 py-2.5 text-end font-medium">{t("Last")}</th>
+                <th className="px-4 py-2.5 text-end font-medium">{t("Bid")}</th>
+                <th className="px-4 py-2.5 text-end font-medium">{t("Ask")}</th>
+                <th className="px-4 py-2.5 text-end font-medium">{t("24h change")}</th>
+                <th className="px-4 py-2.5 text-end font-medium">{t("24h volume")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-line">
@@ -69,12 +69,12 @@ export default function Markets() {
                 const volumeAsset = flipped ? row.quote : row.base
                 const anchor = [last, bid, ask].find((value) => value != null && value > 0) ?? 0
                 const digits = priceFractionDigits(anchor, peekAsset(right)?.precision ?? 8)
-                const cell = "px-4 py-3 text-right font-mono tabular-nums"
+                const cell = "px-4 py-3 text-end font-mono tabular-nums"
                 return (
                   <tr key={`${row.base}-${row.quote}`} className="hover:bg-row">
                     <td className="px-4 py-3">
                       <Link to={`/market/${row.base}/${row.quote}`} className="font-medium text-link hover:underline">{left}/{right}</Link>
-                      <button type="button" onClick={() => invert.togglePair(row.base, row.quote)} className="ml-2 text-xs text-muted hover:text-link">{t("Invert")}</button>
+                      <button type="button" onClick={() => invert.togglePair(row.base, row.quote)} className="ms-2 text-xs text-muted hover:text-link">{t("Invert")}</button>
                     </td>
                     <td className={cell}>{last == null || !Number.isFinite(last) ? "—" : formatFixed(last, digits)}</td>
                     <td className={cell}>{bid == null || !Number.isFinite(bid) ? "—" : formatFixed(bid, digits)}</td>

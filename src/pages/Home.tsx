@@ -238,7 +238,7 @@ export default function Home() {
                 title={t("Approximate: Elasticsearch cardinality estimate of non-virtual operations")}
                 hint={opsRate == null ? (historyGap ? null : t("All time")) : t("{rate} ops/s", { rate: opsRate.toFixed(2) })}
               />
-              <Link to="/network" className="group shrink-0 cursor-pointer text-right" title={priceSource || undefined}>
+              <Link to="/network" className="group shrink-0 cursor-pointer text-end" title={priceSource || undefined}>
                 <div className="text-[11px] font-medium uppercase tracking-wide text-muted">{t("Transfer cost")}</div>
                 <div className="mt-0.5 text-sm font-semibold leading-tight text-ink group-hover:text-link">{transferUsd == null ? "—" : `$${formatDecimal(transferUsd, transferUsd < 0.01 ? 6 : 2)}`}</div>
                 <div className="text-[11px] leading-snug text-muted">{transferCore == null ? t("Fee schedule") : `${formatRaw(transferRaw ?? 0, 5)} ${core}`}</div>
@@ -260,7 +260,7 @@ export default function Home() {
                   )
                 }
               />
-              <div className="shrink-0 text-right">
+              <div className="shrink-0 text-end">
                 <div className="text-[11px] font-medium uppercase tracking-wide text-muted">{t("Total accounts")}</div>
                 <div className="mt-0.5 text-sm font-semibold leading-tight text-ink">{accounts == null ? "—" : formatInt(accounts)}</div>
               </div>

@@ -49,7 +49,7 @@ export default function Pools() {
       <Panel title={t("Pools")} className="mb-4">
         {query.loading && !data ? <LoadingBlock /> : null}
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[860px] text-left text-sm">
+          <table className="w-full min-w-[860px] text-start text-sm">
             <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
               <tr>
                 <th className="px-4 py-2.5 font-medium">{t("Pool")}</th>
