@@ -1,5 +1,6 @@
 import { accountLabel, assetSymbol, peekAsset, resolveAccounts, resolveAssets } from "./directory.ts"
 import type { Amount } from "./directory.ts"
+import { feePayerOf } from "./feePayer.ts"
 import { formatRaw, protocolPercent } from "./format.ts"
 import { translate } from "./i18n.tsx"
 import { parseChainJson } from "./json.ts"
@@ -539,26 +540,20 @@ export function fromSignedOp(
   opIndex: number,
   op: SignedOp,
 ): OpView {
+  const type = op[0] ?? -1
   const body = op[1] ?? {}
-  const payer =
-    (typeof body.fee_paying_account === "string" && body.fee_paying_account) ||
-    (typeof body.from === "string" && body.from) ||
-    (typeof body.seller === "string" && body.seller) ||
-    (typeof body.publisher === "string" && body.publisher) ||
-    (typeof body.issuer === "string" && body.issuer) ||
-    ""
   return {
     key: `${blockNum}-${trxIndex}-${opIndex}`,
     opId: "",
     opNum: 0,
-    type: op[0] ?? -1,
-    virtual: isVirtualType(op[0] ?? -1),
+    type,
+    virtual: isVirtualType(type),
     blockNum,
     time,
     trxId,
     trxInBlock: trxIndex,
     opInTrx: opIndex,
-    feePayer: payer,
+    feePayer: feePayerOf(type, body),
     fee: asAmount(body.fee) ?? undefined,
     body,
   }
