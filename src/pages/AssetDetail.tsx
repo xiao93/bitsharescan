@@ -4,7 +4,8 @@ import { AccountLink, AssetLink, CopyButton, Crumbs, ErrorBox, KeyValue, Loading
 import { fetchAssetPage, globallySettled, individuallySettled, priceText, settled } from "../lib/assetPage.ts"
 import type { AssetPageData, CallRow } from "../lib/assetPage.ts"
 import { assetSymbol, flagNames, peekAsset, resolveAccounts, supplyShare } from "../lib/directory.ts"
-import { asBig, compactNumber, compactUsd, formatDecimal, formatDuration, formatRaw, formatTime, parseChainTime, percentFromScale, toFloat } from "../lib/format.ts"
+import { FormatTime } from "../components/Now.tsx"
+import { asBig, compactNumber, compactUsd, formatDecimal, formatDuration, formatRaw, parseChainTime, percentFromScale, toFloat } from "../lib/format.ts"
 import { fetchAssetOps, fetchHolders } from "../lib/history.ts"
 import { coreSymbol } from "../lib/network.ts"
 import { linkClass } from "../lib/utils.ts"
@@ -162,7 +163,7 @@ function overviewRows(data: AssetPageData) {
   if (backing) rows.push({ label: "Short backing asset", value: <AssetLink id={backing} /> })
   const reward = Number((asset.options.extensions ?? {}).reward_percent)
   if (Number.isFinite(reward) && reward) rows.push({ label: "Reward percent", value: percentFromScale(reward) })
-  rows.push({ label: "Created", value: asset.creation_time ? <Link className={linkClass} to={`/block/${asset.creation_block_num}`}>{formatTime(asset.creation_time)}</Link> : "—" })
+  rows.push({ label: "Created", value: asset.creation_time ? <Link className={linkClass} to={`/block/${asset.creation_block_num}`}><FormatTime time={asset.creation_time} /></Link> : "—" })
   return rows
 }
 
@@ -246,7 +247,7 @@ function Feeds({ data }: { data: AssetPageData }) {
         { label: "Max settlement volume", value: percentFromScale(Number(bit.options?.maximum_force_settlement_volume ?? 0)) },
         { label: "Settled volume", value: formatRaw(bit.force_settled_volume ?? 0, data.asset.precision) },
         { label: "Short backing asset", value: backing ? <AssetLink id={backing} /> : "—" },
-        { label: "Published", value: bit.current_feed_publication_time ? formatTime(bit.current_feed_publication_time) : "—" },
+        { label: "Published", value: bit.current_feed_publication_time ? <FormatTime time={bit.current_feed_publication_time} /> : "—" },
       ]} />
       <div className="overflow-x-auto border-t border-line">
         <table className="w-full min-w-[720px] text-start text-sm">
@@ -271,7 +272,7 @@ function Feeds({ data }: { data: AssetPageData }) {
                   <td className="px-4 py-2">{priceText(body.settlement_price)}</td>
                   <td className="px-4 py-2 font-mono">{ratio(body.maintenance_collateral_ratio)}</td>
                   <td className="px-4 py-2 font-mono">{ratio(body.maximum_short_squeeze_ratio)}</td>
-                  <td className="px-4 py-2 text-muted">{formatTime(time)}</td>
+                  <td className="px-4 py-2 text-muted"><FormatTime time={time} /></td>
                 </tr>
               )
             })}
@@ -374,7 +375,7 @@ function Settlements({ data }: { data: AssetPageData }) {
             <li key={row.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-2 text-sm">
               <AccountLink id={row.owner} />
               <span className="font-mono">{formatRaw(row.amount, peekAsset(row.assetId)?.precision ?? data.asset.precision)} {assetSymbol(row.assetId)}</span>
-              <span className="text-muted">{row.date ? formatTime(row.date) : "—"}</span>
+              <span className="text-muted">{row.date ? <FormatTime time={row.date} /> : "—"}</span>
             </li>
           ))}
         </ul>

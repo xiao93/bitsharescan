@@ -45,20 +45,49 @@ export function useTimeView(): TimeView {
 export function TimeAgo({ time, className, compact }: { time?: string | null; className?: string; compact?: boolean }) {
   const now = useContext(NowContext)
   const view = useTimeView()
-  useTimeMode()
+  const mode = useTimeMode()
   if (!time) return <span className={className}>—</span>
+  const absolute = formatScanTime(time, mode)
   if (view === "date" && !compact) {
     return (
       <span className={className} title={timeAgo(time, now)}>
-        {formatTime(time, false)}
+        {absolute}
       </span>
     )
   }
   return (
-    <span className={className} title={formatTime(time)}>
+    <span className={className} title={absolute}>
       {timeAgo(time, now)}
     </span>
   )
+}
+
+/** Format a timestamp with the current Settings Local / UTC choice, and re-render when it changes. */
+export function useFormatTime() {
+  const mode = useTimeMode()
+  return (iso?: string | null, opts?: { scan?: boolean; withZone?: boolean }) => {
+    if (!iso) return "—"
+    if (opts?.scan === false) return formatTime(iso, opts.withZone ?? true)
+    return formatScanTime(iso, mode)
+  }
+}
+
+/** An absolute timestamp that follows Settings (Local / UTC) and updates live when the setting changes. */
+export function FormatTime({
+  time,
+  scan = true,
+  withZone = true,
+  className,
+}: {
+  time?: string | null
+  scan?: boolean
+  withZone?: boolean
+  className?: string
+}) {
+  const mode = useTimeMode()
+  if (!time) return <span className={className}>—</span>
+  const text = scan ? formatScanTime(time, mode) : formatTime(time, withZone)
+  return <span className={className}>{text}</span>
 }
 
 /** Column header that flips every timestamp on the site between Age and Date Time (like Etherscan). */
@@ -84,6 +113,7 @@ export function TimeHead({ className }: { className?: string }) {
 export function TimeDetail({ time }: { time?: string | null }) {
   const { t } = useI18n()
   const now = useContext(NowContext)
+  const mode = useTimeMode()
   const [open, setOpen] = useState(false)
   const [menuPos, setMenuPos] = useState<{ top: number; left: number } | null>(null)
   useEffect(() => {
@@ -95,6 +125,7 @@ export function TimeDetail({ time }: { time?: string | null }) {
   const utc = time ? formatScanTime(time, "utc") : "—"
   const local = time ? formatScanTime(time, "local") : "—"
   const unix = time ? unixTimestamp(time) : "—"
+  const displayed = mode === "local" ? local : utc
 
   useLayoutEffect(() => {
     if (!open) return
@@ -151,7 +182,7 @@ export function TimeDetail({ time }: { time?: string | null }) {
             onClick={() => setOpen((value) => !value)}
             className="inline-flex items-center gap-1 whitespace-nowrap rounded-md border border-line bg-card px-2 py-0.5 text-sm text-ink shadow-[0_1px_2px_rgba(16,24,40,0.04)] hover:bg-canvas"
           >
-            {utc}
+            {displayed}
             <ChevronDown className="h-3.5 w-3.5 text-muted" aria-hidden="true" />
           </button>
         </HoverLabel>

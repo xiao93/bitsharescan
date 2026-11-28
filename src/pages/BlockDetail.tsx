@@ -1,7 +1,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useEffect } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
-import { TimeDetail } from "../components/Now.tsx"
+import { TimeDetail, useFormatTime } from "../components/Now.tsx"
 import { BetaBadge, BlockActions } from "../components/BlockActions.tsx"
 import {
   AccountLink,
@@ -19,7 +19,7 @@ import {
   TypeBadge,
 } from "../components/widgets.tsx"
 import { blockFeeText, fetchBlock, fetchDynamic, signedOpsForBlock } from "../lib/chain.ts"
-import { formatInt, formatTime, shortHash } from "../lib/format.ts"
+import { formatInt, shortHash } from "../lib/format.ts"
 import { fetchBlockOps } from "../lib/history.ts"
 import { cn, linkClass } from "../lib/utils.ts"
 import { useQuery, useTitle } from "../hooks/useQuery.ts"
@@ -29,6 +29,7 @@ export default function BlockDetail() {
   const { num = "" } = useParams()
   const blockNum = Number(num)
   const { t } = useI18n()
+  const formatTime = useFormatTime()
   useTitle(Number.isFinite(blockNum) ? t("Block {n}", { n: formatInt(blockNum) }) : t("Block"))
   const query = useQuery(async () => {
     if (!Number.isFinite(blockNum) || blockNum <= 0) throw new Error(t("That block number is not valid."))

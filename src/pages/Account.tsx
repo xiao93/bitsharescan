@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react"
 import { ChevronDown } from "lucide-react"
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom"
-import { TimeAgo } from "../components/Now.tsx"
+import { FormatTime, TimeAgo } from "../components/Now.tsx"
 import { AccountPositions } from "../components/AccountPositions.tsx"
 import { AccountWhitelist } from "../components/AccountWhitelist.tsx"
 import { AccountRelations } from "../components/AccountRelations.tsx"
@@ -20,7 +20,7 @@ import {
 } from "../lib/chain.ts"
 import { accountLabel, assetTitle, peekAsset } from "../lib/directory.ts"
 import type { AssetInfo } from "../lib/directory.ts"
-import { asBig, compactUsd, formatInt, formatRaw, formatTime, membershipOf, toFloat } from "../lib/format.ts"
+import { asBig, compactUsd, formatInt, formatRaw, membershipOf, toFloat } from "../lib/format.ts"
 import { fetchAccountOps } from "../lib/history.ts"
 import { opLabel, OPERATIONS } from "../lib/ops.ts"
 import { linkClass, pool } from "../lib/utils.ts"
@@ -216,7 +216,7 @@ export default function AccountPage() {
             </InfoCard>
             <InfoCard title={t("Activity")}>
               <InfoRow label={t("Operations")}>{formatInt(full.statistics?.total_ops ?? ops.data?.total ?? 0)}</InfoRow>
-              <InfoRow label={t("Created")}>{full.account.creation_time ? formatTime(full.account.creation_time) : "—"}</InfoRow>
+              <InfoRow label={t("Created")}>{full.account.creation_time ? <FormatTime time={full.account.creation_time} /> : "—"}</InfoRow>
               <InfoRow label={t("Creation block")}>
                 {full.account.creation_block_num ? <Link className={linkClass} to={`/block/${full.account.creation_block_num}`}>{formatInt(full.account.creation_block_num)}</Link> : "—"}
               </InfoRow>

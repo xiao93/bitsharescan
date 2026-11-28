@@ -3,7 +3,7 @@ import { AccountLink, Crumbs, LoadingBlock, Panel } from "../components/widgets.
 import { useTitle } from "../hooks/useQuery.ts"
 import { fetchWitnesses } from "../lib/chain.ts"
 import type { WitnessRow } from "../lib/chain.ts"
-import { formatTime } from "../lib/format.ts"
+import { useFormatTime } from "../components/Now.tsx"
 import { useI18n } from "../lib/i18n.tsx"
 import { flagEmoji, locateHosts } from "../lib/geo.ts"
 import type { HostPlace } from "../lib/geo.ts"
@@ -214,6 +214,7 @@ export default function NodeTracker() {
 
 function P2pSection({ snapshot }: { snapshot: P2pSnapshot | null }) {
   const { t } = useI18n()
+  const formatTime = useFormatTime()
   if (!snapshot) return null
   const nodes = [...snapshot.nodes].sort((a, b) => Number(b.reachable) - Number(a.reachable) || a.country.localeCompare(b.country) || a.ip.localeCompare(b.ip))
   const versions = tally(nodes.filter((node) => node.reachable).map((node) => p2pVersion(node) || t("Unknown")))

@@ -3,7 +3,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react"
 import { Link } from "react-router-dom"
 import { HeroAd, heroAdEmpty } from "../components/HeroAd.tsx"
 import { SearchBar } from "../components/SearchBar.tsx"
-import { TimeAgo } from "../components/Now.tsx"
+import { TimeAgo, useTimeMode } from "../components/Now.tsx"
 import { AccountLink, ErrorBox, LineChart, LoadingBlock, OpSummary, Panel, TxLink, TypeBadge } from "../components/widgets.tsx"
 import { blockFeeText, fetchBlocks, fetchChainId, fetchDynamic, fetchGlobal, type BlockRow, type DynamicGlobal, type GlobalProps } from "../lib/chain.ts"
 import { db } from "../lib/node.ts"
@@ -19,6 +19,7 @@ import { fetchBtsUsd, priceHint, type BtsUsd } from "../lib/usd.ts"
 
 export default function Home() {
   const { t } = useI18n()
+  useTimeMode()
   useTitle("")
   const [dgp, setDgp] = useState<DynamicGlobal | null>(null)
   const [global, setGlobal] = useState<GlobalProps | null>(null)

@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom"
 import { Crumbs, ErrorBox, LoadingBlock } from "../components/widgets.tsx"
 import { RANGES, chartById, loadChart, type LineSeries, type Point, type RangeId, type RankRow } from "../lib/charts.ts"
 import { formatDecimal, formatInt, formatTime } from "../lib/format.ts"
+import { useFormatTime, useTimeMode } from "../components/Now.tsx"
 import { timeZoneSuffix } from "../lib/timePref.ts"
 import { coreSymbol } from "../lib/network.ts"
 import { fetchBtsUsd, priceHint, type BtsUsd } from "../lib/usd.ts"
@@ -15,6 +16,8 @@ export default function ChartDetail() {
   const { id = "" } = useParams()
   const chart = chartById(id)
   const { t } = useI18n()
+  const formatTime = useFormatTime()
+  useTimeMode()
   const isPrice = chart?.id === "bts-price"
   useTitle(isPrice ? "BitShares (BTS) Price Chart" : (chart?.title ?? "Chart"))
   const [range, setRange] = useState<RangeId>("1y")
@@ -189,6 +192,7 @@ export default function ChartDetail() {
 const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
 function RankView({ chartId, view, rows, grid, digits, unit }: { chartId: string; view: string; rows: RankRow[]; grid?: number[][] | null; digits: number; unit: string }) {
+  useTimeMode()
   const { t } = useI18n()
   const total = rows.reduce((sum, row) => sum + row.value, 0) || 1
   const max = Math.max(1, ...rows.map((row) => row.value))
@@ -314,6 +318,7 @@ function PriceTable({ points, digits }: { points: Point[]; digits: number }) {
 }
 
 function ChartSummary({ series, digits, bucket }: { series: LineSeries[]; digits: number; bucket: "day" | "month" }) {
+  useTimeMode()
   const { t } = useI18n()
   const row = series[0]
   const points = row?.points ?? []
@@ -336,6 +341,7 @@ function ChartSummary({ series, digits, bucket }: { series: LineSeries[]; digits
 }
 
 function AreaChart({ series, digits, bucket, onZoom }: { series: LineSeries[]; digits: number; bucket: "day" | "month"; onZoom: (start: number, end: number) => void }) {
+  useTimeMode()
   const { t } = useI18n()
   const host = useRef<HTMLDivElement>(null)
   const [width, setWidth] = useState(960)

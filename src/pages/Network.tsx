@@ -1,6 +1,7 @@
 import { Crumbs, ErrorBox, KeyValue, LoadingBlock, Panel } from "../components/widgets.tsx"
 import { fetchDynamic, fetchGlobal } from "../lib/chain.ts"
-import { asBig, formatDuration, formatInt, formatRaw, formatTime, percentFromScale } from "../lib/format.ts"
+import { FormatTime } from "../components/Now.tsx"
+import { asBig, formatDuration, formatInt, formatRaw, percentFromScale } from "../lib/format.ts"
 import { opLabel } from "../lib/ops.ts"
 import { useQuery, useTitle } from "../hooks/useQuery.ts"
 import { useI18n } from "../lib/i18n.tsx"
@@ -40,9 +41,9 @@ export default function Network() {
             <KeyValue
               rows={[
                 { label: "Head block", value: formatInt(query.data.dynamic.head_block_number) },
-                { label: "Head time", value: formatTime(query.data.dynamic.time) },
+                { label: "Head time", value: <FormatTime time={query.data.dynamic.time} /> },
                 { label: "Last irreversible", value: formatInt(query.data.dynamic.last_irreversible_block_num) },
-                { label: "Next maintenance", value: formatTime(query.data.dynamic.next_maintenance_time) },
+                { label: "Next maintenance", value: <FormatTime time={query.data.dynamic.next_maintenance_time} /> },
                 { label: "Active witnesses", value: query.data.global.active_witnesses.length },
                 { label: "Active committee", value: query.data.global.active_committee_members.length },
                 { label: "Witness budget left", value: `${formatRaw(query.data.dynamic.witness_budget ?? 0, 5)} BTS` },

@@ -13,7 +13,7 @@ import { useI18n } from "../lib/i18n.tsx"
 import { localeTag } from "../lib/locale.ts"
 import { networkHasEs } from "../lib/network.ts"
 import { cn, linkClass, routeForObject } from "../lib/utils.ts"
-import { HoverLabel, TimeAgo, TimeHead } from "./Now.tsx"
+import { HoverLabel, TimeAgo, TimeHead, useTimeMode } from "./Now.tsx"
 
 export function CopyButton({ value, label }: { value: string; label?: string }) {
   const { t } = useI18n()
@@ -417,6 +417,7 @@ export function LineChart({
   compact?: boolean
 }) {
   const { t } = useI18n()
+  useTimeMode()
   const gid = `area-${useId().replace(/:/g, "")}`
   const [hover, setHover] = useState<number | null>(null)
   if (!points.length) return <Empty title="No chart data" />

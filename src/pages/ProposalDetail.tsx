@@ -1,7 +1,8 @@
 import { Link, useParams } from "react-router-dom"
 import { AccountLink, AmountView, Crumbs, ErrorBox, JsonTree, KeyValue, LoadingBlock, OpSummary, Panel, TypeBadge } from "../components/widgets.tsx"
 import { useQuery, useTitle } from "../hooks/useQuery.ts"
-import { formatInt, formatTime } from "../lib/format.ts"
+import { FormatTime } from "../components/Now.tsx"
+import { formatInt } from "../lib/format.ts"
 import { useI18n } from "../lib/i18n.tsx"
 import { fetchProposal, ProposalNotFound } from "../lib/proposals.ts"
 import { linkClass } from "../lib/utils.ts"
@@ -47,14 +48,14 @@ export default function ProposalDetail() {
                       <Link to={`/block/${obj.block_number}`} className={linkClass}>
                         #{formatInt(obj.block_number)}
                       </Link>
-                      {obj.block_time ? ` · ${formatTime(obj.block_time)}` : ""}
+                      {obj.block_time ? <> · <FormatTime time={obj.block_time} /></> : ""}
                     </span>
                   ) : (
                     "—"
                   ),
                 },
-                { label: "Expires", value: formatTime(obj.expiration_time) },
-                { label: "Review period", value: obj.review_period_time ? formatTime(obj.review_period_time) : "—" },
+                { label: "Expires", value: <FormatTime time={obj.expiration_time} /> },
+                { label: "Review period", value: obj.review_period_time ? <FormatTime time={obj.review_period_time} /> : "—" },
                 { label: "Required active approvals", value: <AccountList ids={obj.required_active_approvals} /> },
                 { label: "Approved (active)", value: <AccountList ids={obj.available_active_approvals} /> },
                 { label: "Required owner approvals", value: <AccountList ids={obj.required_owner_approvals} /> },

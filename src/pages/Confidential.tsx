@@ -2,7 +2,8 @@ import { useState, type MouseEvent } from "react"
 import { Link, useSearchParams } from "react-router-dom"
 import { AccountLink, AmountView, Crumbs, ErrorBox, LoadingBlock, Pager, Panel } from "../components/widgets.tsx"
 import { fetchConfidentialOps, fetchConfidentialStats, publicSide, type ConfDay } from "../lib/confidential.ts"
-import { formatInt, formatRaw, formatTime } from "../lib/format.ts"
+import { FormatTime } from "../components/Now.tsx"
+import { formatInt, formatRaw } from "../lib/format.ts"
 import { opLabel } from "../lib/ops.ts"
 import { linkClass } from "../lib/utils.ts"
 import { useQuery, useTitle } from "../hooks/useQuery.ts"
@@ -100,7 +101,7 @@ export default function Confidential() {
                     <tr key={op.key} className="hover:bg-row">
                       <td className="px-4 py-3">{op.opId ? <Link className={linkClass} to={`/op/${op.opId}`}>{opLabel(op.type)}</Link> : opLabel(op.type)}</td>
                       <td className="px-4 py-3"><Link className={linkClass} to={`/block/${op.blockNum}`}>{formatInt(op.blockNum)}</Link></td>
-                      <td className="px-4 py-3 text-xs text-muted">{formatTime(op.time)}</td>
+                      <td className="px-4 py-3 text-xs text-muted"><FormatTime time={op.time} /></td>
                       <td className="px-4 py-3">{side.account ? <AccountLink id={side.account} /> : "—"}</td>
                       <td className="px-4 py-3">{side.amount ? <AmountView value={side.amount} /> : <span className="text-muted">{t("Hidden")}</span>}</td>
                       <td className="px-4 py-3 text-end font-mono tabular-nums">{side.inputs} / {side.outputs}</td>

@@ -1,7 +1,8 @@
 import { Link, useSearchParams } from "react-router-dom"
 import { AccountLink, Crumbs, ErrorBox, LoadingBlock, Panel } from "../components/widgets.tsx"
 import { fetchWorkers, type WorkerRow } from "../lib/chain.ts"
-import { asBig, compactUsd, formatDecimal, formatRaw, formatStake, formatTime, toFloat } from "../lib/format.ts"
+import { FormatTime } from "../components/Now.tsx"
+import { asBig, compactUsd, formatDecimal, formatRaw, formatStake, toFloat } from "../lib/format.ts"
 import { coreSymbol } from "../lib/network.ts"
 import { fetchBtsUsd } from "../lib/usd.ts"
 import { linkClass } from "../lib/utils.ts"
@@ -106,7 +107,7 @@ function WorkerLine({ row, btsUsd, core }: { row: WorkerRow; btsUsd: number | nu
         <div className="font-mono tabular-nums">{formatRaw(row.dailyPay, 5)} {core}</div>
         <div className="text-xs text-muted">{usd == null ? "—" : usdText(usd)}</div>
       </td>
-      <td className="px-4 py-3 text-xs text-muted">{formatTime(row.begin)}<br />{formatTime(row.end)}</td>
+      <td className="px-4 py-3 text-xs text-muted"><FormatTime time={row.begin} /><br /><FormatTime time={row.end} /></td>
       <td className="px-4 py-3 text-end font-mono tabular-nums">{formatStake(row.votesFor)} {core}</td>
       <td className="px-4 py-3 text-end font-mono tabular-nums">{asBig(row.votesAgainst) === 0n ? "—" : `${formatStake(row.votesAgainst)} ${core}`}</td>
       <td className="px-4 py-3"><Status row={row} /></td>

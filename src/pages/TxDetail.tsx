@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom"
-import { HoverLabel, TimeDetail } from "../components/Now.tsx"
+import { FormatTime, HoverLabel, TimeDetail } from "../components/Now.tsx"
 import {
   AccountLink,
   AmountView,
@@ -17,7 +17,7 @@ import {
 } from "../components/widgets.tsx"
 import { blockFeeText, feeTotalsForOps, fetchDynamic } from "../lib/chain.ts"
 import { db } from "../lib/node.ts"
-import { formatInt, formatTime, formatUsdParen, shortHash, toFloat } from "../lib/format.ts"
+import { formatInt, formatUsdParen, shortHash, toFloat } from "../lib/format.ts"
 import { fetchTransactionOps } from "../lib/history.ts"
 import { asAmount } from "../lib/ops.ts"
 import { peekAsset } from "../lib/directory.ts"
@@ -75,36 +75,24 @@ export default function TxDetail() {
       {query.error ? <ErrorBox message={query.error} onRetry={query.reload} /> : null}
       {data && first ? (
         <>
+          {allTransfers ? (
+            <Panel title="Transaction Action" className="mb-4">
+              <ul className="divide-y divide-line" data-tx-action-overview="">
+                {data.ops.map((op, index) => (
+                  <li key={op.key} className="flex flex-wrap items-start gap-x-3 gap-y-1 px-4 py-3 text-sm">
+                    <TypeBadge type={op.type} virtual={op.virtual} />
+                    <span className="min-w-0 flex-1 break-words">
+                      <OpAction op={op} btsUsd={btsUsd} usdHint={usdHint} />
+                    </span>
+                    {data.ops.length > 1 ? <span className="text-xs text-muted">#{index}</span> : null}
+                  </li>
+                ))}
+              </ul>
+            </Panel>
+          ) : null}
           <Panel className="mb-4">
             <KeyValue
               rows={[
-                ...(allTransfers
-                  ? [
-                      {
-                        label: "Transaction Action",
-                        hint: "A summary of what this transaction does.",
-                        valueClassName: "break-normal",
-                        value: (
-                          <div data-tx-action-overview="">
-                            {data.ops.length === 1 ? (
-                              <OpAction op={data.ops[0]!} btsUsd={btsUsd} usdHint={usdHint} />
-                            ) : (
-                              <ul className="space-y-1.5">
-                                {data.ops.map((op, index) => (
-                                  <li key={op.key} className="flex flex-wrap items-start gap-x-3 gap-y-1">
-                                    <span className="min-w-0 flex-1 break-words">
-                                      <OpAction op={op} btsUsd={btsUsd} usdHint={usdHint} />
-                                    </span>
-                                    <span className="text-xs text-muted">#{index}</span>
-                                  </li>
-                                ))}
-                              </ul>
-                            )}
-                          </div>
-                        ),
-                      },
-                    ]
-                  : []),
                 {
                   label: "Transaction id",
                   hint: "The unique hash that identifies this transaction on the BitShares blockchain.",
@@ -166,7 +154,7 @@ export default function TxDetail() {
                 {
                   label: "Expiration",
                   hint: "The time after which this transaction is no longer valid if it has not been included in a block.",
-                  value: data.signed?.expiration ? formatTime(data.signed.expiration) : "—",
+                  value: data.signed?.expiration ? <FormatTime time={data.signed.expiration} /> : "—",
                 },
                 {
                   label: "Signatures",
@@ -183,7 +171,7 @@ export default function TxDetail() {
             />
           </Panel>
           {!allTransfers ? (
-            <Panel title={t("Transaction Action")} className="mb-4">
+            <Panel title="Transaction Action" className="mb-4">
               <ul className="divide-y divide-line">
                 {data.ops.map((op, index) => (
                   <li key={op.key} className="flex flex-wrap items-start gap-x-3 gap-y-1 px-4 py-3 text-sm">

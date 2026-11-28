@@ -3,7 +3,8 @@ import { AccountLink, Crumbs, DirArrow, ErrorBox, KeyValue, LoadingBlock, Panel 
 import { fetchWorkers } from "../lib/chain.ts"
 import type { WorkerRow } from "../lib/chain.ts"
 import { esSearch, esTotal, objectIndex } from "../lib/es.ts"
-import { compactUsd, formatDecimal, formatRaw, formatStake, formatTime, toFloat } from "../lib/format.ts"
+import { FormatTime } from "../components/Now.tsx"
+import { compactUsd, formatDecimal, formatRaw, formatStake, toFloat } from "../lib/format.ts"
 import { coreSymbol } from "../lib/network.ts"
 import { fetchBtsUsd } from "../lib/usd.ts"
 import { linkClass } from "../lib/utils.ts"
@@ -49,7 +50,7 @@ export default function WorkerDetail() {
               { label: "Account", value: <AccountLink id={row.account} /> },
               { label: "URL", value: safeUrl(row.url) ? <a className={linkClass} href={safeUrl(row.url)!} target="_blank" rel="noreferrer">{row.url}</a> : "—" },
               { label: "Daily pay", value: payText(row, btsUsd, core) },
-              { label: "Period", value: <span className="inline-flex flex-wrap items-center gap-1"><bdi>{formatTime(row.begin)}</bdi> <DirArrow /> <bdi>{formatTime(row.end)}</bdi></span> },
+              { label: "Period", value: <span className="inline-flex flex-wrap items-center gap-1"><bdi><FormatTime time={row.begin} /></bdi> <DirArrow /> <bdi><FormatTime time={row.end} /></bdi></span> },
               { label: "Votes for", value: `${formatStake(row.votesFor)} ${core}` },
               { label: "Votes against", value: `${formatStake(row.votesAgainst)} ${core}` },
               { label: "Status", value: statusText(row, t) },

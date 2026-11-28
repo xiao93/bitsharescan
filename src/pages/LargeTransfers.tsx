@@ -1,9 +1,9 @@
 import { useMemo } from "react"
 import { Link, useSearchParams } from "react-router-dom"
 import { AccountLink, AmountView, Crumbs, ErrorBox, LoadingBlock, Pager, Panel, TxLink } from "../components/widgets.tsx"
-import { useTimeMode } from "../components/Now.tsx"
+import { FormatTime } from "../components/Now.tsx"
 import { fetchLargeTransfers, filterLargeTransfers, summarizeTransfers } from "../lib/activity.ts"
-import { compactUsd, formatDecimal, formatInt, formatRaw, formatTime } from "../lib/format.ts"
+import { compactUsd, formatDecimal, formatInt, formatRaw } from "../lib/format.ts"
 import { networkNotice } from "../lib/charts.ts"
 import { coreSymbol, networkHasEs } from "../lib/network.ts"
 import { peekAsset } from "../lib/directory.ts"
@@ -17,7 +17,6 @@ const MIN_OPTIONS = [0, 1_000, 10_000, 50_000, 100_000]
 export default function LargeTransfers() {
   const { t } = useI18n()
   useTitle("24h Large Transfers")
-  useTimeMode()
   const [params, setParams] = useSearchParams()
   const assetId = params.get("asset") ?? "1.3.0"
   const minAmount = params.has("min") ? Number(params.get("min")) : 10_000
@@ -116,7 +115,7 @@ export default function LargeTransfers() {
                 {pageRows.map((row) => (
                   <tr key={row.key} className="hover:bg-row">
                     <td className="px-4 py-3">{row.trxId ? <TxLink id={row.trxId} /> : row.opId ? <Link className={linkClass} to={`/op/${row.opId}`}>{t("Operation")}</Link> : "—"}</td>
-                    <td className="px-4 py-3 text-xs text-muted whitespace-nowrap">{formatTime(row.time)}</td>
+                    <td className="px-4 py-3 text-xs text-muted whitespace-nowrap"><FormatTime time={row.time} /></td>
                     <td className="px-4 py-3"><AccountLink id={row.from} /></td>
                     <td className="px-4 py-3"><AccountLink id={row.to} /></td>
                     <td className="px-4 py-3 text-end font-mono tabular-nums"><AmountView value={{ amount: row.amount, asset_id: row.assetId }} /></td>

@@ -207,7 +207,7 @@ export function timeAgo(iso: string | null | undefined, now = Date.now()): strin
   if (hr < 48) return rtf.format(sign * hr, "hour")
   const day = Math.floor(hr / 24)
   if (day < 60) return rtf.format(sign * day, "day")
-  return formatTime(iso)
+  return formatScanTime(iso, getTimeMode())
 }
 
 /** time_point_sec::maximum() (2106-02-07T06:28:15) and other far-future values mean "never". */

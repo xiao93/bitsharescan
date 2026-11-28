@@ -2,7 +2,7 @@ import { fetchFullAccount } from "./chain.ts"
 import type { FullAccount } from "./chain.ts"
 import { peekAsset, resolveAssets } from "./directory.ts"
 import { allOpIndexes, esSearch, esTotal } from "./es.ts"
-import { formatRaw, formatTime } from "./format.ts"
+import { formatRaw, formatScanTime } from "./format.ts"
 import { fetchRelatedAccounts, proxyStake } from "./relations.ts"
 import { opLabel, opSummary, OPERATIONS, toOpView } from "./ops.ts"
 import { getTimeMode, localOffsetLabel, localTimeZoneName } from "./timePref.ts"
@@ -127,7 +127,7 @@ export function opsToCsv(rows: OpView[]) {
       const money = amountFields(op.body)
       const feeAsset = op.fee ? peekAsset(op.fee.asset_id) : undefined
       return [
-        formatTime(op.time),
+        formatScanTime(op.time, getTimeMode()),
         String(op.blockNum ?? ""),
         op.trxId || op.opId,
         opLabel(op.type),

@@ -1,8 +1,8 @@
 import { Link, useSearchParams } from "react-router-dom"
-import { TimeAgo } from "../components/Now.tsx"
+import { FormatTime, TimeAgo } from "../components/Now.tsx"
 import { Crumbs, ErrorBox, LoadingBlock, Pager, Panel } from "../components/widgets.tsx"
 import { useQuery, useTitle } from "../hooks/useQuery.ts"
-import { formatInt, formatTime } from "../lib/format.ts"
+import { formatInt } from "../lib/format.ts"
 import { useI18n } from "../lib/i18n.tsx"
 import { networkHasEs } from "../lib/network.ts"
 import { approvalCount, fetchProposals, PROPOSAL_PAGE_SIZE, type ProposalTab } from "../lib/proposals.ts"
@@ -122,7 +122,7 @@ export default function Proposals() {
                             </div>
                           ) : null}
                         </td>
-                        <td className="px-4 py-3 text-xs text-muted">{formatTime(row.expiration_time)}</td>
+                        <td className="px-4 py-3 text-xs text-muted"><FormatTime time={row.expiration_time} /></td>
                         <td className="px-4 py-3">
                           <ProposalStatus row={row} />
                         </td>
