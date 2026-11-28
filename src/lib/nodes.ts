@@ -128,7 +128,7 @@ function probeOnce(url: string, expectedChain: string): Promise<NodeProbe> {
     const timer = window.setTimeout(() => {
       ws.close()
       resolve(empty)
-    }, 8000)
+    }, 6000)
     const call = (api: number, method: string, params: unknown[]) => new Promise((done, fail) => {
       const id = next
       next += 1
@@ -183,10 +183,7 @@ function probeOnce(url: string, expectedChain: string): Promise<NodeProbe> {
 
 export async function probeNodes(nodes: ListedNode[] = listedApiNodes()): Promise<NodeProbe[]> {
   const expected = networkInfo().chainId
-  const results: NodeProbe[] = []
-  for (let index = 0; index < nodes.length; index += 4) {
-    const chunk = await Promise.all(nodes.slice(index, index + 4).map((node) => probeOnce(node.url, expected)))
-    results.push(...chunk)
-  }
+  // All nodes at once: offline ones wait out the timeout, and four at a time stacked those waits (about 30s).
+  const results = await Promise.all(nodes.map((node) => probeOnce(node.url, expected)))
   return results
 }
