@@ -1066,4 +1066,6 @@ export const zh: Record<string, string> = {
   "Sort by": "排序方式",
   "24h volume adds both directions of every pool swap in the last 24 hours.": "24 小时成交量累计了过去 24 小时内每笔流动池兑换的双向数量。",
   "Last 24 hours, from the operation index": "最近 24 小时，来自操作索引",
+  "Lifetime member": "终身会员",
+  "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "终身会员手续费是返现后的剩余部分，比例为 {pct}。创建资产（操作 10）还会把 50% 留在新资产的手续费池中。",
 }

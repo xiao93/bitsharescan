@@ -1066,4 +1066,6 @@ export const th: Record<string, string> = {
   "Sort by": "เรียงตาม",
   "24h volume adds both directions of every pool swap in the last 24 hours.": "ปริมาณ 24 ชม. รวมทั้งสองทิศทางของทุกการสวอปในพูลช่วง 24 ชั่วโมงที่ผ่านมา",
   "Last 24 hours, from the operation index": "24 ชั่วโมงที่ผ่านมา จากดัชนีการดำเนินการ",
+  "Lifetime member": "สมาชิกตลอดชีพ",
+  "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "ค่าธรรมเนียมสมาชิกตลอดชีพคือส่วนที่เหลือหลังเงินคืน ที่อัตรา {pct} การสร้างสินทรัพย์ (ปฏิบัติการ 10) ยังคง 50% ไว้ในกลุ่มค่าธรรมเนียมของสินทรัพย์ใหม่",
 }

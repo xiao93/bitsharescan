@@ -1066,4 +1066,6 @@ export const ja: Record<string, string> = {
   "Sort by": "並べ替え",
   "24h volume adds both directions of every pool swap in the last 24 hours.": "24 時間出来高は、過去 24 時間のすべてのプールスワップの両方向を合計したものです。",
   "Last 24 hours, from the operation index": "過去 24 時間、オペレーションインデックスより",
+  "Lifetime member": "生涯会員",
+  "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "生涯会員の手数料はキャッシュバック後の残額で、比率は {pct} です。資産作成（オペレーション 10）では、さらに 50% が新しい資産の手数料プールに残ります。",
 }

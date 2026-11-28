@@ -1066,4 +1066,6 @@ export const ru: Record<string, string> = {
   "Sort by": "Сортировка",
   "24h volume adds both directions of every pool swap in the last 24 hours.": "Объём за 24 ч суммирует оба направления каждого свопа в пуле за последние 24 часа.",
   "Last 24 hours, from the operation index": "Последние 24 часа, по индексу операций",
+  "Lifetime member": "Пожизненный член",
+  "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "Комиссия для пожизненных членов — остаток после кэшбэка, доля {pct}. При создании актива (операция 10) ещё 50% остаётся в пуле комиссий нового актива.",
 }

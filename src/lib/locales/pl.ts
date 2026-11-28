@@ -1066,4 +1066,6 @@ export const pl: Record<string, string> = {
   "Sort by": "Sortuj według",
   "24h volume adds both directions of every pool swap in the last 24 hours.": "Wolumen z 24 godz. sumuje oba kierunki każdego swapu w puli z ostatnich 24 godzin.",
   "Last 24 hours, from the operation index": "Ostatnie 24 godziny, z indeksu operacji",
+  "Lifetime member": "Członek dożywotni",
+  "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "Opłata dla członka dożywotniego to pozostałość po zwrocie, czyli {pct}. Przy tworzeniu aktywa (op. 10) dodatkowe 50% zostaje w puli opłat nowego aktywa.",
 }

@@ -57,17 +57,20 @@ export default function Network() {
           </Panel>
           <Panel title={t("Fee schedule · scale {scale}", { scale: String(fees?.scale ?? "—") })}>
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[640px] text-start text-sm">
+              <table className="w-full min-w-[760px] text-start text-sm">
                 <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
                   <tr>
                     <th className="w-px px-4 py-2.5 text-start font-medium whitespace-nowrap">{t("Op")}</th>
                     <th className="px-4 py-2.5 text-start font-medium">{t("Operation")}</th>
                     <th className="px-4 py-2.5 text-start font-medium">{t("Component")}</th>
                     <th className="px-4 py-2.5 text-end font-medium whitespace-nowrap">{t("Amount")}</th>
+                    <th className="px-4 py-2.5 text-end font-medium whitespace-nowrap">{t("Lifetime member")}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-line">
                   {(fees?.parameters ?? []).flatMap(([index, fields]) => {
+                    const scale = Number(fees?.scale ?? 10000)
+                    const networkPercent = Number(params.network_percent_of_fee ?? 0)
                     const entries = Object.entries(fields)
                     return entries.map(([field, amount], offset) => (
                       <tr key={`${index}-${field}`}>
@@ -78,13 +81,17 @@ export default function Network() {
                           </>
                         ) : null}
                         <td className="px-4 py-2.5 text-start text-muted">{field.replaceAll("_", " ")}</td>
-                        <td className="px-4 py-2.5 text-end whitespace-nowrap"><span className="font-mono tabular-nums">{formatFee(amount, Number(fees?.scale ?? 10000))}</span></td>
+                        <td className="px-4 py-2.5 text-end whitespace-nowrap"><span className="font-mono tabular-nums">{formatFee(amount, scale)}</span></td>
+                        <td className="px-4 py-2.5 text-end whitespace-nowrap"><span className="font-mono tabular-nums">{formatLtmFee(amount, scale, networkPercent, index)}</span></td>
                       </tr>
                     ))
                   })}
                 </tbody>
               </table>
             </div>
+            <p className="border-t border-line px-4 py-3 text-xs text-muted">
+              {t("Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.", { pct: percentFromScale(Number(params.network_percent_of_fee ?? 0)) })}
+            </p>
           </Panel>
         </div>
       ) : null}
@@ -100,10 +107,26 @@ function formatParam(key: string, value: unknown): string {
   return JSON.stringify(value)
 }
 
-function formatFee(amount: unknown, scale: number): string {
+function scaledFee(amount: unknown, scale: number): bigint | null {
   if (typeof amount === "number" || (typeof amount === "string" && /^-?\d+$/.test(amount))) {
-    const scaled = (asBig(amount) * asBig(scale)) / 10000n
-    return `${formatRaw(scaled, 5)} BTS`
+    return (asBig(amount) * asBig(scale)) / 10000n
   }
-  return JSON.stringify(amount)
+  return null
+}
+
+function formatFee(amount: unknown, scale: number): string {
+  const scaled = scaledFee(amount, scale)
+  return scaled == null ? JSON.stringify(amount) : `${formatRaw(scaled, 5)} BTS`
+}
+
+/** Residual after lifetime-member cashback, matching bitshares-ui Fees.jsx. */
+function formatLtmFee(amount: unknown, scale: number, networkPercent: number, opId: number): string {
+  const scaled = scaledFee(amount, scale)
+  if (scaled == null) return JSON.stringify(amount)
+  const share = asBig(networkPercent)
+  // Usual ops: standard * network_percent_of_fee. Asset create (op 10) also leaves 50% in the fee pool.
+  const residual = opId === 10
+    ? (scaled * (10000n + share)) / (20000n)
+    : (scaled * share) / 10000n
+  return `${formatRaw(residual, 5)} BTS`
 }

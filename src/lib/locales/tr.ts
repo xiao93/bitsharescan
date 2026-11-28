@@ -1066,4 +1066,6 @@ export const tr: Record<string, string> = {
   "Sort by": "Sırala",
   "24h volume adds both directions of every pool swap in the last 24 hours.": "24 saatlik hacim, son 24 saatteki her havuz takasının iki yönünü de toplar.",
   "Last 24 hours, from the operation index": "Son 24 saat, işlem dizininden",
+  "Lifetime member": "Ömür boyu üye",
+  "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "Ömür boyu üye ücreti, iade sonrası kalan paydır: {pct}. Varlık oluşturma (işlem 10) ayrıca yeni varlığın ücret havuzunda %50 bırakır.",
 }

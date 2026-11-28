@@ -1066,4 +1066,6 @@ export const ms: Record<string, string> = {
   "Sort by": "Isih mengikut",
   "24h volume adds both directions of every pool swap in the last 24 hours.": "Volum 24 jam menjumlahkan kedua-dua arah setiap swap kolam dalam 24 jam lepas.",
   "Last 24 hours, from the operation index": "24 jam lepas, daripada indeks operasi",
+  "Lifetime member": "Ahli seumur hidup",
+  "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "Yuran ahli seumur hidup ialah baki selepas pulangan tunai, pada kadar {pct}. Penciptaan aset (op 10) juga mengekalkan 50% dalam kumpulan yuran aset baharu.",
 }

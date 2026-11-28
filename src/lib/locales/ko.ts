@@ -1066,4 +1066,6 @@ export const ko: Record<string, string> = {
   "Sort by": "정렬 기준",
   "24h volume adds both directions of every pool swap in the last 24 hours.": "24시간 거래량은 지난 24시간 동안 모든 풀 스왑의 양방향 수량을 합한 값입니다.",
   "Last 24 hours, from the operation index": "최근 24시간, 작업 인덱스 기준",
+  "Lifetime member": "평생 회원",
+  "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "평생 회원 수수료는 캐시백 후 남는 금액이며, 비율은 {pct}입니다. 자산 생성(op 10)은 새 자산의 수수료 풀에 50%를 추가로 남깁니다.",
 }

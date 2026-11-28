@@ -1066,4 +1066,6 @@ export const fa: Record<string, string> = {
   "Sort by": "مرتب‌سازی بر اساس",
   "24h volume adds both directions of every pool swap in the last 24 hours.": "حجم 24 ساعت، هر دو جهت هر مبادله استخر را در 24 ساعت گذشته جمع می‌کند.",
   "Last 24 hours, from the operation index": "24 ساعت گذشته، از نمایه عملیات",
+  "Lifetime member": "عضو مادام‌العمر",
+  "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "کارمزد عضو مادام‌العمر باقیمانده پس از بازپرداخت است، معادل {pct}. ایجاد دارایی (عملیات 10) همچنین 50% را در استخر کارمزد دارایی جدید نگه می‌دارد.",
 }

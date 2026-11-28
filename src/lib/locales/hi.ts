@@ -1066,4 +1066,6 @@ export const hi: Record<string, string> = {
   "Sort by": "क्रमबद्ध करें",
   "24h volume adds both directions of every pool swap in the last 24 hours.": "24 घंटे का वॉल्यूम पिछले 24 घंटों में हर पूल स्वैप की दोनों दिशाओं को जोड़ता है।",
   "Last 24 hours, from the operation index": "पिछले 24 घंटे, ऑपरेशन इंडेक्स से",
+  "Lifetime member": "आजीवन सदस्य",
+  "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "आजीवन सदस्य शुल्क कैशबैक के बाद बचा हिस्सा है, यानी {pct}। एसेट बनाने (ऑप 10) पर नए एसेट के शुल्क पूल में 50% और रहता है।",
 }

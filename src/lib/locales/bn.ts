@@ -1066,4 +1066,6 @@ export const bn: Record<string, string> = {
   "Sort by": "সাজান",
   "24h volume adds both directions of every pool swap in the last 24 hours.": "24 ঘণ্টার ভলিউম গত 24 ঘণ্টায় প্রতিটি পুল সোয়াপের উভয় দিক যোগ করে।",
   "Last 24 hours, from the operation index": "গত 24 ঘণ্টা, অপারেশন ইনডেক্স থেকে",
+  "Lifetime member": "আজীবন সদস্য",
+  "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "আজীবন সদস্য ফি হলো ক্যাশব্যাকের পর অবশিষ্ট অংশ, হার {pct}। অ্যাসেট তৈরি (অপ 10) নতুন অ্যাসেটের ফি পুলে আরও 50% রেখে দেয়।",
 }

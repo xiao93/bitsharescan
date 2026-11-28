@@ -1066,4 +1066,6 @@ export const he: Record<string, string> = {
   "Sort by": "מיון לפי",
   "24h volume adds both directions of every pool swap in the last 24 hours.": "נפח 24 השעות מסכם את שני הכיוונים של כל החלפת מאגר ב-24 השעות האחרונות.",
   "Last 24 hours, from the operation index": "24 השעות האחרונות, מאינדקס הפעולות",
+  "Lifetime member": "חבר לכל החיים",
+  "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "עמלת חבר לכל החיים היא היתרה לאחר החזר המזומן, בשיעור {pct}. יצירת נכס (פעולה 10) משאירה גם 50% בבריכת העמלות של הנכס החדש.",
 }

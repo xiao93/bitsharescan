@@ -1066,4 +1066,6 @@ export const vi: Record<string, string> = {
   "Sort by": "Sắp xếp theo",
   "24h volume adds both directions of every pool swap in the last 24 hours.": "Khối lượng 24 giờ cộng cả hai chiều của mọi lần hoán đổi trong pool trong 24 giờ qua.",
   "Last 24 hours, from the operation index": "24 giờ qua, từ chỉ mục thao tác",
+  "Lifetime member": "Thành viên trọn đời",
+  "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "Phí thành viên trọn đời là phần còn lại sau hoàn phí, tỷ lệ {pct}. Tạo tài sản (thao tác 10) còn giữ 50% trong nhóm phí của tài sản mới.",
 }
