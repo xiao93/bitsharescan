@@ -1151,4 +1151,10 @@ export const vi: Record<string, string> = {
   "Liquidity/other": "Thanh khoản/khác",
   "Other": "Khác",
   "{category} ({count}, {percent}%)": "{category} ({count}, {percent}%)",
+  "{n} transactions · {m} operations": "{n} giao dịch · {m} thao tác",
+  "A transaction can contain multiple operation types.": "Một giao dịch có thể chứa nhiều loại thao tác.",
+  "{count} operations": "{count} thao tác",
+  "{category} ({count} txs, {percent}%)": "{category} ({count} giao dịch, {percent}%)",
+  "Operation share": "Tỷ lệ thao tác",
+  "{category}: {count} ops ({percent}%)": "{category}: {count} thao tác ({percent}%)",
 }

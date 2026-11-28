@@ -1151,4 +1151,10 @@ export const hi: Record<string, string> = {
   "Liquidity/other": "लिक्विडिटी/अन्य",
   "Other": "अन्य",
   "{category} ({count}, {percent}%)": "{category} ({count}, {percent}%)",
+  "{n} transactions · {m} operations": "{n} ट्रांज़ैक्शन · {m} ऑपरेशन",
+  "A transaction can contain multiple operation types.": "एक ट्रांज़ैक्शन में कई प्रकार के ऑपरेशन हो सकते हैं।",
+  "{count} operations": "{count} ऑपरेशन",
+  "{category} ({count} txs, {percent}%)": "{category} ({count} ट्रांज़ैक्शन, {percent}%)",
+  "Operation share": "ऑपरेशन हिस्सा",
+  "{category}: {count} ops ({percent}%)": "{category}: {count} ऑपरेशन ({percent}%)",
 }

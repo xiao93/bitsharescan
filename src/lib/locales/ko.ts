@@ -1151,4 +1151,10 @@ export const ko: Record<string, string> = {
   "Liquidity/other": "유동성/기타",
   "Other": "기타",
   "{category} ({count}, {percent}%)": "{category} ({count}, {percent}%)",
+  "{n} transactions · {m} operations": "트랜잭션 {n}건 · 작업 {m}건",
+  "A transaction can contain multiple operation types.": "한 트랜잭션에 여러 작업 유형이 포함될 수 있습니다.",
+  "{count} operations": "작업 {count}건",
+  "{category} ({count} txs, {percent}%)": "{category} (트랜잭션 {count}건, {percent}%)",
+  "Operation share": "작업 비중",
+  "{category}: {count} ops ({percent}%)": "{category}: 작업 {count}건 ({percent}%)",
 }

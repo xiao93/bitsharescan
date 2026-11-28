@@ -1151,4 +1151,10 @@ export const nl: Record<string, string> = {
   "Liquidity/other": "Liquiditeit/overig",
   "Other": "Overig",
   "{category} ({count}, {percent}%)": "{category} ({count}, {percent}%)",
+  "{n} transactions · {m} operations": "{n} transacties · {m} operaties",
+  "A transaction can contain multiple operation types.": "Een transactie kan meerdere operatietypen bevatten.",
+  "{count} operations": "{count} operaties",
+  "{category} ({count} txs, {percent}%)": "{category} ({count} txs, {percent}%)",
+  "Operation share": "Aandeel operaties",
+  "{category}: {count} ops ({percent}%)": "{category}: {count} operaties ({percent}%)",
 }

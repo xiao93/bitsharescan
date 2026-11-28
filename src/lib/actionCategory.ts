@@ -1,4 +1,3 @@
-import { opLabel } from "./ops.ts"
 import type { OpView } from "./ops.ts"
 
 /** Categories for the block-page Transaction Actions mosaic (Etherscan-style). */
@@ -102,79 +101,116 @@ export function opCategory(type: number): ActionCategory {
 
 export type ActionCell = {
   key: string
-  category: ActionCategory
-  categories: ActionCategory[]
-  name: string
   trxId: string
+  index: number
+  categories: ActionCategory[]
+  opCounts: Partial<Record<ActionCategory, number>>
+  opTotal: number
 }
 
-export function actionCellsForBlock(
+export type ActionSummary = {
+  cells: ActionCell[]
+  txCounts: Map<ActionCategory, number>
+  opCounts: Map<ActionCategory, number>
+  txTotal: number
+  opTotal: number
+}
+
+function addOp(map: Map<ActionCategory, number>, type: number) {
+  const cat = opCategory(type)
+  map.set(cat, (map.get(cat) ?? 0) + 1)
+}
+
+/** Group virtual ops onto their signed tx (by trx id, or by trx_in_block when the id is missing). */
+function attachVirtuals(
   transactions: Array<{ trxId: string; index: number; ops: OpView[] }>,
   virtuals: OpView[],
-): { cells: ActionCell[]; counts: Map<ActionCategory, number>; total: number } {
-  const virtualsByTx = new Map<string, OpView[]>()
-  const orphanVirtuals: OpView[] = []
-  for (const op of virtuals) {
-    if (op.trxId) {
-      const list = virtualsByTx.get(op.trxId) ?? []
-      list.push(op)
-      virtualsByTx.set(op.trxId, list)
-    } else {
-      orphanVirtuals.push(op)
-    }
-  }
-
-  const allOps: OpView[] = []
+): { byTx: Map<number, OpView[]>; orphans: OpView[] } {
+  const byId = new Map<string, number>()
   for (const tx of transactions) {
-    allOps.push(...tx.ops)
-    allOps.push(...(virtualsByTx.get(tx.trxId) ?? []))
+    if (tx.trxId) byId.set(tx.trxId, tx.index)
   }
-  allOps.push(...orphanVirtuals)
-
-  const counts = new Map<ActionCategory, number>()
-  for (const op of allOps) {
-    const cat = opCategory(op.type)
-    counts.set(cat, (counts.get(cat) ?? 0) + 1)
+  const byTx = new Map<number, OpView[]>()
+  const orphans: OpView[] = []
+  for (const op of virtuals) {
+    const index = (op.trxId ? byId.get(op.trxId) : undefined) ?? (transactions.some((tx) => tx.index === op.trxInBlock) ? op.trxInBlock : undefined)
+    if (index == null) {
+      orphans.push(op)
+      continue
+    }
+    const list = byTx.get(index) ?? []
+    list.push(op)
+    byTx.set(index, list)
   }
+  return { byTx, orphans }
+}
 
-  const perOp = transactions.length > 0 && transactions.length <= 8
+export function actionSummaryForBlock(
+  transactions: Array<{ trxId: string; index: number; ops: OpView[] }>,
+  virtuals: OpView[],
+): ActionSummary {
+  const { byTx, orphans } = attachVirtuals(transactions, virtuals)
+  const opCounts = new Map<ActionCategory, number>()
+  const txCounts = new Map<ActionCategory, number>()
   const cells: ActionCell[] = []
-  if (perOp || transactions.length === 0) {
-    for (const op of allOps) {
-      const category = opCategory(op.type)
-      cells.push({
-        key: op.key,
-        category,
-        categories: [category],
-        name: opLabel(op.type),
-        trxId: op.trxId,
-      })
+
+  for (const tx of transactions) {
+    const related = [...tx.ops, ...(byTx.get(tx.index) ?? [])]
+    const cellCounts: Partial<Record<ActionCategory, number>> = {}
+    for (const op of related) {
+      addOp(opCounts, op.type)
+      const cat = opCategory(op.type)
+      cellCounts[cat] = (cellCounts[cat] ?? 0) + 1
     }
-  } else {
-    for (const tx of transactions) {
-      const related = [...tx.ops, ...(virtualsByTx.get(tx.trxId) ?? [])]
-      const categories = [...new Set(related.map((op) => opCategory(op.type)))]
-      const first = tx.ops[0] ?? related[0]
-      const category = first ? opCategory(first.type) : "other"
-      cells.push({
-        key: `tx-${tx.index}-${tx.trxId}`,
-        category,
-        categories,
-        name: first ? opLabel(first.type) : ACTION_CATEGORY_LABEL.other,
-        trxId: tx.trxId,
-      })
-    }
-    for (const op of orphanVirtuals) {
-      const category = opCategory(op.type)
-      cells.push({
-        key: op.key,
-        category,
-        categories: [category],
-        name: opLabel(op.type),
-        trxId: op.trxId,
-      })
-    }
+    const categories = ACTION_CATEGORIES.filter((id) => (cellCounts[id] ?? 0) > 0)
+    for (const cat of categories) txCounts.set(cat, (txCounts.get(cat) ?? 0) + 1)
+    cells.push({
+      key: `tx-${tx.index}-${tx.trxId}`,
+      trxId: tx.trxId,
+      index: tx.index,
+      categories,
+      opCounts: cellCounts,
+      opTotal: related.length,
+    })
   }
 
-  return { cells, counts, total: allOps.length }
+  // Virtual ops with no signed transaction (e.g. an expiry) count toward the op totals only.
+  for (const op of orphans) addOp(opCounts, op.type)
+
+  let opTotal = 0
+  for (const n of opCounts.values()) opTotal += n
+
+  return { cells, txCounts, opCounts, txTotal: transactions.length, opTotal }
+}
+
+/** Format a share so whole numbers stay whole and other values keep one decimal. */
+export function formatShare(count: number, total: number): string {
+  if (!total || count <= 0) return "0"
+  const raw = (count * 100) / total
+  if (raw > 0 && raw < 0.1) return "<0.1"
+  const nearest = Math.round(raw * 10) / 10
+  if (Math.abs(nearest - Math.round(nearest)) < 0.05) return String(Math.round(nearest))
+  return nearest.toFixed(1)
+}
+
+/**
+ * Integer percents that sum to 100, using the largest-remainder method.
+ * A positive count is never rounded to 0 when there is remainder to give.
+ */
+export function integerPercents(counts: number[], total: number): number[] {
+  if (!total || !counts.length) return counts.map(() => 0)
+  const raw = counts.map((count) => (count * 100) / total)
+  const floors = raw.map((value) => Math.floor(value))
+  let remain = 100 - floors.reduce((sum, value) => sum + value, 0)
+  const order = raw
+    .map((value, index) => ({ index, frac: value - Math.floor(value), count: counts[index] ?? 0 }))
+    .sort((a, b) => b.frac - a.frac || b.count - a.count)
+  const out = [...floors]
+  for (const item of order) {
+    if (remain <= 0) break
+    if ((counts[item.index] ?? 0) <= 0) continue
+    out[item.index] = (out[item.index] ?? 0) + 1
+    remain -= 1
+  }
+  return out
 }

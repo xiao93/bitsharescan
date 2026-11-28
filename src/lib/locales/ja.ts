@@ -1151,4 +1151,10 @@ export const ja: Record<string, string> = {
   "Liquidity/other": "流動性/その他",
   "Other": "その他",
   "{category} ({count}, {percent}%)": "{category} ({count}, {percent}%)",
+  "{n} transactions · {m} operations": "{n} 件のトランザクション · {m} 件のオペレーション",
+  "A transaction can contain multiple operation types.": "1件のトランザクションに複数の操作種別が含まれることがあります。",
+  "{count} operations": "オペレーション {count} 件",
+  "{category} ({count} txs, {percent}%)": "{category}（{count} 件のトランザクション、{percent}%）",
+  "Operation share": "オペレーションの内訳",
+  "{category}: {count} ops ({percent}%)": "{category}: オペレーション {count} 件（{percent}%）",
 }

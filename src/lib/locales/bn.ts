@@ -1151,4 +1151,10 @@ export const bn: Record<string, string> = {
   "Liquidity/other": "লিকুইডিটি/অন্যান্য",
   "Other": "অন্যান্য",
   "{category} ({count}, {percent}%)": "{category} ({count}, {percent}%)",
+  "{n} transactions · {m} operations": "{n} লেনদেন · {m} অপারেশন",
+  "A transaction can contain multiple operation types.": "একটি লেনদেনে একাধিক ধরনের অপারেশন থাকতে পারে।",
+  "{count} operations": "{count} অপারেশন",
+  "{category} ({count} txs, {percent}%)": "{category} ({count} লেনদেন, {percent}%)",
+  "Operation share": "অপারেশনের অংশ",
+  "{category}: {count} ops ({percent}%)": "{category}: {count} অপারেশন ({percent}%)",
 }

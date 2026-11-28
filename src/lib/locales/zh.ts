@@ -1151,4 +1151,10 @@ export const zh: Record<string, string> = {
   "Liquidity/other": "流动性/其他",
   "Other": "其他",
   "{category} ({count}, {percent}%)": "{category} ({count}, {percent}%)",
+  "{n} transactions · {m} operations": "{n} 笔交易 · {m} 个操作",
+  "A transaction can contain multiple operation types.": "一笔交易可以包含多种操作类型。",
+  "{count} operations": "{count} 个操作",
+  "{category} ({count} txs, {percent}%)": "{category} ({count} 笔交易, {percent}%)",
+  "Operation share": "操作占比",
+  "{category}: {count} ops ({percent}%)": "{category}：{count} 个操作（{percent}%）",
 }

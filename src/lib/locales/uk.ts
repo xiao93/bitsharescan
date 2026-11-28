@@ -1151,4 +1151,10 @@ export const uk: Record<string, string> = {
   "Liquidity/other": "Ліквідність/інше",
   "Other": "Інше",
   "{category} ({count}, {percent}%)": "{category} ({count}, {percent}%)",
+  "{n} transactions · {m} operations": "{n} транзакцій · {m} операцій",
+  "A transaction can contain multiple operation types.": "Одна транзакція може містити різні типи операцій.",
+  "{count} operations": "Операцій: {count}",
+  "{category} ({count} txs, {percent}%)": "{category} ({count} транзакцій, {percent}%)",
+  "Operation share": "Частка операцій",
+  "{category}: {count} ops ({percent}%)": "{category}: {count} операцій ({percent}%)",
 }

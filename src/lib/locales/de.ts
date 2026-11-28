@@ -1151,4 +1151,10 @@ export const de: Record<string, string> = {
   "Liquidity/other": "Liquidität/sonstiges",
   "Other": "Sonstiges",
   "{category} ({count}, {percent}%)": "{category} ({count}, {percent}%)",
+  "{n} transactions · {m} operations": "{n} Transaktionen · {m} Operationen",
+  "A transaction can contain multiple operation types.": "Eine Transaktion kann mehrere Operationstypen enthalten.",
+  "{count} operations": "{count} Operationen",
+  "{category} ({count} txs, {percent}%)": "{category} ({count} Txs, {percent}%)",
+  "Operation share": "Operationsanteil",
+  "{category}: {count} ops ({percent}%)": "{category}: {count} Operationen ({percent}%)",
 }

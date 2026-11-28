@@ -1151,4 +1151,10 @@ export const th: Record<string, string> = {
   "Liquidity/other": "สภาพคล่อง/อื่น ๆ",
   "Other": "อื่น ๆ",
   "{category} ({count}, {percent}%)": "{category} ({count}, {percent}%)",
+  "{n} transactions · {m} operations": "{n} ธุรกรรม · {m} การดำเนินการ",
+  "A transaction can contain multiple operation types.": "ธุรกรรมหนึ่งรายการสามารถมีได้หลายประเภทการดำเนินการ",
+  "{count} operations": "{count} การดำเนินการ",
+  "{category} ({count} txs, {percent}%)": "{category} ({count} ธุรกรรม, {percent}%)",
+  "Operation share": "สัดส่วนการดำเนินการ",
+  "{category}: {count} ops ({percent}%)": "{category}: {count} การดำเนินการ ({percent}%)",
 }

@@ -1151,4 +1151,10 @@ export const tr: Record<string, string> = {
   "Liquidity/other": "Likidite/diğer",
   "Other": "Diğer",
   "{category} ({count}, {percent}%)": "{category} ({count}, {percent}%)",
+  "{n} transactions · {m} operations": "{n} işlem · {m} operasyon",
+  "A transaction can contain multiple operation types.": "Bir işlem birden fazla operasyon türü içerebilir.",
+  "{count} operations": "{count} operasyon",
+  "{category} ({count} txs, {percent}%)": "{category} ({count} işlem, {percent}%)",
+  "Operation share": "Operasyon payı",
+  "{category}: {count} ops ({percent}%)": "{category}: {count} operasyon ({percent}%)",
 }

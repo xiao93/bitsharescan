@@ -1151,4 +1151,10 @@ export const fa: Record<string, string> = {
   "Liquidity/other": "نقدینگی/سایر",
   "Other": "سایر",
   "{category} ({count}, {percent}%)": "{category} ({count}, {percent}%)",
+  "{n} transactions · {m} operations": "{n} تراکنش · {m} عملیات",
+  "A transaction can contain multiple operation types.": "یک تراکنش می‌تواند چند نوع عملیات داشته باشد.",
+  "{count} operations": "{count} عملیات",
+  "{category} ({count} txs, {percent}%)": "{category} ({count} تراکنش، {percent}%)",
+  "Operation share": "سهم عملیات",
+  "{category}: {count} ops ({percent}%)": "{category}: {count} عملیات ({percent}%)",
 }

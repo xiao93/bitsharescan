@@ -1151,4 +1151,10 @@ export const he: Record<string, string> = {
   "Liquidity/other": "נזילות/אחר",
   "Other": "אחר",
   "{category} ({count}, {percent}%)": "{category} ({count}, {percent}%)",
+  "{n} transactions · {m} operations": "{n} עסקאות · {m} פעולות",
+  "A transaction can contain multiple operation types.": "עסקה יכולה לכלול כמה סוגי פעולות.",
+  "{count} operations": "{count} פעולות",
+  "{category} ({count} txs, {percent}%)": "{category} ({count} עסקאות, {percent}%)",
+  "Operation share": "חלק הפעולות",
+  "{category}: {count} ops ({percent}%)": "{category}: {count} פעולות ({percent}%)",
 }

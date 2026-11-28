@@ -1151,4 +1151,10 @@ export const ms: Record<string, string> = {
   "Liquidity/other": "Kecairan/lain-lain",
   "Other": "Lain-lain",
   "{category} ({count}, {percent}%)": "{category} ({count}, {percent}%)",
+  "{n} transactions · {m} operations": "{n} transaksi · {m} operasi",
+  "A transaction can contain multiple operation types.": "Satu transaksi boleh mengandungi pelbagai jenis operasi.",
+  "{count} operations": "{count} operasi",
+  "{category} ({count} txs, {percent}%)": "{category} ({count} transaksi, {percent}%)",
+  "Operation share": "Bahagian operasi",
+  "{category}: {count} ops ({percent}%)": "{category}: {count} operasi ({percent}%)",
 }

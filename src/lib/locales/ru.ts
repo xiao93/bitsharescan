@@ -1151,4 +1151,10 @@ export const ru: Record<string, string> = {
   "Liquidity/other": "Ликвидность/прочее",
   "Other": "Прочее",
   "{category} ({count}, {percent}%)": "{category} ({count}, {percent}%)",
+  "{n} transactions · {m} operations": "{n} транзакций · {m} операций",
+  "A transaction can contain multiple operation types.": "В одной транзакции могут быть операции разных типов.",
+  "{count} operations": "Операций: {count}",
+  "{category} ({count} txs, {percent}%)": "{category} ({count} транзакций, {percent}%)",
+  "Operation share": "Доля операций",
+  "{category}: {count} ops ({percent}%)": "{category}: {count} операций ({percent}%)",
 }

@@ -1151,4 +1151,10 @@ export const ar: Record<string, string> = {
   "Liquidity/other": "السيولة/أخرى",
   "Other": "أخرى",
   "{category} ({count}, {percent}%)": "{category} ({count}, {percent}%)",
+  "{n} transactions · {m} operations": "{n} معاملات · {m} عمليات",
+  "A transaction can contain multiple operation types.": "يمكن أن تحتوي المعاملة على أكثر من نوع من العمليات.",
+  "{count} operations": "{count} عمليات",
+  "{category} ({count} txs, {percent}%)": "{category} ({count} معاملات، {percent}%)",
+  "Operation share": "حصة العمليات",
+  "{category}: {count} ops ({percent}%)": "{category}: {count} عمليات ({percent}%)",
 }

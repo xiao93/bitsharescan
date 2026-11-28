@@ -1,5 +1,5 @@
 import { Check, ChevronDown, Clock, Copy } from "lucide-react"
-import { createContext, useContext, useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react"
+import { createContext, useContext, useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from "react"
 import { createPortal } from "react-dom"
 import { formatScanTime, formatTime, timeAgo, unixTimestamp } from "../lib/format.ts"
 import { useI18n } from "../lib/i18n.tsx"
@@ -216,7 +216,21 @@ function FormatCopy({ value }: { value: string }) {
 }
 
 /** A dark Etherscan-style hover tooltip. `immediate` repositions when the label text changes (Copy → Copied!). */
-export function HoverLabel({ text, children, immediate, disabled }: { text: string; children: ReactNode; immediate?: boolean; disabled?: boolean }) {
+export function HoverLabel({
+  text,
+  children,
+  immediate,
+  disabled,
+  className,
+  style,
+}: {
+  text: string
+  children: ReactNode
+  immediate?: boolean
+  disabled?: boolean
+  className?: string
+  style?: CSSProperties
+}) {
   const [open, setOpen] = useState(false)
   const [coords, setCoords] = useState<{ top: number; left: number } | null>(null)
   const ref = useRef<HTMLSpanElement>(null)
@@ -237,7 +251,8 @@ export function HoverLabel({ text, children, immediate, disabled }: { text: stri
   return (
     <span
       ref={ref}
-      className="inline-flex"
+      className={cn("inline-flex", className)}
+      style={style}
       onMouseEnter={() => {
         if (disabled) return
         place()
