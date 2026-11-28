@@ -1,8 +1,8 @@
 import { Link, useParams } from "react-router-dom"
-import { TimeAgo } from "../components/Now.tsx"
+import { TimeDetail } from "../components/Now.tsx"
 import { AccountLink, AmountView, Crumbs, ErrorBox, JsonTree, KeyValue, LoadingBlock, OpSummary, Panel, StatusBadge, TypeBadge } from "../components/widgets.tsx"
 import { fetchDynamic } from "../lib/chain.ts"
-import { formatInt, formatTime } from "../lib/format.ts"
+import { formatInt } from "../lib/format.ts"
 import { fetchOperation } from "../lib/history.ts"
 import { linkClass } from "../lib/utils.ts"
 import { useQuery, useTitle } from "../hooks/useQuery.ts"
@@ -43,7 +43,7 @@ export default function OpDetail() {
                 label: "Block",
                 value: <Link className={linkClass} to={`/block/${op.blockNum}`}>{formatInt(op.blockNum)}</Link>,
               },
-              { label: "Time", value: <>{formatTime(op.time)} · <TimeAgo time={op.time} /></> },
+              { label: "Time", value: <TimeDetail time={op.time} /> },
               {
                 label: "Transaction",
                 value: op.trxId ? <Link className={`${linkClass} font-mono text-xs`} to={`/tx/${op.trxId}`}>{op.trxId}</Link> : "Virtual operation",

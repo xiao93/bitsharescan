@@ -866,9 +866,18 @@ export async function signedOpsForBlock(block: BlockRow, esOps: OpView[]): Promi
   for (const op of esOps) {
     if (op.trxId && !op.virtual) idByIndex.set(op.trxInBlock, op.trxId)
   }
+  const resultByPos = new Map<string, NonNullable<OpView["result"]>>()
+  for (const op of esOps) {
+    if (!op.virtual && op.result) resultByPos.set(`${op.trxInBlock}-${op.opInTrx}`, op.result)
+  }
   const transactions = block.transactions.map((tx, index) => {
     const trxId = idByIndex.get(index) ?? ""
-    const ops = tx.operations.map((op, opIndex) => fromSignedOp(block.num, block.time, trxId, index, opIndex, op))
+    const ops = tx.operations.map((op, opIndex) => {
+      const view = fromSignedOp(block.num, block.time, trxId, index, opIndex, op)
+      const indexed = resultByPos.get(`${index}-${opIndex}`)
+      if (indexed) view.result = indexed
+      return view
+    })
     return { trxId, index, expiration: tx.expiration, signatures: tx.signatures ?? [], ops }
   })
   await hydrateOps(transactions.flatMap((tx) => tx.ops))

@@ -1,5 +1,7 @@
-import { Link, useParams } from "react-router-dom"
-import { TimeAgo } from "../components/Now.tsx"
+import { ChevronLeft, ChevronRight } from "lucide-react"
+import { useEffect } from "react"
+import { Link, useNavigate, useParams } from "react-router-dom"
+import { TimeDetail } from "../components/Now.tsx"
 import {
   AccountLink,
   AmountView,
@@ -8,7 +10,7 @@ import {
   ErrorBox,
   KeyValue,
   LoadingBlock,
-  OpSummary,
+  OpAction,
   OpTable,
   Panel,
   StatusBadge,
@@ -18,7 +20,7 @@ import {
 import { blockFeeText, fetchBlock, fetchDynamic, signedOpsForBlock } from "../lib/chain.ts"
 import { formatInt, formatTime, shortHash } from "../lib/format.ts"
 import { fetchBlockOps } from "../lib/history.ts"
-import { linkClass } from "../lib/utils.ts"
+import { cn, linkClass } from "../lib/utils.ts"
 import { useQuery, useTitle } from "../hooks/useQuery.ts"
 import { useI18n } from "../lib/i18n.tsx"
 
@@ -41,6 +43,23 @@ export default function BlockDetail() {
   const dgp = data?.dgp
   const confirmations = block && dgp ? Math.max(0, dgp.head_block_number - block.num) : 0
   const irreversible = Boolean(block && dgp && block.num <= dgp.last_irreversible_block_num)
+  const navigate = useNavigate()
+  const hasPrev = Boolean(block && block.num > 1)
+  const hasNext = Boolean(block && dgp && block.num < dgp.head_block_number)
+
+  // Left / Right arrow keys step through blocks, like the buttons next to the height.
+  useEffect(() => {
+    if (!block) return
+    const onKey = (event: KeyboardEvent) => {
+      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return
+      const target = event.target as HTMLElement | null
+      if (target && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName))) return
+      if (event.key === "ArrowLeft" && hasPrev) navigate(`/block/${block.num - 1}`)
+      else if (event.key === "ArrowRight" && hasNext) navigate(`/block/${block.num + 1}`)
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [block, hasPrev, hasNext, navigate])
 
   return (
     <div>
@@ -56,8 +75,17 @@ export default function BlockDetail() {
           <Panel className="mb-4">
             <KeyValue
               rows={[
-                { label: "Block height", value: formatInt(block.num) },
-                { label: "Timestamp", value: <><TimeAgo time={block.time} /> <span className="text-muted">· {formatTime(block.time)}</span></> },
+                {
+                  label: "Block height",
+                  value: (
+                    <span className="inline-flex items-center gap-2">
+                      <span>{formatInt(block.num)}</span>
+                      <BlockStep to={hasPrev ? `/block/${block.num - 1}` : undefined} label={t("Previous block")} disabledLabel={t("Genesis")} dir="prev" />
+                      <BlockStep to={hasNext ? `/block/${block.num + 1}` : undefined} label={t("Next block")} disabledLabel={t("This is the latest block")} dir="next" />
+                    </span>
+                  ),
+                },
+                { label: "Timestamp", value: <TimeDetail time={block.time} /> },
                 { label: "Confirmations", value: `${formatInt(confirmations)} · ${t("Head block")} ${formatInt(dgp.head_block_number)}` },
                 {
                   label: "Witness",
@@ -98,7 +126,7 @@ export default function BlockDetail() {
                         <li key={op.key} className="flex flex-wrap items-start justify-between gap-2 rounded-lg bg-canvas px-3 py-2">
                           <div className="min-w-0">
                             <TypeBadge type={op.type} />
-                            <p className="mt-1 text-sm"><OpSummary op={op} /></p>
+                            <p className="mt-1 text-sm"><OpAction op={op} /></p>
                             <p className="text-xs text-muted">
                               {t("From")} <AccountLink id={op.feePayer} />
                             </p>
@@ -127,6 +155,23 @@ export default function BlockDetail() {
         </>
       ) : null}
     </div>
+  )
+}
+
+function BlockStep({ to, label, disabledLabel, dir }: { to?: string; label: string; disabledLabel: string; dir: "prev" | "next" }) {
+  const Icon = dir === "prev" ? ChevronLeft : ChevronRight
+  const base = "inline-flex h-6 w-6 items-center justify-center rounded border border-line"
+  if (!to) {
+    return (
+      <span className={cn(base, "cursor-not-allowed text-muted opacity-40")} title={disabledLabel} aria-label={disabledLabel} aria-disabled="true">
+        <Icon className="h-4 w-4 rtl:rotate-180" />
+      </span>
+    )
+  }
+  return (
+    <Link to={to} className={cn(base, "bg-card text-ink hover:border-link hover:text-link")} title={label} aria-label={label}>
+      <Icon className="h-4 w-4 rtl:rotate-180" />
+    </Link>
   )
 }
 

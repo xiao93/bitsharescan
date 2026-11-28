@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom"
-import { TimeAgo } from "../components/Now.tsx"
+import { TimeDetail } from "../components/Now.tsx"
 import {
   AccountLink,
   AmountView,
@@ -9,6 +9,7 @@ import {
   JsonTree,
   KeyValue,
   LoadingBlock,
+  OpAction,
   OpSummary,
   Panel,
   StatusBadge,
@@ -81,7 +82,7 @@ export default function TxDetail() {
                     </Link>
                   ),
                 },
-                { label: "Timestamp", hint: "The date and time when the block containing this transaction was produced.", value: <>{formatTime(first.time)} · <TimeAgo time={first.time} /></> },
+                { label: "Timestamp", hint: "The date and time when the block containing this transaction was produced.", value: <TimeDetail time={first.time} /> },
                 { label: "Confirmations", hint: "How many blocks have been produced after this transaction\u2019s block. More confirmations make it harder to reverse; once past the last irreversible block it is final.", value: formatInt(confirmations) },
                 { label: "Position in block", hint: "The index of this transaction within its block (the first transaction is 0).", value: first.trxInBlock },
                 { label: "Operations", hint: "The number of operations bundled in this transaction. A BitShares transaction can carry several operations that all succeed or fail together.", value: data.ops.length },
@@ -104,6 +105,17 @@ export default function TxDetail() {
                 },
               ]}
             />
+          </Panel>
+          <Panel title={t("Transaction Action")} className="mb-4">
+            <ul className="divide-y divide-line">
+              {data.ops.map((op, index) => (
+                <li key={op.key} className="flex flex-wrap items-start gap-x-3 gap-y-1 px-4 py-3 text-sm">
+                  <TypeBadge type={op.type} virtual={op.virtual} />
+                  <span className="min-w-0 flex-1 break-words"><OpAction op={op} /></span>
+                  {data.ops.length > 1 ? <span className="text-xs text-muted">#{index}</span> : null}
+                </li>
+              ))}
+            </ul>
           </Panel>
           <div className="space-y-4">
             {data.ops.map((op, index) => (

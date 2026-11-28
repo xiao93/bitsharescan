@@ -1,9 +1,9 @@
 import { Link, useParams } from "react-router-dom"
 import { AccountLink, Crumbs, ErrorBox, KeyValue, LoadingBlock, Panel } from "../components/widgets.tsx"
-import { TimeAgo } from "../components/Now.tsx"
+import { TimeDetail } from "../components/Now.tsx"
 import { borrowerIds, fetchDealsForOffer, fetchOffer } from "../lib/defi.ts"
 import { assetSymbol, peekAsset } from "../lib/directory.ts"
-import { feeRatePercent, formatDuration, formatRaw, formatTime } from "../lib/format.ts"
+import { feeRatePercent, formatDuration, formatRaw } from "../lib/format.ts"
 import { linkClass } from "../lib/utils.ts"
 import { useQuery, useTitle } from "../hooks/useQuery.ts"
 import { useI18n } from "../lib/i18n.tsx"
@@ -41,7 +41,7 @@ export default function CreditOfferDetail() {
               { label: "Fee rate", value: feeRatePercent(offer.fee_rate) },
               { label: "Minimum deal", value: formatRaw(offer.min_deal_amount, asset?.precision ?? 5) },
               { label: "Maximum term", value: formatDuration(offer.max_duration_seconds) },
-              { label: "Auto disable", value: <>{formatTime(offer.auto_disable_time)} · <TimeAgo time={offer.auto_disable_time} /></> },
+              { label: "Auto disable", value: <TimeDetail time={offer.auto_disable_time} /> },
               { label: "Allowed borrowers", value: borrowerIds(offer).length ? borrowerIds(offer).map((account) => <span key={account} className="me-3"><AccountLink id={account} /></span>) : "Anyone" },
               { label: "Collateral", value: offer.acceptable_collateral?.length ? offer.acceptable_collateral.map(([assetId]) => assetSymbol(assetId)).join(", ") : "None listed" },
             ]} />

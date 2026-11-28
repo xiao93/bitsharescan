@@ -126,7 +126,7 @@ export function parseChainTime(iso: string | null | undefined): number {
   return Date.parse(`${iso}Z`)
 }
 
-export function formatTime(iso: string | null | undefined): string {
+export function formatTime(iso: string | null | undefined, withZone = true): string {
   const t = parseChainTime(iso)
   if (!Number.isFinite(t)) return "—"
   const when = new Date(t)
@@ -140,7 +140,7 @@ export function formatTime(iso: string | null | undefined): string {
     hour12: false,
     timeZone: getTimeMode() === "utc" ? "UTC" : undefined,
   })
-  return `${formatted} ${timeZoneSuffix(when)}`
+  return withZone ? `${formatted} ${timeZoneSuffix(when)}` : formatted
 }
 
 export function timeAgo(iso: string | null | undefined, now = Date.now()): string {

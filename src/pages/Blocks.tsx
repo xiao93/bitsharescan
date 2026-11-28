@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Link, useSearchParams } from "react-router-dom"
-import { TimeAgo } from "../components/Now.tsx"
+import { TimeAgo, TimeHead } from "../components/Now.tsx"
 import { Crumbs, ErrorBox, LoadingBlock, Pager, Panel } from "../components/widgets.tsx"
 import { blockFeeText, fetchBlocks, fetchDynamic } from "../lib/chain.ts"
 import { formatInt } from "../lib/format.ts"
@@ -62,7 +62,7 @@ export default function Blocks() {
             <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
               <tr>
                 <th className="px-4 py-2.5 font-medium">{t("Block")}</th>
-                <th className="px-4 py-2.5 font-medium">{t("Age")}</th>
+                <th className="px-4 py-2.5 font-medium"><TimeHead /></th>
                 <th className="px-4 py-2.5 font-medium">{t("Witness")}</th>
                 <th className="px-4 py-2.5 font-medium">{t("Txn")}</th>
                 <th className="px-4 py-2.5 font-medium">{t("Fees")}</th>

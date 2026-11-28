@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom"
 import { AccountLink, Crumbs, ErrorBox, LineChart, LoadingBlock, Panel } from "../components/widgets.tsx"
-import { TimeAgo } from "../components/Now.tsx"
+import { TimeAgo, TimeHead } from "../components/Now.tsx"
 import { fetchCandles, fetchFills, fetchOrderBook, fetchTicker } from "../lib/chain.ts"
 import { peekAsset } from "../lib/directory.ts"
 import { columnFractionDigits, formatFixed, priceFractionDigits, toFloat } from "../lib/format.ts"
@@ -155,7 +155,7 @@ export default function MarketDetail() {
                     <th className="px-4 py-2 text-end font-medium">{left}</th>
                     <th className="px-4 py-2 font-medium">{t("Side")}</th>
                     <th className="px-4 py-2 font-medium">{t("Account")}</th>
-                    <th className="px-4 py-2 font-medium">{t("Age")}</th>
+                    <th className="px-4 py-2 font-medium"><TimeHead /></th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-line">

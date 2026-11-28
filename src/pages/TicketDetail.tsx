@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom"
 import { AccountLink, Crumbs, ErrorBox, KeyValue, LoadingBlock, Panel } from "../components/widgets.tsx"
-import { TimeAgo } from "../components/Now.tsx"
+import { TimeDetail } from "../components/Now.tsx"
 import { fetchTicket, lockInfo } from "../lib/defi.ts"
 import { peekAsset } from "../lib/directory.ts"
 import { formatRaw, formatTime, isNeverTime } from "../lib/format.ts"
@@ -37,7 +37,7 @@ export default function TicketDetail() {
             { label: "Target lock", value: target.label },
             { label: "Voting power", value: `${formatRaw(ticket.value, 5)} BTS` },
             { label: "Status", value: ticket.status === "stable" ? t("Stable") : t(ticket.status) },
-            { label: "Next auto update", value: isNeverTime(ticket.next_auto_update_time) ? t("Never") : <>{formatTime(ticket.next_auto_update_time)} · <TimeAgo time={ticket.next_auto_update_time} /></> },
+            { label: "Next auto update", value: isNeverTime(ticket.next_auto_update_time) ? t("Never") : <TimeDetail time={ticket.next_auto_update_time} /> },
             { label: "Next downgrade", value: isNeverTime(ticket.next_type_downgrade_time) ? t("Never") : formatTime(ticket.next_type_downgrade_time) },
           ]} />
         </Panel>

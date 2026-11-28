@@ -67,3 +67,40 @@ function normalizeOffset(raw: string): string {
   if (!match) return text
   return `UTC${match[1]}${match[2]!.padStart(2, "0")}:${match[3] ?? "00"}`
 }
+
+/** Etherscan-style Age <-> Date Time view, shared by every timestamp on the site. */
+export type TimeView = "age" | "date"
+
+const VIEW_KEY = "bitscan.timeview"
+const viewListeners = new Set<(view: TimeView) => void>()
+
+function readView(): TimeView {
+  try {
+    return localStorage.getItem(VIEW_KEY) === "date" ? "date" : "age"
+  } catch {
+    return "age"
+  }
+}
+
+let currentView: TimeView = readView()
+
+export function getTimeView(): TimeView {
+  return currentView
+}
+
+export function setTimeView(view: TimeView) {
+  currentView = view
+  try {
+    localStorage.setItem(VIEW_KEY, view)
+  } catch {
+    /* ignore */
+  }
+  for (const listener of viewListeners) listener(view)
+}
+
+export function subscribeTimeView(listener: (view: TimeView) => void) {
+  viewListeners.add(listener)
+  return () => {
+    viewListeners.delete(listener)
+  }
+}

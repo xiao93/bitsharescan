@@ -1,9 +1,9 @@
 import { Link, useParams } from "react-router-dom"
 import { AccountLink, Crumbs, ErrorBox, KeyValue, LoadingBlock, Panel } from "../components/widgets.tsx"
-import { TimeAgo } from "../components/Now.tsx"
+import { TimeDetail } from "../components/Now.tsx"
 import { fetchDeal } from "../lib/defi.ts"
 import { assetSymbol, peekAsset } from "../lib/directory.ts"
-import { feeRatePercent, formatRaw, formatTime } from "../lib/format.ts"
+import { feeRatePercent, formatRaw } from "../lib/format.ts"
 import { linkClass } from "../lib/utils.ts"
 import { useQuery, useTitle } from "../hooks/useQuery.ts"
 
@@ -33,7 +33,7 @@ export default function CreditDealDetail() {
             { label: "Debt", value: `${formatRaw(deal.debt_amount, peekAsset(deal.debt_asset)?.precision ?? 5)} ${assetSymbol(deal.debt_asset)}` },
             { label: "Collateral", value: `${formatRaw(deal.collateral_amount, peekAsset(deal.collateral_asset)?.precision ?? 5)} ${assetSymbol(deal.collateral_asset)}` },
             { label: "Fee rate", value: feeRatePercent(deal.fee_rate) },
-            { label: "Repay by", value: <>{formatTime(deal.latest_repay_time)} · <TimeAgo time={deal.latest_repay_time} /></> },
+            { label: "Repay by", value: <TimeDetail time={deal.latest_repay_time} /> },
             { label: "Auto repay", value: Number(deal.auto_repay) ? String(deal.auto_repay) : "Off" },
           ]} />
         </Panel>

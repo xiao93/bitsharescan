@@ -155,7 +155,7 @@ function ltrText(value: string): string {
   return `${LRI}${value}${PDI}`
 }
 
-function summaryText(bits: SummaryBit[]): string {
+export function summaryText(bits: SummaryBit[]): string {
   return bits.map((bit) => {
     if (typeof bit === "string") return bit
     if (bit.kind === "arrow") return isRtl() ? " ← " : " → "
@@ -183,7 +183,7 @@ function isLtrToken(value: string): boolean {
   return /^[\s0-9.,+\-−$%#A-Za-z][\s0-9.,+\-−$%#A-Za-z:/]*$/.test(value) && /[0-9A-Za-z]/.test(value)
 }
 
-function phrase(template: string, vars: Record<string, SummaryBit | SummaryBit[]>): SummaryBit[] {
+export function phrase(template: string, vars: Record<string, SummaryBit | SummaryBit[]>): SummaryBit[] {
   const text = translate(template)
   const bits: SummaryBit[] = []
   const pattern = /\{(\w+)\}/g
@@ -200,7 +200,7 @@ function phrase(template: string, vars: Record<string, SummaryBit | SummaryBit[]
   return bits
 }
 
-function whoBit(value: unknown): SummaryBit {
+export function whoBit(value: unknown): SummaryBit {
   if (typeof value !== "string" || !value) return ""
   if (/^1\.2\.\d+$/.test(value)) return { kind: "account", id: value }
   if (/^1\.3\.\d+$/.test(value)) return { kind: "asset", id: value }
@@ -208,7 +208,7 @@ function whoBit(value: unknown): SummaryBit {
   return value
 }
 
-function moneyBits(value: unknown): SummaryBit[] {
+export function moneyBits(value: unknown): SummaryBit[] {
   const amount = asAmount(value)
   if (!amount) return ["—"]
   const asset = peekAsset(amount.asset_id)
@@ -217,7 +217,7 @@ function moneyBits(value: unknown): SummaryBit[] {
   return [isRtl() ? `${LRI}${qtyText}${PDI}` : qtyText, { kind: "asset", id: amount.asset_id }]
 }
 
-function namedAmountBits(body: Record<string, unknown>, amountKey: string, assetKey: string): SummaryBit[] {
+export function namedAmountBits(body: Record<string, unknown>, amountKey: string, assetKey: string): SummaryBit[] {
   const direct = asAmount(body[amountKey])
   if (direct) return moneyBits(direct)
   const asset = body[assetKey]
@@ -228,11 +228,11 @@ function namedAmountBits(body: Record<string, unknown>, amountKey: string, asset
   return ["—"]
 }
 
-function accountName(value: unknown): SummaryBit {
+export function accountName(value: unknown): SummaryBit {
   return typeof value === "string" && value ? { kind: "account-name", name: value } : ""
 }
 
-function assetSymbolBit(value: unknown): SummaryBit {
+export function assetSymbolBit(value: unknown): SummaryBit {
   return typeof value === "string" && value ? { kind: "asset-symbol", symbol: value } : ""
 }
 
@@ -252,7 +252,7 @@ export function collectRefs(value: unknown, accounts: Set<string>, assets: Set<s
   }
 }
 
-function genericSummaryBits(body: Record<string, unknown>): SummaryBit[] {
+export function genericSummaryBits(body: Record<string, unknown>): SummaryBit[] {
   const parts: SummaryBit[] = []
   for (const [key, value] of Object.entries(body)) {
     if (key === "fee" || key === "extensions") continue
@@ -276,7 +276,7 @@ function listCount(value: unknown): string {
   return String(Array.isArray(value) ? value.length : 0)
 }
 
-function objectBit(value: unknown, fallback: string): SummaryBit {
+export function objectBit(value: unknown, fallback: string): SummaryBit {
   if (typeof value === "string" && /^\d+\.\d+\.\d+$/.test(value)) return { kind: "object", id: value }
   return typeof value === "string" && value ? value : fallback
 }
@@ -418,7 +418,7 @@ export function summarize(type: number, body: Record<string, unknown>): string {
   return summaryText(summarizeBits(type, body))
 }
 
-function formatResultBits(result: OpResult | undefined): SummaryBit[] {
+export function formatResultBits(result: OpResult | undefined): SummaryBit[] {
   if (!result || result.which === 0 || result.data == null) return []
   if (typeof result.data === "string") return [whoBit(result.data)]
   const amount = asAmount(result.data)

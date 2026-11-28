@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom"
 import { AccountLink, Crumbs, ErrorBox, KeyValue, LoadingBlock, Panel, SummaryBits, TypeBadge } from "../components/widgets.tsx"
-import { TimeAgo } from "../components/Now.tsx"
+import { TimeAgo, TimeHead } from "../components/Now.tsx"
 import { countPoolSwaps, fetchPool, fetchPoolHistory, poolPrice, poolTvlBts } from "../lib/defi.ts"
 import { assetSymbol, peekAsset } from "../lib/directory.ts"
 import { compactNumber, compactUsd, formatDecimal, formatRaw, protocolPercent } from "../lib/format.ts"
@@ -68,7 +68,7 @@ export default function PoolDetail() {
                 <table className="w-full min-w-[720px] text-start text-sm">
                   <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
                     <tr>
-                      <th className="px-4 py-2.5 font-medium">{t("Age")}</th>
+                      <th className="px-4 py-2.5 font-medium"><TimeHead /></th>
                       <th className="px-4 py-2.5 font-medium">{t("Type")}</th>
                       <th className="px-4 py-2.5 font-medium">{t("Account")}</th>
                       <th className="px-4 py-2.5 font-medium">{t("Summary")}</th>

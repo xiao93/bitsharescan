@@ -5,6 +5,7 @@ import { Link } from "react-router-dom"
 import { accountLabel, accountPath, assetSymbol, peekAsset } from "../lib/directory.ts"
 import type { Amount } from "../lib/directory.ts"
 import { formatInt, formatRaw, formatTime, shortHash } from "../lib/format.ts"
+import { opActionBits } from "../lib/actions.ts"
 import { isVirtualType, opLabel, opSummaryBits } from "../lib/ops.ts"
 import type { SummaryBit } from "../lib/ops.ts"
 import type { OpView } from "../lib/ops.ts"
@@ -12,7 +13,7 @@ import { useI18n } from "../lib/i18n.tsx"
 import { localeTag } from "../lib/locale.ts"
 import { networkHasEs } from "../lib/network.ts"
 import { cn, linkClass, routeForObject } from "../lib/utils.ts"
-import { TimeAgo } from "./Now.tsx"
+import { TimeAgo, TimeHead } from "./Now.tsx"
 
 export function CopyButton({ value, label }: { value: string; label?: string }) {
   const { t } = useI18n()
@@ -262,6 +263,11 @@ export function OpSummary({ op }: { op: OpView }) {
   return <SummaryBits bits={opSummaryBits(op)} />
 }
 
+/** Etherscan-style Transaction Action: a full sentence for one operation. */
+export function OpAction({ op }: { op: OpView }) {
+  return <SummaryBits bits={opActionBits(op)} />
+}
+
 export function DirArrow({ className }: { className?: string } = {}) {
   return <span className={cn("inline-block rtl:rotate-180", className)} aria-hidden="true">→</span>
 }
@@ -310,7 +316,7 @@ export function OpTable({ rows }: { rows: OpView[] }) {
             <th className="px-4 py-2.5 font-medium">{t("Txn")}</th>
             <th className="px-4 py-2.5 font-medium">{t("Type")}</th>
             <th className="px-4 py-2.5 font-medium">{t("Block")}</th>
-            <th className="px-4 py-2.5 font-medium">{t("Age")}</th>
+            <th className="px-4 py-2.5 font-medium"><TimeHead /></th>
             <th className="px-4 py-2.5 font-medium">{t("From")}</th>
             <th className="px-4 py-2.5 font-medium">{t("Summary")}</th>
             <th className="px-4 py-2.5 font-medium">{t("Fee")}</th>

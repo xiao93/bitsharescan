@@ -253,7 +253,7 @@ export default function Home() {
                 hint={
                   dgp ? (
                     <>
-                      <TimeAgo time={dgp.time} />
+                      <TimeAgo compact time={dgp.time} />
                       {` · ${t("Irreversible {n}", { n: formatInt(dgp.last_irreversible_block_num) })}`}
                       {blockInterval ? ` · ${blockInterval}s` : ""}
                     </>
@@ -310,7 +310,7 @@ export default function Home() {
                     <span className="min-w-0 flex-1">
                       <span className="flex items-baseline justify-between gap-4">
                         <span className="text-[15px] font-medium leading-5 text-link">#{formatInt(block.num)}</span>
-                        <TimeAgo className="shrink-0 text-xs leading-5 text-muted" time={block.time} />
+                        <TimeAgo compact className="shrink-0 text-xs leading-5 text-muted" time={block.time} />
                       </span>
                       <span className="mt-1 flex items-center justify-between gap-4 text-[13px] leading-5">
                         <span className="truncate text-muted">
@@ -352,7 +352,7 @@ export default function Home() {
                   <span className="min-w-0 flex-1">
                     <span className="flex items-center justify-between gap-4">
                       <TxLink id={tx.trxId} />
-                      <TimeAgo className="shrink-0 text-xs leading-5 text-muted" time={tx.time} />
+                      <TimeAgo compact className="shrink-0 text-xs leading-5 text-muted" time={tx.time} />
                     </span>
                     <span className="mt-1.5 flex min-w-0 items-center gap-2 overflow-hidden text-[13px] leading-5">
                       <TypeBadge type={tx.type} virtual={tx.virtual} />
