@@ -2,6 +2,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useEffect } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { TimeDetail } from "../components/Now.tsx"
+import { BetaBadge, BlockActions } from "../components/BlockActions.tsx"
 import {
   AccountLink,
   AmountView,
@@ -106,6 +107,13 @@ export default function BlockDetail() {
                 { label: "Transactions", value: formatInt(block.txCount) },
                 { label: "Total fees", value: blockFeeText(block), hint: t("Sum of the fees of every operation in the block. An operation paid in another asset counts the standard BTS fee for its type (marked ≈).") },
                 { label: "Indexed operations", value: formatInt(data.esOps.length) },
+                {
+                  label: "Transaction Actions",
+                  hint: "Visual overview of operations in this block",
+                  badge: <BetaBadge />,
+                  valueClassName: "break-normal",
+                  value: <BlockActions transactions={data.grouped.transactions} virtuals={data.grouped.virtuals} />,
+                },
               ]}
             />
           </Panel>

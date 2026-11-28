@@ -340,3 +340,41 @@ code,
     transition: none;
   }
 }
+
+
+/* Transaction Action mosaic colors — distinct in light, dim, and black themes. */
+:root {
+  --act-transfer: #2563eb;
+  --act-limit-order: #d97706;
+  --act-cancel-order: #78716c;
+  --act-fill: #7c3aed;
+  --act-pool-swap: #0d9488;
+  --act-pool-flow: #0891b2;
+  --act-flash: #db2777;
+  --act-margin: #ea580c;
+  --act-feed: #a16207;
+  --act-account: #4f46e5;
+  --act-asset: #65a30d;
+  --act-proposal: #9333ea;
+  --act-credit: #0284c7;
+  --act-liquidity: #16a34a;
+  --act-other: #57534e;
+}
+
+.dark {
+  --act-transfer: #60a5fa;
+  --act-limit-order: #fbbf24;
+  --act-cancel-order: #a8a29e;
+  --act-fill: #c4b5fd;
+  --act-pool-swap: #2dd4bf;
+  --act-pool-flow: #22d3ee;
+  --act-flash: #f472b6;
+  --act-margin: #fb923c;
+  --act-feed: #facc15;
+  --act-account: #818cf8;
+  --act-asset: #a3e635;
+  --act-proposal: #d8b4fe;
+  --act-credit: #38bdf8;
+  --act-liquidity: #4ade80;
+  --act-other: #a8a29e;
+}

@@ -544,17 +544,18 @@ export function HelpTip({ text }: { text: string }) {
   )
 }
 
-export function KeyValue({ rows }: { rows: { label: string; value: ReactNode; hint?: string }[] }) {
+export function KeyValue({ rows }: { rows: { label: string; value: ReactNode; hint?: string; badge?: ReactNode; valueClassName?: string }[] }) {
   const { t } = useI18n()
   return (
     <dl className="divide-y divide-line">
       {rows.map((row) => (
-        <div key={row.label} className="grid gap-1 px-4 py-3 sm:grid-cols-[220px_1fr] sm:gap-4">
-          <dt className="flex items-center gap-1.5 text-sm text-muted">
+        <div key={row.label} className="grid gap-1 px-4 py-3 sm:grid-cols-[220px_1fr] sm:items-start sm:gap-4">
+          <dt className="flex flex-wrap items-center gap-1.5 text-sm text-muted">
             <span>{t(row.label)}</span>
             {row.hint ? <HelpTip text={row.hint} /> : null}
+            {row.badge}
           </dt>
-          <dd className="min-w-0 break-all text-sm text-ink">{row.value}</dd>
+          <dd className={cn("min-w-0 break-all text-sm text-ink", row.valueClassName)}>{row.value}</dd>
         </div>
       ))}
     </dl>

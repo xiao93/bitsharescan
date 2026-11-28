@@ -15,7 +15,7 @@ import {
   StatusBadge,
   TypeBadge,
 } from "../components/widgets.tsx"
-import { fetchDynamic } from "../lib/chain.ts"
+import { blockFeeText, feeTotalsForOps, fetchDynamic } from "../lib/chain.ts"
 import { db } from "../lib/node.ts"
 import { formatInt, formatTime, shortHash } from "../lib/format.ts"
 import { fetchTransactionOps } from "../lib/history.ts"
@@ -42,7 +42,8 @@ export default function TxDetail() {
         signed = null
       }
     }
-    return { ops, dgp, signed, first }
+    const fees = await feeTotalsForOps(ops)
+    return { ops, dgp, signed, first, fees }
   }, [trxId])
 
   const data = query.data
@@ -86,6 +87,26 @@ export default function TxDetail() {
                 { label: "Confirmations", hint: "How many blocks have been produced after this transaction\u2019s block. More confirmations make it harder to reverse; once past the last irreversible block it is final.", value: formatInt(confirmations) },
                 { label: "Position in block", hint: "The index of this transaction within its block (the first transaction is 0).", value: first.trxInBlock },
                 { label: "Operations", hint: "The number of operations bundled in this transaction. A BitShares transaction can carry several operations that all succeed or fail together.", value: data.ops.length },
+                {
+                  label: "Total fees",
+                  hint: "Sum of the fees of every operation in the transaction. An operation paid in another asset counts the standard BTS fee for its type (marked ≈).",
+                  valueClassName: "break-normal",
+                  value: (
+                    <span className="inline-flex flex-wrap items-baseline gap-x-1.5 gap-y-1">
+                      <span>{blockFeeText(data.fees)}</span>
+                      {data.fees.paid.some((fee) => fee.asset_id !== "1.3.0") ? (
+                        <span className="text-muted">
+                          ({data.fees.paid.map((fee, index) => (
+                            <span key={fee.asset_id}>
+                              {index ? ", " : null}
+                              <AmountView value={fee} />
+                            </span>
+                          ))})
+                        </span>
+                      ) : null}
+                    </span>
+                  ),
+                },
                 { label: "Fee payer", hint: "The account that paid the fee for this transaction.", value: <AccountLink id={first.feePayer} /> },
                 {
                   label: "Expiration",

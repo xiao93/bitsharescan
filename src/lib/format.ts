@@ -143,6 +143,42 @@ export function formatTime(iso: string | null | undefined, withZone = true): str
   return withZone ? `${formatted} ${timeZoneSuffix(when)}` : formatted
 }
 
+const SCAN_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+/** Etherscan-style timestamp, e.g. "Nov-28-2026 11:33:35 AM +UTC" or "Nov-28-2026 08:33:35 PM UTC+09". */
+export function formatScanTime(iso: string | null | undefined, zone: "utc" | "local"): string {
+  const t = parseChainTime(iso)
+  if (!Number.isFinite(t)) return "—"
+  const when = new Date(t)
+  const useUtc = zone === "utc"
+  const year = useUtc ? when.getUTCFullYear() : when.getFullYear()
+  const month = SCAN_MONTHS[useUtc ? when.getUTCMonth() : when.getMonth()] ?? "Jan"
+  const day = String(useUtc ? when.getUTCDate() : when.getDate()).padStart(2, "0")
+  let hours = useUtc ? when.getUTCHours() : when.getHours()
+  const minutes = String(useUtc ? when.getUTCMinutes() : when.getMinutes()).padStart(2, "0")
+  const seconds = String(useUtc ? when.getUTCSeconds() : when.getSeconds()).padStart(2, "0")
+  const period = hours >= 12 ? "PM" : "AM"
+  hours = hours % 12 || 12
+  const clock = `${String(hours).padStart(2, "0")}:${minutes}:${seconds} ${period}`
+  const suffix = useUtc ? "+UTC" : shortLocalOffset(when)
+  return `${month}-${day}-${year} ${clock} ${suffix}`
+}
+
+function shortLocalOffset(at: Date): string {
+  const minutes = -at.getTimezoneOffset()
+  const sign = minutes >= 0 ? "+" : "-"
+  const abs = Math.abs(minutes)
+  const hours = String(Math.floor(abs / 60)).padStart(2, "0")
+  const mins = abs % 60
+  return mins ? `UTC${sign}${hours}:${String(mins).padStart(2, "0")}` : `UTC${sign}${hours}`
+}
+
+export function unixTimestamp(iso: string | null | undefined): string {
+  const t = parseChainTime(iso)
+  if (!Number.isFinite(t)) return "—"
+  return String(Math.floor(t / 1000))
+}
+
 export function timeAgo(iso: string | null | undefined, now = Date.now()): string {
   const t = parseChainTime(iso)
   if (!Number.isFinite(t)) return "—"

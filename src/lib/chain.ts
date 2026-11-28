@@ -226,6 +226,37 @@ export function blockFeeText(block: Pick<BlockRow, "feeCore" | "feeConverted">):
   return `${block.feeConverted ? "≈ " : ""}${formatRaw(block.feeCore, precision)} ${coreSymbol()}`
 }
 
+function mergePaidFees(fees: Amount[]): Amount[] {
+  const map = new Map<string, bigint>()
+  const order: string[] = []
+  for (const fee of fees) {
+    if (!fee?.asset_id) continue
+    if (!map.has(fee.asset_id)) order.push(fee.asset_id)
+    map.set(fee.asset_id, (map.get(fee.asset_id) ?? 0n) + asBig(fee.amount))
+  }
+  return order.map((id) => ({ amount: (map.get(id) ?? 0n).toString(), asset_id: id }))
+}
+
+/** Same fee total as a block: BTS fees summed as-is; other assets counted at the op type's standard BTS fee. */
+export async function feeTotalsForOps(
+  ops: Array<{ type: number; virtual?: boolean; body: Record<string, unknown>; fee?: Amount }>,
+): Promise<{ feeCore: bigint; feeConverted: boolean; paid: Amount[] }> {
+  const signed = ops.filter((op) => !op.virtual)
+  const paid = mergePaidFees(signed.map((op) => op.fee).filter((fee): fee is Amount => Boolean(fee?.asset_id)))
+  const others: PaidOp[] = []
+  let core = 0n
+  for (const op of signed) {
+    const fee = op.fee
+    if (!fee?.asset_id) continue
+    if (fee.asset_id === CORE_ID) core += asBig(fee.amount)
+    else others.push({ type: op.type, body: op.body })
+  }
+  const schedule = others.length ? await feeSchedule().catch(() => null) : null
+  let total = core
+  if (schedule) for (const op of others) total += requiredCoreFee(schedule, op)
+  return { feeCore: total, feeConverted: others.length > 0, paid }
+}
+
 export async function fetchBlocks(nums: number[]): Promise<BlockRow[]> {
   const blocks = await pool(nums, 6, async (num) => {
     try {
