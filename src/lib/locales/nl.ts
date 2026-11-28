@@ -1157,4 +1157,8 @@ export const nl: Record<string, string> = {
   "{category} ({count} txs, {percent}%)": "{category} ({count} txs, {percent}%)",
   "Operation share": "Aandeel operaties",
   "{category}: {count} ops ({percent}%)": "{category}: {count} operaties ({percent}%)",
+  "Estimate at the current BTS price": "Schatting tegen de huidige BTS-prijs",
+  "Amount transferred": "Overgemaakt bedrag",
+  "The amount moved by this transfer.": "Het bedrag dat deze overdracht verplaatst.",
+  "A summary of what this transaction does.": "Een samenvatting van wat deze transactie doet.",
 }

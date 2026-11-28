@@ -1157,4 +1157,8 @@ export const bn: Record<string, string> = {
   "{category} ({count} txs, {percent}%)": "{category} ({count} লেনদেন, {percent}%)",
   "Operation share": "অপারেশনের অংশ",
   "{category}: {count} ops ({percent}%)": "{category}: {count} অপারেশন ({percent}%)",
+  "Estimate at the current BTS price": "বর্তমান BTS মূল্যে অনুমান",
+  "Amount transferred": "স্থানান্তরিত পরিমাণ",
+  "The amount moved by this transfer.": "এই স্থানান্তরে সরানো পরিমাণ।",
+  "A summary of what this transaction does.": "এই লেনদেন কী করে তার সারসংক্ষেপ।",
 }

@@ -1157,4 +1157,8 @@ export const th: Record<string, string> = {
   "{category} ({count} txs, {percent}%)": "{category} ({count} ธุรกรรม, {percent}%)",
   "Operation share": "สัดส่วนการดำเนินการ",
   "{category}: {count} ops ({percent}%)": "{category}: {count} การดำเนินการ ({percent}%)",
+  "Estimate at the current BTS price": "ประมาณการตามราคา BTS ปัจจุบัน",
+  "Amount transferred": "จำนวนที่โอน",
+  "The amount moved by this transfer.": "จำนวนที่ถูกเคลื่อนย้ายในการโอนนี้",
+  "A summary of what this transaction does.": "สรุปว่าธุรกรรมนี้ทำอะไร",
 }

@@ -4,7 +4,7 @@ import { createPortal } from "react-dom"
 import { Link } from "react-router-dom"
 import { accountLabel, accountPath, assetSymbol, peekAsset } from "../lib/directory.ts"
 import type { Amount } from "../lib/directory.ts"
-import { formatInt, formatRaw, formatTime, shortHash } from "../lib/format.ts"
+import { formatInt, formatRaw, formatTime, formatUsdParen, shortHash, toFloat } from "../lib/format.ts"
 import { opActionBits } from "../lib/actions.ts"
 import { isVirtualType, opLabel, opSummaryBits } from "../lib/ops.ts"
 import type { SummaryBit } from "../lib/ops.ts"
@@ -13,7 +13,7 @@ import { useI18n } from "../lib/i18n.tsx"
 import { localeTag } from "../lib/locale.ts"
 import { networkHasEs } from "../lib/network.ts"
 import { cn, linkClass, routeForObject } from "../lib/utils.ts"
-import { TimeAgo, TimeHead } from "./Now.tsx"
+import { HoverLabel, TimeAgo, TimeHead } from "./Now.tsx"
 
 export function CopyButton({ value, label }: { value: string; label?: string }) {
   const { t } = useI18n()
@@ -56,12 +56,34 @@ export function AssetLink({ id, className }: { id?: string | null; className?: s
   )
 }
 
-export function AmountView({ value }: { value?: Amount | null }) {
+export function AmountView({
+  value,
+  usd,
+  usdHint,
+  minUsd = 0,
+}: {
+  value?: Amount | null
+  /** Dollars per 1 BTS; shown in parentheses when the amount is in BTS. */
+  usd?: number | null
+  usdHint?: string
+  /** Hide the estimate when the USD figure is below this (useful for tiny fees). */
+  minUsd?: number
+}) {
+  const { t } = useI18n()
   if (!value) return <>—</>
   const asset = peekAsset(value.asset_id)
+  const estimate = usd != null && usd > 0 && asset?.symbol === "BTS" ? toFloat(value.amount, asset.precision) * usd : null
+  const showUsd = estimate != null && Number.isFinite(estimate) && Math.abs(estimate) >= minUsd && estimate !== 0
   return (
     <span className="whitespace-nowrap">
       {asset ? formatRaw(value.amount, asset.precision) : String(value.amount)} <AssetLink id={value.asset_id} />
+      {showUsd ? (
+        <HoverLabel text={usdHint || t("Estimate at the current BTS price")}>
+          <span className="ms-1 text-muted" data-usd-estimate="">
+            {formatUsdParen(estimate)}
+          </span>
+        </HoverLabel>
+      ) : null}
     </span>
   )
 }
@@ -264,8 +286,8 @@ export function OpSummary({ op }: { op: OpView }) {
 }
 
 /** Etherscan-style Transaction Action: a full sentence for one operation. */
-export function OpAction({ op }: { op: OpView }) {
-  return <SummaryBits bits={opActionBits(op)} />
+export function OpAction({ op, btsUsd, usdHint }: { op: OpView; btsUsd?: number | null; usdHint?: string }) {
+  return <SummaryBits bits={opActionBits(op, btsUsd)} usdHint={usdHint} />
 }
 
 export function DirArrow({ className }: { className?: string } = {}) {
@@ -276,19 +298,46 @@ function ltrWrap(key: number, children: ReactNode) {
   return <span key={key} dir="ltr" className="ltr-isolate">{children}</span>
 }
 
-export function SummaryBits({ bits }: { bits: SummaryBit[] }) {
+export function SummaryBits({ bits, usdHint }: { bits: SummaryBit[]; usdHint?: string }) {
+  const { t } = useI18n()
   return (
     <>
       {bits.map((bit, index) => {
         if (typeof bit === "string" || !bit) return <span key={index}>{bit}</span>
         if (bit.kind === "arrow") return <span key={index}> <DirArrow /> </span>
         if (bit.kind === "account") return ltrWrap(index, <AccountLink id={bit.id} />)
-        if (bit.kind === "asset") return ltrWrap(index, <AssetLink id={bit.id} />)
+        if (bit.kind === "asset") {
+          const next = bits[index + 1]
+          if (next && typeof next === "object" && next.kind === "usd-estimate") {
+            return ltrWrap(index, (
+              <span className="whitespace-nowrap">
+                <AssetLink id={bit.id} />
+                <HoverLabel text={usdHint || t("Estimate at the current BTS price")}>
+                  <span className="ms-1 text-muted" data-usd-estimate="">
+                    {formatUsdParen(next.usd)}
+                  </span>
+                </HoverLabel>
+              </span>
+            ))
+          }
+          return ltrWrap(index, <AssetLink id={bit.id} />)
+        }
         if (bit.kind === "account-name") {
           return ltrWrap(index, <Link to={`/account/${encodeURIComponent(bit.name)}`} className={linkClass}>{bit.name}</Link>)
         }
         if (bit.kind === "asset-symbol") {
           return ltrWrap(index, <Link to={`/asset/${encodeURIComponent(bit.symbol)}`} className={linkClass}>{bit.symbol}</Link>)
+        }
+        if (bit.kind === "usd-estimate") {
+          const prev = bits[index - 1]
+          if (prev && typeof prev === "object" && prev.kind === "asset") return null
+          return (
+            <HoverLabel key={index} text={usdHint || t("Estimate at the current BTS price")}>
+              <span className="ms-1 whitespace-nowrap text-muted" data-usd-estimate="">
+                {formatUsdParen(bit.usd)}
+              </span>
+            </HoverLabel>
+          )
         }
         return ltrWrap(index, <Link to={routeForObject(bit.id)} className={linkClass}>{bit.id}</Link>)
       })}

@@ -120,6 +120,18 @@ export function compactUsd(value: number): string {
   return `${sign}$${compactNumber(Math.abs(value)).replace(/^-/, "")}`
 }
 
+/** Etherscan-style parenthetical USD, e.g. ($1,878.22). */
+export function formatUsdParen(value: number): string {
+  if (!Number.isFinite(value)) return ""
+  const abs = Math.abs(value)
+  const digits = abs >= 0.01 ? 2 : abs >= 0.0001 ? 4 : 6
+  const body = abs.toLocaleString(numberLocale(), {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
+  })
+  return `${value < 0 ? "-" : ""}($${body})`
+}
+
 export function parseChainTime(iso: string | null | undefined): number {
   if (!iso) return Number.NaN
   if (/[zZ]|[+-]\d{2}:?\d{2}$/.test(iso)) return Date.parse(iso)

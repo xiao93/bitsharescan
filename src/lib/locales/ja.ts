@@ -1157,4 +1157,8 @@ export const ja: Record<string, string> = {
   "{category} ({count} txs, {percent}%)": "{category}（{count} 件のトランザクション、{percent}%）",
   "Operation share": "オペレーションの内訳",
   "{category}: {count} ops ({percent}%)": "{category}: オペレーション {count} 件（{percent}%）",
+  "Estimate at the current BTS price": "現在の BTS 価格による概算",
+  "Amount transferred": "送金額",
+  "The amount moved by this transfer.": "この送金で移動した数量。",
+  "A summary of what this transaction does.": "このトランザクションの内容の概要。",
 }

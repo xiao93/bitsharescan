@@ -1157,4 +1157,8 @@ export const hi: Record<string, string> = {
   "{category} ({count} txs, {percent}%)": "{category} ({count} ट्रांज़ैक्शन, {percent}%)",
   "Operation share": "ऑपरेशन हिस्सा",
   "{category}: {count} ops ({percent}%)": "{category}: {count} ऑपरेशन ({percent}%)",
+  "Estimate at the current BTS price": "वर्तमान BTS कीमत पर अनुमान",
+  "Amount transferred": "स्थानांतरित राशि",
+  "The amount moved by this transfer.": "इस स्थानांतरण में ले जाई गई मात्रा।",
+  "A summary of what this transaction does.": "यह लेनदेन क्या करता है, उसका सार।",
 }

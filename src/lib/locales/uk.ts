@@ -1157,4 +1157,8 @@ export const uk: Record<string, string> = {
   "{category} ({count} txs, {percent}%)": "{category} ({count} транзакцій, {percent}%)",
   "Operation share": "Частка операцій",
   "{category}: {count} ops ({percent}%)": "{category}: {count} операцій ({percent}%)",
+  "Estimate at the current BTS price": "Оцінка за поточною ціною BTS",
+  "Amount transferred": "Сума переказу",
+  "The amount moved by this transfer.": "Кількість, яку переміщує цей переказ.",
+  "A summary of what this transaction does.": "Короткий опис того, що робить ця транзакція.",
 }

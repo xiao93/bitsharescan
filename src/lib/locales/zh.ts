@@ -1157,4 +1157,8 @@ export const zh: Record<string, string> = {
   "{category} ({count} txs, {percent}%)": "{category} ({count} 笔交易, {percent}%)",
   "Operation share": "操作占比",
   "{category}: {count} ops ({percent}%)": "{category}：{count} 个操作（{percent}%）",
+  "Estimate at the current BTS price": "按当前 BTS 价格估算",
+  "Amount transferred": "转账金额",
+  "The amount moved by this transfer.": "本次转账的金额。",
+  "A summary of what this transaction does.": "本交易内容的概要。",
 }

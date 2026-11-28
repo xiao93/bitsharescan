@@ -1157,4 +1157,8 @@ export const ko: Record<string, string> = {
   "{category} ({count} txs, {percent}%)": "{category} (트랜잭션 {count}건, {percent}%)",
   "Operation share": "작업 비중",
   "{category}: {count} ops ({percent}%)": "{category}: 작업 {count}건 ({percent}%)",
+  "Estimate at the current BTS price": "현재 BTS 가격 기준 추정치",
+  "Amount transferred": "송금 금액",
+  "The amount moved by this transfer.": "이 송금으로 이전된 수량입니다.",
+  "A summary of what this transaction does.": "이 거래가 하는 일에 대한 요약입니다.",
 }

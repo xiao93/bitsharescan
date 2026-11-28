@@ -1157,4 +1157,8 @@ export const fa: Record<string, string> = {
   "{category} ({count} txs, {percent}%)": "{category} ({count} تراکنش، {percent}%)",
   "Operation share": "سهم عملیات",
   "{category}: {count} ops ({percent}%)": "{category}: {count} عملیات ({percent}%)",
+  "Estimate at the current BTS price": "برآورد با قیمت فعلی BTS",
+  "Amount transferred": "مبلغ انتقال",
+  "The amount moved by this transfer.": "مقداری که در این انتقال جابه‌جا شده است.",
+  "A summary of what this transaction does.": "خلاصه‌ای از کاری که این تراکنش انجام می‌دهد.",
 }

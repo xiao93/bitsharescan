@@ -1157,4 +1157,8 @@ export const he: Record<string, string> = {
   "{category} ({count} txs, {percent}%)": "{category} ({count} עסקאות, {percent}%)",
   "Operation share": "חלק הפעולות",
   "{category}: {count} ops ({percent}%)": "{category}: {count} פעולות ({percent}%)",
+  "Estimate at the current BTS price": "הערכה לפי מחיר ה-BTS הנוכחי",
+  "Amount transferred": "סכום שהועבר",
+  "The amount moved by this transfer.": "הכמות שהועברה בהעברה זו.",
+  "A summary of what this transaction does.": "סיכום של מה שהעסקה הזו עושה.",
 }

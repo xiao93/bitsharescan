@@ -1157,4 +1157,8 @@ export const ru: Record<string, string> = {
   "{category} ({count} txs, {percent}%)": "{category} ({count} транзакций, {percent}%)",
   "Operation share": "Доля операций",
   "{category}: {count} ops ({percent}%)": "{category}: {count} операций ({percent}%)",
+  "Estimate at the current BTS price": "Оценка по текущей цене BTS",
+  "Amount transferred": "Сумма перевода",
+  "The amount moved by this transfer.": "Количество, переведённое этой операцией.",
+  "A summary of what this transaction does.": "Краткое описание того, что делает эта транзакция.",
 }

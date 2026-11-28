@@ -1157,4 +1157,8 @@ export const ms: Record<string, string> = {
   "{category} ({count} txs, {percent}%)": "{category} ({count} transaksi, {percent}%)",
   "Operation share": "Bahagian operasi",
   "{category}: {count} ops ({percent}%)": "{category}: {count} operasi ({percent}%)",
+  "Estimate at the current BTS price": "Anggaran pada harga BTS semasa",
+  "Amount transferred": "Jumlah dipindahkan",
+  "The amount moved by this transfer.": "Jumlah yang dipindahkan oleh pindahan ini.",
+  "A summary of what this transaction does.": "Ringkasan apa yang dilakukan oleh transaksi ini.",
 }

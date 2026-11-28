@@ -1157,4 +1157,8 @@ export const vi: Record<string, string> = {
   "{category} ({count} txs, {percent}%)": "{category} ({count} giao dịch, {percent}%)",
   "Operation share": "Tỷ lệ thao tác",
   "{category}: {count} ops ({percent}%)": "{category}: {count} thao tác ({percent}%)",
+  "Estimate at the current BTS price": "Ước tính theo giá BTS hiện tại",
+  "Amount transferred": "Số tiền chuyển",
+  "The amount moved by this transfer.": "Số lượng được chuyển trong giao dịch này.",
+  "A summary of what this transaction does.": "Tóm tắt nội dung của giao dịch này.",
 }

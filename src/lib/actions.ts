@@ -48,12 +48,12 @@ function lockText(type: unknown): string {
   return translate(names[key] ?? (key ? key.replaceAll("_", " ") : "lock"))
 }
 
-export function opActionBits(op: OpView): SummaryBit[] {
+export function opActionBits(op: OpView, btsUsd?: number | null): SummaryBit[] {
   const b = op.body
   const who = whoBit(op.feePayer)
   switch (op.type) {
     case 0:
-      return phrase("Transfer {amount} from {from} to {to}", { amount: moneyBits(b.amount), from: whoBit(b.from), to: whoBit(b.to) })
+      return phrase("Transfer {amount} from {from} to {to}", { amount: moneyBits(b.amount, btsUsd), from: whoBit(b.from), to: whoBit(b.to) })
     case 1:
       return phrase("{who} placed a limit order: sell {sell} for at least {receive}", {
         who: whoBit(b.seller),

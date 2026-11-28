@@ -1157,4 +1157,8 @@ export const it: Record<string, string> = {
   "{category} ({count} txs, {percent}%)": "{category} ({count} tx, {percent}%)",
   "Operation share": "Quota delle operazioni",
   "{category}: {count} ops ({percent}%)": "{category}: {count} operazioni ({percent}%)",
+  "Estimate at the current BTS price": "Stima al prezzo attuale di BTS",
+  "Amount transferred": "Importo trasferito",
+  "The amount moved by this transfer.": "La quantità spostata da questo trasferimento.",
+  "A summary of what this transaction does.": "Un riepilogo di ciò che fa questa transazione.",
 }

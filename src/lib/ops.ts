@@ -1,7 +1,7 @@
 import { accountLabel, assetSymbol, peekAsset, resolveAccounts, resolveAssets } from "./directory.ts"
 import type { Amount } from "./directory.ts"
 import { feePayerOf } from "./feePayer.ts"
-import { feeRatePercent, formatRaw } from "./format.ts"
+import { feeRatePercent, formatRaw, formatUsdParen, toFloat } from "./format.ts"
 import { translate } from "./i18n.tsx"
 import { isRtl } from "./locale.ts"
 import { parseChainJson } from "./json.ts"
@@ -146,6 +146,7 @@ export type SummaryBit =
   | { kind: "asset-symbol"; symbol: string }
   | { kind: "object"; id: string }
   | { kind: "arrow" }
+  | { kind: "usd-estimate"; usd: number }
 
 const LRI = "\u2066"
 const PDI = "\u2069"
@@ -163,6 +164,7 @@ export function summaryText(bits: SummaryBit[]): string {
     if (bit.kind === "asset") return ltrText(assetSymbol(bit.id))
     if (bit.kind === "account-name") return ltrText(bit.name)
     if (bit.kind === "asset-symbol") return ltrText(bit.symbol)
+    if (bit.kind === "usd-estimate") return ltrText(` ${formatUsdParen(bit.usd)}`)
     return ltrText(bit.id)
   }).join("")
 }
@@ -208,13 +210,18 @@ export function whoBit(value: unknown): SummaryBit {
   return value
 }
 
-export function moneyBits(value: unknown): SummaryBit[] {
+export function moneyBits(value: unknown, btsUsd?: number | null): SummaryBit[] {
   const amount = asAmount(value)
   if (!amount) return ["—"]
   const asset = peekAsset(amount.asset_id)
   const qty = asset ? formatRaw(amount.amount, asset.precision) : String(amount.amount)
   const qtyText = `${qty} `
-  return [isRtl() ? `${LRI}${qtyText}${PDI}` : qtyText, { kind: "asset", id: amount.asset_id }]
+  const bits: SummaryBit[] = [isRtl() ? `${LRI}${qtyText}${PDI}` : qtyText, { kind: "asset", id: amount.asset_id }]
+  if (btsUsd != null && btsUsd > 0 && asset?.symbol === "BTS") {
+    const usd = toFloat(amount.amount, asset.precision) * btsUsd
+    if (Number.isFinite(usd) && usd !== 0) bits.push({ kind: "usd-estimate", usd })
+  }
+  return bits
 }
 
 export function namedAmountBits(body: Record<string, unknown>, amountKey: string, assetKey: string): SummaryBit[] {
