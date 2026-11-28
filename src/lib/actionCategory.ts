@@ -121,43 +121,22 @@ function addOp(map: Map<ActionCategory, number>, type: number) {
   map.set(cat, (map.get(cat) ?? 0) + 1)
 }
 
-/** Group virtual ops onto their signed tx (by trx id, or by trx_in_block when the id is missing). */
-function attachVirtuals(
-  transactions: Array<{ trxId: string; index: number; ops: OpView[] }>,
-  virtuals: OpView[],
-): { byTx: Map<number, OpView[]>; orphans: OpView[] } {
-  const byId = new Map<string, number>()
-  for (const tx of transactions) {
-    if (tx.trxId) byId.set(tx.trxId, tx.index)
-  }
-  const byTx = new Map<number, OpView[]>()
-  const orphans: OpView[] = []
-  for (const op of virtuals) {
-    const index = (op.trxId ? byId.get(op.trxId) : undefined) ?? (transactions.some((tx) => tx.index === op.trxInBlock) ? op.trxInBlock : undefined)
-    if (index == null) {
-      orphans.push(op)
-      continue
-    }
-    const list = byTx.get(index) ?? []
-    list.push(op)
-    byTx.set(index, list)
-  }
-  return { byTx, orphans }
-}
-
+/**
+ * Summarize Transaction Actions from the signed transactions in get_block only.
+ * Virtual ops (fill_order, residual/expiry cancels, etc.) are excluded; they stay
+ * in the block page's Virtual operations table.
+ */
 export function actionSummaryForBlock(
   transactions: Array<{ trxId: string; index: number; ops: OpView[] }>,
-  virtuals: OpView[],
 ): ActionSummary {
-  const { byTx, orphans } = attachVirtuals(transactions, virtuals)
   const opCounts = new Map<ActionCategory, number>()
   const txCounts = new Map<ActionCategory, number>()
   const cells: ActionCell[] = []
 
   for (const tx of transactions) {
-    const related = [...tx.ops, ...(byTx.get(tx.index) ?? [])]
+    const signed = tx.ops.filter((op) => !op.virtual)
     const cellCounts: Partial<Record<ActionCategory, number>> = {}
-    for (const op of related) {
+    for (const op of signed) {
       addOp(opCounts, op.type)
       const cat = opCategory(op.type)
       cellCounts[cat] = (cellCounts[cat] ?? 0) + 1
@@ -170,12 +149,9 @@ export function actionSummaryForBlock(
       index: tx.index,
       categories,
       opCounts: cellCounts,
-      opTotal: related.length,
+      opTotal: signed.length,
     })
   }
-
-  // Virtual ops with no signed transaction (e.g. an expiry) count toward the op totals only.
-  for (const op of orphans) addOp(opCounts, op.type)
 
   let opTotal = 0
   for (const n of opCounts.values()) opTotal += n

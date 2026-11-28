@@ -112,7 +112,7 @@ export default function BlockDetail() {
                   hint: "Visual overview of operations in this block",
                   badge: <BetaBadge />,
                   valueClassName: "break-normal",
-                  value: <BlockActions transactions={data.grouped.transactions} virtuals={data.grouped.virtuals} />,
+                  value: <BlockActions transactions={data.grouped.transactions} />,
                 },
               ]}
             />

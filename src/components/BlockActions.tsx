@@ -18,14 +18,12 @@ import { HelpTip } from "./widgets.tsx"
 
 export function BlockActions({
   transactions,
-  virtuals,
 }: {
   transactions: Array<{ trxId: string; index: number; ops: OpView[] }>
-  virtuals: OpView[]
 }) {
   const { t } = useI18n()
   const [filter, setFilter] = useState<ActionCategory | null>(null)
-  const summary = useMemo(() => actionSummaryForBlock(transactions, virtuals), [transactions, virtuals])
+  const summary = useMemo(() => actionSummaryForBlock(transactions), [transactions])
   const { cells, txCounts, opCounts, txTotal, opTotal } = summary
 
   if (!txTotal && !opTotal) return <span className="text-muted">—</span>
