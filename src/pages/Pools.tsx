@@ -1,9 +1,9 @@
 import { Link, useSearchParams } from "react-router-dom"
 import { Crumbs, ErrorBox, LoadingBlock, OpTable, Pager, Panel } from "../components/widgets.tsx"
-import { fetchAllPools, fetchRecentOps, poolTvlBts } from "../lib/defi.ts"
-import type { Pool } from "../lib/defi.ts"
+import { fetchAllPools, fetchPoolVolumes, fetchRecentOps, poolTvlBts } from "../lib/defi.ts"
+import type { Pool, PoolVolumes } from "../lib/defi.ts"
 import { assetSymbol, peekAsset, resolveAssets } from "../lib/directory.ts"
-import { compactNumber, compactUsd, formatRaw, protocolPercent } from "../lib/format.ts"
+import { compactNumber, compactUsd, formatInt, formatRaw, protocolPercent } from "../lib/format.ts"
 import { fetchBtsUsd } from "../lib/usd.ts"
 import { linkClass } from "../lib/utils.ts"
 import { useQuery, useTitle } from "../hooks/useQuery.ts"
@@ -16,19 +16,23 @@ export default function Pools() {
   useTitle("Liquidity pools")
   const [params, setParams] = useSearchParams()
   const page = Math.max(1, Number(params.get("page") || "1") || 1)
+  const sort = params.get("sort") === "tvl" ? "tvl" : "swaps"
   const query = useQuery(async () => {
-    const [all, recent, quote] = await Promise.all([
+    const [all, recent, quote, volumes] = await Promise.all([
       fetchAllPools(),
       fetchRecentOps([59, 60, 61, 62, 63, 75], 8).catch(() => []),
       fetchBtsUsd().catch(() => ({ price: null, source: "", anchor: null })),
+      fetchPoolVolumes().catch(() => null),
     ])
-    const sorted = [...all].sort((a, b) => (poolTvlBts(b) ?? -1) - (poolTvlBts(a) ?? -1))
+    const swapsOf = (pool: Pool) => volumes?.byPool.get(pool.id)?.swaps ?? 0
+    const byTvl = (a: Pool, b: Pool) => (poolTvlBts(b) ?? -1) - (poolTvlBts(a) ?? -1)
+    const sorted = [...all].sort(sort === "swaps" && volumes ? (a, b) => swapsOf(b) - swapsOf(a) || byTvl(a, b) : byTvl)
     const slice = sorted.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
     await resolveAssets(slice.flatMap((pool) => [pool.asset_a, pool.asset_b, pool.share_asset]))
     const tvlBts = all.reduce((sum, pool) => sum + (poolTvlBts(pool) ?? 0), 0)
     const priced = all.filter((pool) => poolTvlBts(pool) != null).length
-    return { total: all.length, slice, recent, tvlBts, priced, btsUsd: quote.price ?? Number.NaN }
-  }, [page])
+    return { total: all.length, slice, recent, tvlBts, priced, volumes, btsUsd: quote.price ?? Number.NaN }
+  }, [page, sort])
   const data = query.data
   const tvlUsd = data && Number.isFinite(data.btsUsd) ? data.tvlBts * data.btsUsd : null
 
@@ -42,27 +46,51 @@ export default function Pools() {
       <div className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Mini label={t("Pools")} value={data ? String(data.total) : "—"} hint={t("1.19.x objects")} />
         <Mini label={t("Est. TVL")} value={tvlUsd == null ? "—" : compactUsd(tvlUsd)} hint={data ? t("{tvl} BTS · {n} priced pools", { tvl: compactNumber(data.tvlBts), n: data.priced }) : t("BTS-paired estimate")} />
-        <Mini label={t("Recent swaps")} value={data ? String(data.recent.filter((row) => row.type === 63).length) : "—"} hint={t("Latest indexed sample")} />
+        <Mini label={t("24h Pool Exchanges")} value={data ? (data.volumes ? formatInt(data.volumes.swaps) : "—") : "—"} hint={t("Last 24 hours, from the operation index")} />
         <Mini label={t("Share assets")} value="1.3.x" hint={t("Pool tokens are user-issued assets")} />
       </div>
       {query.error ? <ErrorBox message={query.error} onRetry={query.reload} /> : null}
-      <Panel title={t("Pools")} className="mb-4">
+      <Panel
+        title={t("Pools")}
+        className="mb-4"
+        extra={
+          <label className="flex items-center gap-2 text-xs text-muted">
+            {t("Sort by")}
+            <select
+              value={sort}
+              onChange={(event) => {
+                const copy = new URLSearchParams(params)
+                copy.set("sort", event.target.value)
+                copy.set("page", "1")
+                setParams(copy)
+              }}
+              className="h-8 rounded-lg border border-line bg-card px-2 text-xs text-ink"
+            >
+              <option value="swaps">{t("Swaps (24h)")}</option>
+              <option value="tvl">{t("Est. TVL")}</option>
+            </select>
+          </label>
+        }
+      >
         {query.loading && !data ? <LoadingBlock /> : null}
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[860px] text-start text-sm">
+        <p className="bx-swipe">{t("Swipe sideways to see all columns →").replace(/\s*→\s*$/, "")} <span className="inline-block rtl:rotate-180" aria-hidden="true">→</span></p>
+        <div className="bx-scroll overflow-x-auto">
+          <table className="w-full min-w-[1100px] text-start text-sm">
             <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
               <tr>
                 <th className="px-4 py-2.5 font-medium">{t("Pool")}</th>
                 <th className="px-4 py-2.5 font-medium">{t("Asset A")}</th>
                 <th className="px-4 py-2.5 font-medium">{t("Asset B")}</th>
+                <th className="px-4 py-2.5 text-end font-medium">{t("24h volume")}</th>
+                <th className="px-4 py-2.5 text-end font-medium">{t("Swaps (24h)")}</th>
                 <th className="px-4 py-2.5 font-medium">{t("Share asset")}</th>
-                <th className="px-4 py-2.5 font-medium">{t("Taker fee")}</th>
-                <th className="px-4 py-2.5 font-medium">{t("Est. TVL")}</th>
+                <th className="px-4 py-2.5 text-end font-medium">{t("Taker fee")}</th>
+                <th className="px-4 py-2.5 text-end font-medium">{t("Est. TVL")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-line">
               {data?.slice.map((pool) => (
-                <PoolRow key={pool.id} pool={pool} btsUsd={data.btsUsd} />
+                <PoolRow key={pool.id} pool={pool} btsUsd={data.btsUsd} volumes={data.volumes} />
               ))}
             </tbody>
           </table>
@@ -79,6 +107,7 @@ export default function Pools() {
           }}
         />
       </Panel>
+      <p className="mb-4 text-xs text-muted">{t("24h volume adds both directions of every pool swap in the last 24 hours.")}</p>
       <Panel title={t("Recent pool operations")}>
         <OpTable rows={data?.recent ?? []} />
       </Panel>
@@ -86,25 +115,34 @@ export default function Pools() {
   )
 }
 
-function PoolRow({ pool, btsUsd }: { pool: Pool; btsUsd: number }) {
+function PoolRow({ pool, btsUsd, volumes }: { pool: Pool; btsUsd: number; volumes: PoolVolumes | null }) {
   const { t } = useI18n()
   const a = peekAsset(pool.asset_a)
   const b = peekAsset(pool.asset_b)
   const tvl = poolTvlBts(pool)
+  const activity = volumes?.byPool.get(pool.id)
+  const volumeOf = (id: string, precision: number, symbol: string) =>
+    volumes ? `${formatRaw(Math.round(activity?.raw.get(id) ?? 0), precision)} ${symbol}` : "—"
+  const num = "whitespace-nowrap px-4 py-3 text-end tabular-nums"
   return (
     <tr className="hover:bg-row">
       <td className="px-4 py-3">
         <Link to={`/pool/${pool.id}`} className={linkClass}>{assetSymbol(pool.asset_a)}/{assetSymbol(pool.asset_b)}</Link>
         <div className="font-mono text-[11px] text-muted">{pool.id}</div>
       </td>
-      <td className="px-4 py-3">{formatRaw(pool.balance_a, a?.precision ?? 5)} {a?.symbol ?? pool.asset_a}</td>
-      <td className="px-4 py-3">{formatRaw(pool.balance_b, b?.precision ?? 5)} {b?.symbol ?? pool.asset_b}</td>
+      <td className="whitespace-nowrap px-4 py-3"><span className="tabular-nums">{formatRaw(pool.balance_a, a?.precision ?? 5)}</span> <Link to={`/asset/${assetSymbol(pool.asset_a)}`} className={linkClass}>{a?.symbol ?? pool.asset_a}</Link></td>
+      <td className="whitespace-nowrap px-4 py-3"><span className="tabular-nums">{formatRaw(pool.balance_b, b?.precision ?? 5)}</span> <Link to={`/asset/${assetSymbol(pool.asset_b)}`} className={linkClass}>{b?.symbol ?? pool.asset_b}</Link></td>
+      <td className={num}>
+        <div>{volumeOf(pool.asset_a, a?.precision ?? 5, a?.symbol ?? pool.asset_a)}</div>
+        <div className="text-muted">{volumeOf(pool.asset_b, b?.precision ?? 5, b?.symbol ?? pool.asset_b)}</div>
+      </td>
+      <td className={num}>{volumes ? formatInt(activity?.swaps ?? 0) : "—"}</td>
       <td className="px-4 py-3">
         <Link to={`/asset/${assetSymbol(pool.share_asset)}`} className={linkClass}>{assetSymbol(pool.share_asset)}</Link>
         <div className="text-[11px] text-muted">{t("withdraw {fee}", { fee: protocolPercent(pool.withdrawal_fee_percent) })}</div>
       </td>
-      <td className="px-4 py-3">{protocolPercent(pool.taker_fee_percent)}</td>
-      <td className="px-4 py-3">{tvl == null || !Number.isFinite(btsUsd) ? "—" : compactUsd(tvl * btsUsd)}</td>
+      <td className={num}>{protocolPercent(pool.taker_fee_percent)}</td>
+      <td className={num}>{tvl == null || !Number.isFinite(btsUsd) ? "—" : compactUsd(tvl * btsUsd)}</td>
     </tr>
   )
 }

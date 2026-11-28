@@ -247,6 +247,13 @@ code,
   text-overflow: ellipsis;
 }
 
+/* Column headings follow the text direction like their cells; the browser default centers them. */
+@layer base {
+  th {
+    text-align: start;
+  }
+}
+
 /* Wide tables on phones: hint and edge shadows show that the table scrolls sideways. */
 .bx-swipe {
   margin: 0;

@@ -26,7 +26,7 @@ BitSharesScan 是一个纯前端静态站点（React 19 + TypeScript + Vite + Ta
 - 账户：余额、挂单、抵押仓位、投票、权限、白名单、关系，以及完整操作历史（超过 1 万条也能翻页）和数据导出
 - 资产列表与详情：供应量、持有人、喂价、市场
 - 治理：见证人、理事会、预算提案（workers）、**提案（1.10.x）列表与详情**
-- DEX 市场与订单簿；流动性池、借贷（credit offer/deal）、SameT 闪贷、锁仓（tickets）
+- DEX 市场与订单簿（含按资产的 24 小时市场页 `#/market/BTS`）；流动性池（含 24 小时成交量与兑换次数）、借贷（credit offer/deal）、SameT 闪贷、锁仓（tickets）
 - 节点追踪：主网与测试网的公共 API 节点，以及由 `scripts/p2p-crawl.py` 生成的 P2P 节点快照和地图
 - 交互式 JSON 树：长十六进制字段可展开、复制，并解码为 UTF-8
 - 网络参数与手续费表、图表统计、隐私转账统计；数据页含 24 小时大额转账与账户活跃度/持仓排行
@@ -149,7 +149,7 @@ This repository is the **original project source**. `npm run build` produces exa
 - Accounts: balances, open orders, debt positions, votes, authorities, whitelists, relations, full operation history (pages past 10,000 entries work) and data export
 - Asset list and details: supply, holders, feeds, markets
 - Governance: witnesses, committee, workers, **proposals (1.10.x) list and detail**
-- DEX markets and order books; liquidity pools, credit offers/deals, SameT flash loans, locking (tickets)
+- DEX markets and order books (plus per-asset 24h market pages such as `#/market/BTS`); liquidity pools with 24h volume and swap counts, credit offers/deals, SameT flash loans, locking (tickets)
 - Node tracker: public API nodes plus mainnet and testnet P2P snapshots and a map, produced by `scripts/p2p-crawl.py`
 - Interactive JSON tree: expand, copy, and UTF-8-decode long hex fields
 - Chain parameters and fee schedule, charts, confidential transfer stats; data pages for 24h large transfers and account activity / top holders

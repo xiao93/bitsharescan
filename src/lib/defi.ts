@@ -2,6 +2,7 @@ import { resolveAccounts, resolveAssets } from "./directory.ts"
 import { translate } from "./i18n.tsx"
 import type { Amount } from "./directory.ts"
 import { allOpIndexes, esSearch, esTotal, monthIndexes } from "./es.ts"
+import { networkHasEs } from "./network.ts"
 import { asBig, toFloat } from "./format.ts"
 import { dedupeOps, hydrateOps, toOpView } from "./ops.ts"
 import type { OpView } from "./ops.ts"
@@ -397,4 +398,59 @@ export async function fetchAccountTickets(account: string) {
 
 export function coreAmount(value: string | number | bigint | undefined): number {
   return toFloat(asBig(value ?? 0), 5)
+}
+
+export type PoolVolumes = {
+  /** Raw 24h volume per pool and asset id: amounts sold into the pool plus amounts paid out of it. */
+  byPool: Map<string, { swaps: number; raw: Map<string, number> }>
+  swaps: number
+}
+
+type VolumeBucket = { key: string; s?: { value?: number } }
+type PoolBucket = {
+  key: string
+  doc_count: number
+  sold?: { buckets?: VolumeBucket[] }
+  recv?: { buckets?: VolumeBucket[] }
+}
+
+/** Last 24 hours of liquidity_pool_exchange operations, grouped by pool. Null when the network has no operation index. */
+export async function fetchPoolVolumes(): Promise<PoolVolumes | null> {
+  if (!networkHasEs()) return null
+  const end = new Date()
+  const start = new Date(end.getTime() - 24 * 60 * 60 * 1000)
+  const op = "operation_history.op_object"
+  const result = "operation_history.operation_result_object.data_object"
+  const sum = (field: string) => ({ sum: { field } })
+  const data = await esSearch<never>(monthIndexes(start, end), {
+    size: 0,
+    track_total_hits: true,
+    query: {
+      bool: {
+        filter: [
+          { term: { operation_type: 63 } },
+          { range: { "block_data.block_time": { gte: start.toISOString().slice(0, 19) } } },
+        ],
+      },
+    },
+    aggs: {
+      pools: {
+        terms: { field: `${op}.pool.keyword`, size: 2000 },
+        aggs: {
+          sold: { terms: { field: `${op}.amount_to_sell.asset_id.keyword`, size: 4 }, aggs: { s: sum(`${op}.amount_to_sell.amount`) } },
+          recv: { terms: { field: `${result}.received.asset_id.keyword`, size: 4 }, aggs: { s: sum(`${result}.received.amount`) } },
+        },
+      },
+    },
+  })
+  const buckets = ((data.aggregations as unknown as { pools?: { buckets?: PoolBucket[] } } | undefined)?.pools?.buckets) ?? []
+  const byPool: PoolVolumes["byPool"] = new Map()
+  for (const bucket of buckets) {
+    const raw = new Map<string, number>()
+    for (const row of [...(bucket.sold?.buckets ?? []), ...(bucket.recv?.buckets ?? [])]) {
+      raw.set(row.key, (raw.get(row.key) ?? 0) + (row.s?.value ?? 0))
+    }
+    byPool.set(bucket.key, { swaps: bucket.doc_count, raw })
+  }
+  return { byPool, swaps: esTotal(data).value }
 }

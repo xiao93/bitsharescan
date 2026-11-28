@@ -33,7 +33,13 @@ const NAV: Array<{ label: string; to?: string; children?: { label: string; to: s
     ],
   },
   { label: "Assets", to: "/assets" },
-  { label: "Markets", to: "/markets" },
+  {
+    label: "Markets",
+    children: [
+      { label: "DEX markets", to: "/markets" },
+      { label: "BTS markets", to: "/market/BTS" },
+    ],
+  },
   {
     label: "DeFi",
     children: [
@@ -573,6 +579,7 @@ export function Layout({ children }: { children: ReactNode }) {
               <FooterLink to="/charts">{t("Charts")}</FooterLink>
               <FooterLink to="/assets">{t("Assets")}</FooterLink>
               <FooterLink to="/markets">{t("Markets")}</FooterLink>
+              <FooterLink to="/market/BTS">{t("BTS markets")}</FooterLink>
             </FooterCol>
             <FooterCol title={t("DeFi")}>
               <FooterLink to="/pools">{t("Liquidity pools")}</FooterLink>

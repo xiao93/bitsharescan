@@ -20,6 +20,7 @@ const load = {
   ExportData: () => import("../pages/ExportData.tsx"),
   Locking: () => import("../pages/Locking.tsx"),
   MarketDetail: () => import("../pages/MarketDetail.tsx"),
+  MarketOverview: () => import("../pages/MarketOverview.tsx"),
   Markets: () => import("../pages/Markets.tsx"),
   PoolDetail: () => import("../pages/PoolDetail.tsx"),
   Pools: () => import("../pages/Pools.tsx"),
@@ -58,6 +59,7 @@ export const FlashLoans = lazyPage(load.FlashLoans)
 export const ExportData = lazyPage(load.ExportData)
 export const Locking = lazyPage(load.Locking)
 export const MarketDetail = lazyPage(load.MarketDetail)
+export const MarketOverview = lazyPage(load.MarketOverview)
 export const Markets = lazyPage(load.Markets)
 export const PoolDetail = lazyPage(load.PoolDetail)
 export const Pools = lazyPage(load.Pools)
@@ -110,6 +112,7 @@ const DYNAMIC_ROUTES: Array<[RegExp, Loader]> = [
   [/^\/asset\/[^/]+$/, load.AssetDetail],
   [/^\/pool\/[^/]+$/, load.PoolDetail],
   [/^\/market\/[^/]+\/[^/]+$/, load.MarketDetail],
+  [/^\/market\/[^/]+$/, load.MarketOverview],
   [/^\/charts\/[^/]+$/, load.ChartDetail],
   [/^\/worker\/[^/]+$/, load.WorkerDetail],
   [/^\/proposal\/[^/]+$/, load.ProposalDetail],

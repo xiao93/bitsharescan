@@ -64,6 +64,7 @@ function AppShell() {
             <Route path="network" element={<pages.Network />} />
             <Route path="nodetracker" element={<pages.NodeTracker />} />
             <Route path="markets" element={<pages.Markets />} />
+            <Route path="market/:asset" element={<pages.MarketOverview />} />
             <Route path="market/:base/:quote" element={<pages.MarketDetail />} />
             <Route path="pools" element={<pages.Pools />} />
             <Route path="pool/:id" element={<pages.PoolDetail />} />
