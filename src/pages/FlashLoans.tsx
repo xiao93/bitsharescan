@@ -38,16 +38,14 @@ export default function FlashLoans() {
       {query.error ? <ErrorBox message={query.error} onRetry={query.reload} /> : null}
       <Panel title={t("Funds")} className="mb-4">
         {query.loading && !query.data ? <LoadingBlock /> : null}
-        <p className="bx-swipe">{t("Swipe sideways to see all columns →").replace(/\s*→\s*$/, "")} <span className="inline-block rtl:rotate-180" aria-hidden="true">→</span></p>
-        <div className="bx-scroll overflow-x-auto">
+        <div className="overflow-x-auto">
           <table className="w-full min-w-[640px] text-start text-sm">
             <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
               <tr>
                 <th className="px-4 py-2.5 font-medium">{t("Fund")}</th>
                 <th className="px-4 py-2.5 font-medium">{t("Owner")}</th>
-                <th className="px-4 py-2.5 text-end font-medium">{t("Balance")}</th>
-                <th className="px-4 py-2.5 font-medium">{t("Asset")}</th>
-                <th className="px-4 py-2.5 text-end font-medium">{t("Fee")}</th>
+                <th className="px-4 py-2.5 font-medium">{t("Balance")}</th>
+                <th className="px-4 py-2.5 font-medium">{t("Fee")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-line">
@@ -57,9 +55,8 @@ export default function FlashLoans() {
                   <tr key={fund.id} className="hover:bg-row">
                     <td className="px-4 py-3"><Link to={`/samet/${fund.id}`} className={`${linkClass} font-mono text-xs`}>{fund.id}</Link></td>
                     <td className="px-4 py-3"><AccountLink id={fund.owner_account} /></td>
-                    <td className="whitespace-nowrap px-4 py-3 text-end tabular-nums">{formatRaw(fund.balance, asset?.precision ?? 5)}</td>
-                    <td className="whitespace-nowrap px-4 py-3">{asset?.symbol ? <Link to={`/asset/${asset.symbol}`} className={linkClass}>{asset.symbol}</Link> : "—"}</td>
-                    <td className="px-4 py-3 text-end tabular-nums">{feeRatePercent(fund.fee_rate)}</td>
+                    <td className="px-4 py-3">{formatRaw(fund.balance, asset?.precision ?? 5)} {asset?.symbol ?? ""}</td>
+                    <td className="px-4 py-3">{feeRatePercent(fund.fee_rate)}</td>
                   </tr>
                 )
               })}
