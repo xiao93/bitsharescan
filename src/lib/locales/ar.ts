@@ -1075,4 +1075,7 @@ export const ar: Record<string, string> = {
   "Never": "أبدًا",
   "Show more": "عرض المزيد",
   "Show less": "عرض أقل",
+  "Fees": "الرسوم",
+  "Total fees": "إجمالي الرسوم",
+  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "مجموع الرسوم التي دفعتها جميع العمليات في الكتلة. تُحوَّل الرسوم المدفوعة بأصول أخرى وفق سعر صرفها الأساسي.",
 }

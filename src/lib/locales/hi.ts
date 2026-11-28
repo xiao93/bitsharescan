@@ -1075,4 +1075,7 @@ export const hi: Record<string, string> = {
   "Never": "कभी नहीं",
   "Show more": "और दिखाएँ",
   "Show less": "कम दिखाएँ",
+  "Fees": "शुल्क",
+  "Total fees": "कुल शुल्क",
+  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "ब्लॉक के सभी ऑपरेशनों द्वारा चुकाए गए शुल्क का योग। अन्य संपत्तियों में दिए गए शुल्क को उनकी कोर विनिमय दर से बदला गया है।",
 }

@@ -1075,4 +1075,7 @@ export const tr: Record<string, string> = {
   "Never": "Asla",
   "Show more": "Daha fazla göster",
   "Show less": "Daha az göster",
+  "Fees": "Ücretler",
+  "Total fees": "Toplam ücret",
+  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "Bloktaki tüm işlemlerin ödediği ücretlerin toplamı. Diğer varlıklarla ödenen ücretler çekirdek kurlarıyla çevrilir.",
 }

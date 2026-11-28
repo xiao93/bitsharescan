@@ -1075,4 +1075,7 @@ export const ur: Record<string, string> = {
   "Never": "کبھی نہیں",
   "Show more": "مزید دکھائیں",
   "Show less": "کم دکھائیں",
+  "Fees": "فیس",
+  "Total fees": "کل فیس",
+  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "بلاک کی تمام کارروائیوں کی ادا کردہ فیس کا مجموعہ۔ دوسرے اثاثوں میں دی گئی فیس ان کی بنیادی شرحِ تبادلہ سے تبدیل کی گئی ہے۔",
 }

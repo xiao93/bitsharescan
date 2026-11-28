@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Link, useSearchParams } from "react-router-dom"
 import { TimeAgo } from "../components/Now.tsx"
 import { Crumbs, ErrorBox, LoadingBlock, Pager, Panel } from "../components/widgets.tsx"
-import { fetchBlocks, fetchDynamic } from "../lib/chain.ts"
+import { blockFeeText, fetchBlocks, fetchDynamic } from "../lib/chain.ts"
 import { formatInt } from "../lib/format.ts"
 import { linkClass } from "../lib/utils.ts"
 import { useQuery, useTitle } from "../hooks/useQuery.ts"
@@ -58,13 +58,14 @@ export default function Blocks() {
         {(blocks.loading || (!headNum && !head.error)) && !blocks.data?.length ? <LoadingBlock /> : null}
         {blocks.error ? <div className="p-4"><ErrorBox message={blocks.error} onRetry={blocks.reload} /></div> : null}
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[680px] text-start text-sm">
+          <table className="w-full min-w-[780px] text-start text-sm">
             <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
               <tr>
                 <th className="px-4 py-2.5 font-medium">{t("Block")}</th>
                 <th className="px-4 py-2.5 font-medium">{t("Age")}</th>
                 <th className="px-4 py-2.5 font-medium">{t("Witness")}</th>
                 <th className="px-4 py-2.5 font-medium">{t("Txn")}</th>
+                <th className="px-4 py-2.5 font-medium">{t("Fees")}</th>
                 <th className="px-4 py-2.5 font-medium">{t("Witness id")}</th>
               </tr>
             </thead>
@@ -81,6 +82,7 @@ export default function Blocks() {
                   </td>
                   <td className="px-4 py-3">{block.witnessName}</td>
                   <td className="px-4 py-3">{block.txCount}</td>
+                  <td className="whitespace-nowrap px-4 py-3 tabular-nums">{blockFeeText(block)}</td>
                   <td className="px-4 py-3 font-mono text-xs text-muted">{block.witness}</td>
                 </tr>
               ))}

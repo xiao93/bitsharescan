@@ -1075,4 +1075,7 @@ export const ms: Record<string, string> = {
   "Never": "Tidak pernah",
   "Show more": "Tunjukkan lagi",
   "Show less": "Tunjukkan kurang",
+  "Fees": "Yuran",
+  "Total fees": "Jumlah yuran",
+  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "Jumlah yuran yang dibayar oleh setiap operasi dalam blok. Yuran dalam aset lain ditukar mengikut kadar pertukaran terasnya.",
 }

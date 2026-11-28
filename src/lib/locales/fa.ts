@@ -1075,4 +1075,7 @@ export const fa: Record<string, string> = {
   "Never": "هرگز",
   "Show more": "نمایش بیشتر",
   "Show less": "نمایش کمتر",
+  "Fees": "کارمزدها",
+  "Total fees": "کل کارمزدها",
+  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "مجموع کارمزد همه عملیات بلوک. کارمزدهای پرداخت‌شده با دارایی‌های دیگر با نرخ تبدیل هسته‌ای آن‌ها تبدیل شده‌اند.",
 }

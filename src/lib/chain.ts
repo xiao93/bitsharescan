@@ -7,7 +7,7 @@ import {
 } from "./directory.ts"
 import type { Amount, AssetInfo } from "./directory.ts"
 import { esSearch, objectIndex } from "./es.ts"
-import { asBig, parseChainTime, toFloat } from "./format.ts"
+import { asBig, formatRaw, parseChainTime, toFloat } from "./format.ts"
 import { fetchEsFills } from "./history.ts"
 import type { NormalizedFill } from "./history.ts"
 import { coreSymbol } from "./network.ts"
@@ -69,6 +69,10 @@ export type BlockRow = {
   merkle: string
   signature: string
   transactions: SignedBlock["transactions"]
+  /** Sum of every operation's fee, in raw core units. Fees paid in other assets are converted at their core exchange rate. */
+  feeCore: bigint
+  /** True when part of feeCore came from a non-core fee asset, so the total is an estimate. */
+  feeConverted: boolean
 }
 
 export type Ticker = {
@@ -141,6 +145,50 @@ export async function fetchChainId(): Promise<string> {
   return db<string>("get_chain_id", [])
 }
 
+const CORE_ID = "1.3.0"
+
+/** Fee amounts per fee asset across every operation of every transaction in a block. */
+function sumBlockFees(block: SignedBlock | null): Map<string, bigint> {
+  const sums = new Map<string, bigint>()
+  for (const tx of block?.transactions ?? []) {
+    for (const op of tx.operations ?? []) {
+      const fee = (op[1] as { fee?: Amount } | undefined)?.fee
+      if (!fee?.asset_id) continue
+      sums.set(fee.asset_id, (sums.get(fee.asset_id) ?? 0n) + asBig(fee.amount))
+    }
+  }
+  return sums
+}
+
+/** Core units a fee paid in another asset is worth, from the asset's core exchange rate (rounded up, like the chain). */
+function feeInCore(assetId: string, amount: bigint): bigint | null {
+  const rate = peekAsset(assetId)?.options?.core_exchange_rate
+  if (!rate) return null
+  const base = asBig(rate.base.amount)
+  const quote = asBig(rate.quote.amount)
+  if (base <= 0n || quote <= 0n) return null
+  if (rate.base.asset_id === assetId && rate.quote.asset_id === CORE_ID) return (amount * quote + base - 1n) / base
+  if (rate.quote.asset_id === assetId && rate.base.asset_id === CORE_ID) return (amount * base + quote - 1n) / quote
+  return null
+}
+
+function blockFeeTotal(sums: Map<string, bigint>): { feeCore: bigint; feeConverted: boolean } {
+  let total = sums.get(CORE_ID) ?? 0n
+  let converted = false
+  for (const [assetId, amount] of sums) {
+    if (assetId === CORE_ID || amount === 0n) continue
+    converted = true
+    const core = feeInCore(assetId, amount)
+    if (core != null) total += core
+  }
+  return { feeCore: total, feeConverted: converted }
+}
+
+export function blockFeeText(block: Pick<BlockRow, "feeCore" | "feeConverted">): string {
+  const precision = peekAsset(CORE_ID)?.precision ?? 5
+  return `${block.feeConverted ? "≈ " : ""}${formatRaw(block.feeCore, precision)} ${coreSymbol()}`
+}
+
 export async function fetchBlocks(nums: number[]): Promise<BlockRow[]> {
   const blocks = await pool(nums, 6, async (num) => {
     try {
@@ -151,7 +199,11 @@ export async function fetchBlocks(nums: number[]): Promise<BlockRow[]> {
     }
   })
   const names = await witnessNames(blocks.map((row) => row.block?.witness ?? ""))
-  return blocks.map(({ num, block }) => ({
+  const feeSums = blocks.map(({ block }) => sumBlockFees(block))
+  const otherAssets = [...new Set(feeSums.flatMap((sum) => [...sum.keys()]).filter((id) => id !== CORE_ID))]
+  if (otherAssets.length) await resolveAssets(otherAssets).catch(() => undefined)
+  return blocks.map(({ num, block }, index) => ({
+    ...blockFeeTotal(feeSums[index]!),
     num,
     time: block?.timestamp ?? "",
     witness: block?.witness ?? "",

@@ -1075,4 +1075,7 @@ export const vi: Record<string, string> = {
   "Never": "Không bao giờ",
   "Show more": "Xem thêm",
   "Show less": "Thu gọn",
+  "Fees": "Phí",
+  "Total fees": "Tổng phí",
+  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "Tổng phí do mọi thao tác trong khối trả. Phí trả bằng tài sản khác được quy đổi theo tỷ giá lõi.",
 }

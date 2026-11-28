@@ -1075,4 +1075,7 @@ export const ko: Record<string, string> = {
   "Never": "없음",
   "Show more": "더 보기",
   "Show less": "접기",
+  "Fees": "수수료",
+  "Total fees": "총 수수료",
+  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "블록 내 모든 작업이 지불한 수수료의 합계입니다. 다른 자산으로 낸 수수료는 핵심 환율로 환산합니다.",
 }

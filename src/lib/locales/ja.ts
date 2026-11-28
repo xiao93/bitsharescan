@@ -1075,4 +1075,7 @@ export const ja: Record<string, string> = {
   "Never": "なし",
   "Show more": "もっと見る",
   "Show less": "閉じる",
+  "Fees": "手数料",
+  "Total fees": "手数料合計",
+  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "ブロック内のすべての操作が支払った手数料の合計です。他の資産で支払った手数料はコア交換レートで換算しています。",
 }

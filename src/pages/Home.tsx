@@ -5,7 +5,7 @@ import { HeroAd, heroAdEmpty } from "../components/HeroAd.tsx"
 import { SearchBar } from "../components/SearchBar.tsx"
 import { TimeAgo } from "../components/Now.tsx"
 import { AccountLink, ErrorBox, LineChart, LoadingBlock, OpSummary, Panel, TxLink, TypeBadge } from "../components/widgets.tsx"
-import { fetchBlocks, fetchChainId, fetchDynamic, fetchGlobal, type BlockRow, type DynamicGlobal, type GlobalProps } from "../lib/chain.ts"
+import { blockFeeText, fetchBlocks, fetchChainId, fetchDynamic, fetchGlobal, type BlockRow, type DynamicGlobal, type GlobalProps } from "../lib/chain.ts"
 import { db } from "../lib/node.ts"
 import { asBig, compactNumber, compactUsd, formatDecimal, formatInt, formatRaw, toFloat } from "../lib/format.ts"
 import { fetchDefiStats, type DefiStats } from "../lib/defi.ts"
@@ -316,7 +316,10 @@ export default function Home() {
                         <span className="truncate text-muted">
                           {t("Witness")} <span className="text-link">{block.witnessName}</span>
                         </span>
-                        <span className="shrink-0 rounded bg-canvas px-1.5 py-0.5 text-xs text-ink">{t("{n} txns", { n: block.txCount })}</span>
+                        <span className="flex shrink-0 items-center gap-2">
+                          <span className="text-xs text-muted" title={t("Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.")}><span className="hidden sm:inline">{t("Fees")} </span><span className="tabular-nums text-ink">{blockFeeText(block)}</span></span>
+                          <span className="rounded bg-canvas px-1.5 py-0.5 text-xs text-ink">{t("{n} txns", { n: block.txCount })}</span>
+                        </span>
                       </span>
                     </span>
                   </Link>

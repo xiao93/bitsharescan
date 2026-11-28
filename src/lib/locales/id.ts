@@ -1075,4 +1075,7 @@ export const id: Record<string, string> = {
   "Never": "Tidak pernah",
   "Show more": "Tampilkan lebih banyak",
   "Show less": "Tampilkan lebih sedikit",
+  "Fees": "Biaya",
+  "Total fees": "Total biaya",
+  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "Jumlah biaya yang dibayar oleh setiap operasi dalam blok. Biaya dalam aset lain dikonversi dengan kurs inti aset tersebut.",
 }

@@ -1075,4 +1075,7 @@ export const ru: Record<string, string> = {
   "Never": "Никогда",
   "Show more": "Показать больше",
   "Show less": "Свернуть",
+  "Fees": "Комиссии",
+  "Total fees": "Всего комиссий",
+  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "Сумма комиссий всех операций в блоке. Комиссии в других активах пересчитаны по их курсу к основному активу.",
 }

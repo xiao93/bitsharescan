@@ -1075,4 +1075,7 @@ export const nl: Record<string, string> = {
   "Never": "Nooit",
   "Show more": "Meer tonen",
   "Show less": "Minder tonen",
+  "Fees": "Kosten",
+  "Total fees": "Totale kosten",
+  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "Som van de kosten die alle bewerkingen in het blok betalen. Kosten in andere activa zijn omgerekend tegen hun kernwisselkoers.",
 }

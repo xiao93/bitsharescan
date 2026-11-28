@@ -1075,4 +1075,7 @@ export const zh: Record<string, string> = {
   "Never": "从不",
   "Show more": "展开",
   "Show less": "收起",
+  "Fees": "手续费",
+  "Total fees": "总手续费",
+  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "区块内所有操作支付的手续费之和。以其他资产支付的手续费按其核心汇率折算。",
 }

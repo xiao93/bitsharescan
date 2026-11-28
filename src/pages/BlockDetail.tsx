@@ -15,7 +15,7 @@ import {
   TxLink,
   TypeBadge,
 } from "../components/widgets.tsx"
-import { fetchBlock, fetchDynamic, signedOpsForBlock } from "../lib/chain.ts"
+import { blockFeeText, fetchBlock, fetchDynamic, signedOpsForBlock } from "../lib/chain.ts"
 import { formatInt, formatTime, shortHash } from "../lib/format.ts"
 import { fetchBlockOps } from "../lib/history.ts"
 import { linkClass } from "../lib/utils.ts"
@@ -76,6 +76,7 @@ export default function BlockDetail() {
                 { label: "Merkle root", value: <MonoCopy value={block.merkle} /> },
                 { label: "Witness signature", value: <MonoCopy value={block.signature} /> },
                 { label: "Transactions", value: formatInt(block.txCount) },
+                { label: "Total fees", value: blockFeeText(block), hint: t("Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.") },
                 { label: "Indexed operations", value: formatInt(data.esOps.length) },
               ]}
             />

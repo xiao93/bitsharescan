@@ -1075,4 +1075,7 @@ export const bn: Record<string, string> = {
   "Never": "কখনও না",
   "Show more": "আরও দেখান",
   "Show less": "কম দেখান",
+  "Fees": "ফি",
+  "Total fees": "মোট ফি",
+  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "ব্লকের সব অপারেশনের দেওয়া ফির যোগফল। অন্য সম্পদে দেওয়া ফি তাদের কোর বিনিময় হারে রূপান্তরিত।",
 }

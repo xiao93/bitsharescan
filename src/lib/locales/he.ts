@@ -1075,4 +1075,7 @@ export const he: Record<string, string> = {
   "Never": "אף פעם",
   "Show more": "הצג עוד",
   "Show less": "הצג פחות",
+  "Fees": "עמלות",
+  "Total fees": "סך העמלות",
+  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "סכום העמלות ששילמו כל הפעולות בבלוק. עמלות שנגבו בנכסים אחרים הומרו לפי שער ההמרה הליבתי שלהם.",
 }
