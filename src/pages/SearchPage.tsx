@@ -1,7 +1,8 @@
-import { Link, useSearchParams } from "react-router-dom"
+import { useEffect } from "react"
+import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { AccountLink, Crumbs, Empty, ErrorBox, LoadingBlock, Panel } from "../components/widgets.tsx"
 import { accountLabel } from "../lib/directory.ts"
-import { searchDirectory } from "../lib/search.ts"
+import { quickRoute, searchDirectory } from "../lib/search.ts"
 import { linkClass } from "../lib/utils.ts"
 import { useQuery, useTitle } from "../hooks/useQuery.ts"
 import { useI18n } from "../lib/i18n.tsx"
@@ -12,6 +13,20 @@ export default function SearchPage() {
   const type = params.get("type") ?? "all"
   const { t } = useI18n()
   useTitle(q ? `${t("Search")} ${q}` : t("Search"))
+  const navigate = useNavigate()
+  // A shared /search?q= link with a block number, transaction id, or object id opens that page directly,
+  // the same as the search bar does.
+  useEffect(() => {
+    const raw = q.trim()
+    if (!/^\d+$|^(0x)?[0-9a-fA-F]{40}$|^\d+\.\d+\.\d+$/.test(raw)) return
+    let stop = false
+    void quickRoute(raw).then((route) => {
+      if (!stop && route) navigate(route, { replace: true })
+    }, () => undefined)
+    return () => {
+      stop = true
+    }
+  }, [q, navigate])
   const query = useQuery(() => searchDirectory(q), [q])
   const data = query.data
   const scoped = type === "account" || type === "asset" || type === "key"

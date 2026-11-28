@@ -1072,4 +1072,7 @@ export const ru: Record<string, string> = {
   "No funds.": "Фондов нет.",
   "No funds for this asset.": "Нет фондов для этого актива.",
   "No SameT operations were found for this asset.": "Операции SameT для этого актива не найдены.",
+  "Never": "Никогда",
+  "Show more": "Показать больше",
+  "Show less": "Свернуть",
 }

@@ -115,12 +115,16 @@ function rangeWindow(range: RangeId) {
   const end = new Date()
   if (range === "all") return { start: new Date(currentNetwork() === "testnet" ? "2016-01-01T00:00:00Z" : "2015-10-13T00:00:00Z"), end, index: `${opIndexPrefix()}-*` }
   const days = range === "1m" ? 30 : range === "6m" ? 182 : 365
-  const start = new Date(Date.now() - (days - 1) * 86400000)
-  return { start, end, index: monthIndexes(start, end) }
+  // Whole UTC days only: today is still in progress, so a partial bucket would show as a false drop
+  // (and as the period's lowest value). The window ends at the last second of yesterday, UTC.
+  const today = Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), end.getUTCDate())
+  const start = new Date(today - days * 86400000)
+  const lastFull = new Date(today - 1000)
+  return { start, end: lastFull, index: monthIndexes(start, lastFull) }
 }
 
 function cacheKey(id: string, range: RangeId) {
-  return `bitscan.chart.v4.${currentNetwork()}.${id}.${range}`
+  return `bitscan.chart.v5.${currentNetwork()}.${id}.${range}`
 }
 
 function readCache(id: string, range: RangeId) {

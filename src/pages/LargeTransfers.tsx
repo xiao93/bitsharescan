@@ -3,7 +3,7 @@ import { Link, useSearchParams } from "react-router-dom"
 import { AccountLink, AmountView, Crumbs, ErrorBox, LoadingBlock, Pager, Panel, TxLink } from "../components/widgets.tsx"
 import { useTimeMode } from "../components/Now.tsx"
 import { fetchLargeTransfers, filterLargeTransfers, summarizeTransfers } from "../lib/activity.ts"
-import { compactUsd, formatInt, formatRaw, formatTime } from "../lib/format.ts"
+import { compactUsd, formatDecimal, formatInt, formatRaw, formatTime } from "../lib/format.ts"
 import { networkNotice } from "../lib/charts.ts"
 import { coreSymbol, networkHasEs } from "../lib/network.ts"
 import { peekAsset } from "../lib/directory.ts"
@@ -55,7 +55,7 @@ export default function LargeTransfers() {
       {query.error && networkHasEs() ? <div className="mt-4"><ErrorBox message={query.error} onRetry={query.reload} /></div> : null}
       <div className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Stat label={t("Large transfers (24h)")} value={query.data ? formatInt(stats.count) : "—"} hint={!assetId && min === 0 && query.data?.truncated ? t("Showing the largest {n} indexed transfers", { n: formatInt(query.data.rows.length) }) : t("Matching the current filters")} />
-        <Stat label={t("24h BTS volume")} value={query.data ? formatRaw(Math.round(stats.btsVolume * 1e5), 5) : "—"} hint={coreSymbol()} />
+        <Stat label={t("24h BTS volume")} value={query.data ? formatDecimal(stats.btsVolume) : "—"} hint={coreSymbol()} />
         <Stat label={t("24h USD volume")} value={query.data && stats.usdKnown ? compactUsd(stats.usdVolume) : "—"} hint={t("Priced assets only")} />
         <Stat
           label={t("Largest transfer")}

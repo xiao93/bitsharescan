@@ -3,12 +3,14 @@ import { AccountLink, Crumbs, ErrorBox, KeyValue, LoadingBlock, Panel } from "..
 import { TimeAgo } from "../components/Now.tsx"
 import { fetchTicket, lockInfo } from "../lib/defi.ts"
 import { peekAsset } from "../lib/directory.ts"
-import { formatRaw, formatTime } from "../lib/format.ts"
+import { formatRaw, formatTime, isNeverTime } from "../lib/format.ts"
+import { useI18n } from "../lib/i18n.tsx"
 import { useQuery, useTitle } from "../hooks/useQuery.ts"
 
 export default function TicketDetail() {
   const { id = "" } = useParams()
   const ticketId = decodeURIComponent(id)
+  const { t } = useI18n()
   useTitle(ticketId)
   const query = useQuery(async () => {
     const ticket = await fetchTicket(ticketId)
@@ -31,12 +33,12 @@ export default function TicketDetail() {
           <KeyValue rows={[
             { label: "Account", value: <AccountLink id={ticket.account} /> },
             { label: "Amount", value: `${formatRaw(ticket.amount?.amount, asset?.precision ?? 5)} ${asset?.symbol ?? "BTS"}` },
-            { label: "Current lock", value: `${current.label} · ${current.power} voting power` },
+            { label: "Current lock", value: `${current.label} · ${t("{power} voting power", { power: current.power })}` },
             { label: "Target lock", value: target.label },
             { label: "Voting power", value: `${formatRaw(ticket.value, 5)} BTS` },
-            { label: "Status", value: ticket.status },
-            { label: "Next auto update", value: <>{formatTime(ticket.next_auto_update_time)} · <TimeAgo time={ticket.next_auto_update_time} /></> },
-            { label: "Next downgrade", value: formatTime(ticket.next_type_downgrade_time) },
+            { label: "Status", value: ticket.status === "stable" ? t("Stable") : t(ticket.status) },
+            { label: "Next auto update", value: isNeverTime(ticket.next_auto_update_time) ? t("Never") : <>{formatTime(ticket.next_auto_update_time)} · <TimeAgo time={ticket.next_auto_update_time} /></> },
+            { label: "Next downgrade", value: isNeverTime(ticket.next_type_downgrade_time) ? t("Never") : formatTime(ticket.next_type_downgrade_time) },
           ]} />
         </Panel>
       ) : null}

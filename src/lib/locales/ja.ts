@@ -1072,4 +1072,7 @@ export const ja: Record<string, string> = {
   "No funds.": "ファンドはありません。",
   "No funds for this asset.": "この資産のファンドはありません。",
   "No SameT operations were found for this asset.": "この資産の SameT オペレーションは見つかりませんでした。",
+  "Never": "なし",
+  "Show more": "もっと見る",
+  "Show less": "閉じる",
 }

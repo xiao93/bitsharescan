@@ -101,6 +101,7 @@ export type AssetPageData = {
   markets: AssetMarket[]
   usdPrice: number | null
   usdSource: string
+  settledPrice?: boolean
   pools: Pool[]
   offers: CreditOffer[]
   funds: SametFund[]
@@ -268,7 +269,7 @@ export async function fetchAssetPage(idOrSymbol: string): Promise<AssetPageData>
     settles: settleRows,
     bids: bidRows,
     markets,
-    ...(await assetUsd(asset.symbol, markets)),
+    ...(await assetUsd(asset.symbol, markets, bitasset, asset.id)),
     pools,
     offers,
     funds,
@@ -297,9 +298,23 @@ function btsPerAsset(row: AssetMarket, symbol: string, core: string): number | n
   return null
 }
 
-async function assetUsd(symbol: string, markets: AssetMarket[]): Promise<{ usdPrice: number | null; usdSource: string }> {
+/** Core units one unit of a globally settled asset redeems for, from its settlement price. */
+function settledCorePerUnit(bit: BitAsset | null, assetId: string): number | null {
+  if (!bit || !globallySettled(bit)) return null
+  const price = bit.settlement_price
+  const rate = priceRate(price)
+  if (!price || rate == null || rate <= 0) return null
+  if (price.base.asset_id === assetId && price.quote.asset_id === "1.3.0") return rate
+  if (price.quote.asset_id === assetId && price.base.asset_id === "1.3.0") return 1 / rate
+  return null
+}
+
+async function assetUsd(symbol: string, markets: AssetMarket[], bit: BitAsset | null, assetId: string): Promise<{ usdPrice: number | null; usdSource: string; settledPrice?: boolean }> {
   const core = coreSymbol()
   const quote = await fetchBtsUsd()
+  // A globally settled smartcoin (bitUSD today) no longer tracks its peg: it redeems at the settlement price.
+  const settled = settledCorePerUnit(bit, assetId)
+  if (settled != null && quote.price != null) return { usdPrice: settled * quote.price, usdSource: quote.source, settledPrice: true }
   if (symbol === "USD") return { usdPrice: null, usdSource: quote.source }
   if (symbol === core) return { usdPrice: quote.price, usdSource: quote.source }
   const btsMarkets = markets

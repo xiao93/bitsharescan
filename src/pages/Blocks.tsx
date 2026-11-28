@@ -55,7 +55,7 @@ export default function Blocks() {
       </div>
       {head.error ? <ErrorBox message={head.error} onRetry={head.reload} /> : null}
       <Panel>
-        {blocks.loading && !blocks.data?.length ? <LoadingBlock /> : null}
+        {(blocks.loading || (!headNum && !head.error)) && !blocks.data?.length ? <LoadingBlock /> : null}
         {blocks.error ? <div className="p-4"><ErrorBox message={blocks.error} onRetry={blocks.reload} /></div> : null}
         <div className="overflow-x-auto">
           <table className="w-full min-w-[680px] text-start text-sm">

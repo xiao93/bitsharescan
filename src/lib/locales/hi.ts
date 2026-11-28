@@ -1072,4 +1072,7 @@ export const hi: Record<string, string> = {
   "No funds.": "कोई फंड नहीं।",
   "No funds for this asset.": "इस एसेट का कोई फंड नहीं।",
   "No SameT operations were found for this asset.": "इस एसेट के लिए कोई SameT ऑपरेशन नहीं मिला।",
+  "Never": "कभी नहीं",
+  "Show more": "और दिखाएँ",
+  "Show less": "कम दिखाएँ",
 }

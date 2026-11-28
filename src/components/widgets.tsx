@@ -81,7 +81,7 @@ export function TxLink({ id }: { id?: string }) {
   const { t } = useI18n()
   if (!id) return <span className="text-xs text-muted">{t("Pending id")}</span>
   return (
-    <span className="inline-flex items-center gap-1">
+    <span className="inline-flex items-center gap-1 whitespace-nowrap">
       <Link to={`/tx/${id}`} className={`${linkClass} font-mono text-[13px]`} title={id}>
         {shortHash(id)}
       </Link>
@@ -93,7 +93,7 @@ export function TxLink({ id }: { id?: string }) {
 export function TypeBadge({ type, virtual }: { type: number; virtual?: boolean }) {
   const { t } = useI18n()
   return (
-    <span className="inline-flex max-w-[18rem] items-center gap-1 rounded-md bg-chip px-2 py-0.5 text-xs font-medium text-link">
+    <span className="inline-flex max-w-[18rem] shrink-0 items-center gap-1 whitespace-nowrap rounded-md bg-chip px-2 py-0.5 text-xs font-medium text-link">
       {opLabel(type)}
       {virtual || isVirtualType(type) ? <span className="text-[10px] text-violet-600">{t("virtual")}</span> : null}
     </span>
@@ -337,10 +337,10 @@ export function OpTable({ rows }: { rows: OpView[] }) {
               <td className="whitespace-nowrap px-4 py-3 text-muted">
                 <TimeAgo time={op.time} />
               </td>
-              <td className="px-4 py-3">
+              <td className="whitespace-nowrap px-4 py-3">
                 <AccountLink id={op.feePayer} />
               </td>
-              <td className="max-w-md px-4 py-3 text-ink"><OpSummary op={op} /></td>
+              <td className="min-w-[16rem] max-w-md px-4 py-3 text-ink"><OpSummary op={op} /></td>
               <td className="whitespace-nowrap px-4 py-3">
                 <AmountView value={op.fee} />
               </td>

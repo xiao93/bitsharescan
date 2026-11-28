@@ -113,7 +113,7 @@ export default function MarketOverview() {
             <p className="bx-swipe">{t("Swipe sideways to see all columns →").replace(/\s*→\s*$/, "")} <span className="inline-block rtl:rotate-180" aria-hidden="true">→</span></p>
             <div className="bx-scroll overflow-x-auto">
               <table className="w-full min-w-[720px] text-start text-sm">
-                <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
+                <thead className="whitespace-nowrap bg-canvas text-[11px] uppercase tracking-wide text-muted">
                   <tr>
                     <th className="px-4 py-2.5 font-medium">{t("Market")}</th>
                     <th className="px-4 py-2.5 text-end font-medium">{t("Last price")}</th>
@@ -131,7 +131,7 @@ export default function MarketOverview() {
                     return (
                       <tr key={`${row.base}-${row.quote}`} className="hover:bg-row">
                         <td className="px-4 py-3">
-                          <Link to={`/market/${row.base}/${row.quote}`} className="font-medium text-link hover:underline">{symbol}/{row.other}</Link>
+                          <Link to={`/market/${encodeURIComponent(row.other)}/${encodeURIComponent(symbol)}`} className="font-medium text-link hover:underline">{symbol}/{row.other}</Link>
                         </td>
                         <td className={cell}>{row.price == null ? "—" : formatFixed(row.price, priceDigits)}</td>
                         <td className={`${cell} ${row.change == null ? "text-muted" : row.change >= 0 ? "text-success" : "text-danger"}`}>

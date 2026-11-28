@@ -1072,4 +1072,7 @@ export const bn: Record<string, string> = {
   "No funds.": "কোনো তহবিল নেই।",
   "No funds for this asset.": "এই অ্যাসেটের কোনো তহবিল নেই।",
   "No SameT operations were found for this asset.": "এই অ্যাসেটের জন্য কোনো SameT অপারেশন পাওয়া যায়নি।",
+  "Never": "কখনও না",
+  "Show more": "আরও দেখান",
+  "Show less": "কম দেখান",
 }

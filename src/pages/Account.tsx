@@ -23,7 +23,7 @@ import type { AssetInfo } from "../lib/directory.ts"
 import { asBig, compactUsd, formatInt, formatRaw, formatTime, membershipOf, toFloat } from "../lib/format.ts"
 import { fetchAccountOps } from "../lib/history.ts"
 import { opLabel, OPERATIONS } from "../lib/ops.ts"
-import { linkClass } from "../lib/utils.ts"
+import { linkClass, pool } from "../lib/utils.ts"
 import { useQuery, useTitle } from "../hooks/useQuery.ts"
 import { useI18n } from "../lib/i18n.tsx"
 import { coreSymbol } from "../lib/network.ts"
@@ -408,23 +408,25 @@ function btsBalance(full: FullAccount): string {
 
 async function priceBalances(full: FullAccount): Promise<PricedBalance[]> {
   const core = coreSymbol()
-  const quote = await fetchBtsUsd()
+  const quote = await fetchBtsUsd().catch(() => ({ price: null }))
   const btsUsd = quote.price ?? Number.NaN
   const nonzero = full.balances.filter((row) => asBig(row.balance) !== 0n)
   const zeros = full.balances.filter((row) => asBig(row.balance) === 0n)
   const priced: PricedBalance[] = []
-  for (const row of nonzero.slice(0, 30)) {
+  // Tickers run a few at a time: one by one, 30 balances took over ten seconds.
+  const rows = await pool(nonzero.slice(0, 30), 6, async (row): Promise<PricedBalance | null> => {
     const asset = peekAsset(row.asset_type)
-    if (!asset) continue
+    if (!asset) return null
     const amount = toFloat(row.balance, asset.precision)
     let bts: number | null = asset.symbol === core ? amount : null
     if (asset.symbol !== core) {
-      const px = await priceOfAssetInBts(asset.symbol)
+      const px = await priceOfAssetInBts(asset.symbol).catch(() => null)
       bts = px == null ? null : amount * px
     }
     const usd = bts != null && Number.isFinite(btsUsd) && btsUsd > 0 ? bts * btsUsd : null
-    priced.push({ asset, raw: row.balance, bts, usd })
-  }
+    return { asset, raw: row.balance, bts, usd }
+  })
+  for (const row of rows) if (row) priced.push(row)
   for (const row of zeros) {
     const asset = peekAsset(row.asset_type)
     if (asset) priced.push({ asset, raw: row.balance, bts: 0, usd: 0 })
@@ -462,7 +464,7 @@ function OrderTable({ orders }: { orders: LimitOrder[] }) {
                 <td className="px-4 py-3"><Link className={`${linkClass} font-mono text-xs`} to={`/object/${order.id}`}>{order.id}</Link></td>
                 <td className="px-4 py-3">{formatRaw(order.for_sale, baseAsset?.precision ?? 0)} {baseAsset?.symbol ?? base.asset_id}</td>
                 <td className="px-4 py-3">{formatRaw(receive, quoteAsset?.precision ?? 0)} {quoteAsset?.symbol ?? quote.asset_id}</td>
-                <td className="px-4 py-3">{Number.isFinite(price) ? price.toLocaleString("en-US", { maximumFractionDigits: 8 }) : "—"}</td>
+                <td className="whitespace-nowrap px-4 py-3">{Number.isFinite(price) ? <>{price.toLocaleString("en-US", { maximumFractionDigits: 8 })} <span className="text-xs text-muted">{quoteAsset?.symbol ?? quote.asset_id}/{baseAsset?.symbol ?? base.asset_id}</span></> : "—"}</td>
                 <td className="px-4 py-3 text-muted"><TimeAgo time={order.expiration} /></td>
               </tr>
             )

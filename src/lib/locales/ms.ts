@@ -1072,4 +1072,7 @@ export const ms: Record<string, string> = {
   "No funds.": "Tiada dana.",
   "No funds for this asset.": "Tiada dana untuk aset ini.",
   "No SameT operations were found for this asset.": "Tiada operasi SameT dijumpai untuk aset ini.",
+  "Never": "Tidak pernah",
+  "Show more": "Tunjukkan lagi",
+  "Show less": "Tunjukkan kurang",
 }

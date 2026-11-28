@@ -1072,4 +1072,7 @@ export const tr: Record<string, string> = {
   "No funds.": "Fon yok.",
   "No funds for this asset.": "Bu varlık için fon yok.",
   "No SameT operations were found for this asset.": "Bu varlık için SameT işlemi bulunamadı.",
+  "Never": "Asla",
+  "Show more": "Daha fazla göster",
+  "Show less": "Daha az göster",
 }

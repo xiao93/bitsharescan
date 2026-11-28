@@ -1072,4 +1072,7 @@ export const ur: Record<string, string> = {
   "No funds.": "کوئی فنڈ نہیں۔",
   "No funds for this asset.": "اس اثاثے کا کوئی فنڈ نہیں۔",
   "No SameT operations were found for this asset.": "اس اثاثے کے لیے کوئی SameT آپریشن نہیں ملا۔",
+  "Never": "کبھی نہیں",
+  "Show more": "مزید دکھائیں",
+  "Show less": "کم دکھائیں",
 }

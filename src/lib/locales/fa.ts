@@ -1072,4 +1072,7 @@ export const fa: Record<string, string> = {
   "No funds.": "صندوقی نیست.",
   "No funds for this asset.": "صندوقی برای این دارایی نیست.",
   "No SameT operations were found for this asset.": "هیچ عملیات SameT برای این دارایی یافت نشد.",
+  "Never": "هرگز",
+  "Show more": "نمایش بیشتر",
+  "Show less": "نمایش کمتر",
 }

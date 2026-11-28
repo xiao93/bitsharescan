@@ -1072,4 +1072,7 @@ export const ar: Record<string, string> = {
   "No funds.": "لا توجد صناديق.",
   "No funds for this asset.": "لا توجد صناديق لهذا الأصل.",
   "No SameT operations were found for this asset.": "لم يتم العثور على عمليات SameT لهذا الأصل.",
+  "Never": "أبدًا",
+  "Show more": "عرض المزيد",
+  "Show less": "عرض أقل",
 }

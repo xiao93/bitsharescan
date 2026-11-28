@@ -1072,4 +1072,7 @@ export const ko: Record<string, string> = {
   "No funds.": "펀드가 없습니다.",
   "No funds for this asset.": "이 자산의 펀드가 없습니다.",
   "No SameT operations were found for this asset.": "이 자산의 SameT 작업을 찾지 못했습니다.",
+  "Never": "없음",
+  "Show more": "더 보기",
+  "Show less": "접기",
 }

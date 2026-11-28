@@ -144,8 +144,7 @@ export class NodeClient {
 
   private async handshake() {
     await this.raw(1, "login", ["", ""])
-    const db = await this.raw(1, "database", [])
-    const history = await this.raw(1, "history", [])
+    const [db, history] = await Promise.all([this.raw(1, "database", []), this.raw(1, "history", [])])
     const chainId = await this.raw(typeof db === "number" ? db : 0, "get_chain_id", [])
     const expected = networkInfo().chainId
     if (expected && chainId !== expected) throw new Error("Node is on a different chain")

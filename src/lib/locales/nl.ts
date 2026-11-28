@@ -1072,4 +1072,7 @@ export const nl: Record<string, string> = {
   "No funds.": "Geen fondsen.",
   "No funds for this asset.": "Geen fondsen voor dit asset.",
   "No SameT operations were found for this asset.": "Geen SameT-operaties gevonden voor dit asset.",
+  "Never": "Nooit",
+  "Show more": "Meer tonen",
+  "Show less": "Minder tonen",
 }

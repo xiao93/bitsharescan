@@ -1072,4 +1072,7 @@ export const zh: Record<string, string> = {
   "No funds.": "暂无资金池。",
   "No funds for this asset.": "没有这个资产的资金池。",
   "No SameT operations were found for this asset.": "没有找到这个资产的 SameT 操作。",
+  "Never": "从不",
+  "Show more": "展开",
+  "Show less": "收起",
 }

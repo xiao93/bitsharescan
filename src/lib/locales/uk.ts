@@ -1072,4 +1072,7 @@ export const uk: Record<string, string> = {
   "No funds.": "Фондів немає.",
   "No funds for this asset.": "Немає фондів для цього активу.",
   "No SameT operations were found for this asset.": "Операції SameT для цього активу не знайдено.",
+  "Never": "Ніколи",
+  "Show more": "Показати більше",
+  "Show less": "Згорнути",
 }

@@ -1072,4 +1072,7 @@ export const vi: Record<string, string> = {
   "No funds.": "Không có quỹ.",
   "No funds for this asset.": "Không có quỹ cho tài sản này.",
   "No SameT operations were found for this asset.": "Không tìm thấy thao tác SameT cho tài sản này.",
+  "Never": "Không bao giờ",
+  "Show more": "Xem thêm",
+  "Show less": "Thu gọn",
 }

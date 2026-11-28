@@ -22,8 +22,11 @@ function rowsFrom(data: EsResponse<EsOp>): OpView[] {
 }
 
 export async function fetchDailyOps(days = 14): Promise<{ date: string; ops: number }[]> {
-  const end = new Date()
-  const start = new Date(Date.now() - (days - 1) * 86400000)
+  // Whole UTC days: today's partial count would always look like a sudden drop.
+  const now = new Date()
+  const today = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+  const start = new Date(today - days * 86400000)
+  const end = new Date(today - 1000)
   const data = await esSearch<EsOp>(monthIndexes(start, end), {
     size: 0,
     query: {

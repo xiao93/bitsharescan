@@ -54,7 +54,7 @@ export default function AssetDetail() {
     setParams(copy, { replace: true })
   }
 
-  const priceUsd = asset?.symbol === "USD" ? 1 : data?.usdPrice ?? Number.NaN
+  const priceUsd = asset?.symbol === "USD" && !data?.settledPrice ? 1 : data?.usdPrice ?? Number.NaN
   const supplyFloat = asset && data ? toFloat(data.dynamic.current_supply ?? 0, asset.precision) : null
   const cap = supplyFloat != null && Number.isFinite(priceUsd) ? supplyFloat * priceUsd : null
   const kind = !asset ? "" : asset.id === "1.3.0" ? "Core" : data?.bitasset?.is_prediction_market ? "Prediction" : smart ? "SmartCoin" : "UIA"
@@ -75,11 +75,11 @@ export default function AssetDetail() {
               {individuallySettled(data.bitasset) ? <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">{t("Individual settlement")}</span> : null}
               {data.description.shortName ? <span className="text-sm text-muted">{data.description.shortName}</span> : null}
             </div>
-            <p className="mt-1 max-w-3xl text-sm text-muted">{data.description.main || t("No description published.")}</p>
+            <AssetBlurb key={asset.id} text={data.description.main} />
             <p className="mt-1 inline-flex items-center gap-1 font-mono text-xs text-muted">{asset.id}<CopyButton value={asset.id} /></p>
           </header>
           <div className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
-            <Stat label={t("Price")} value={Number.isFinite(priceUsd) && priceUsd > 0 ? `$${formatDecimal(priceUsd)}` : "—"} hint={data.usdSource || t("No market with volume")} title={data.usdSource} />
+            <Stat label={t("Price")} value={Number.isFinite(priceUsd) && priceUsd > 0 ? `$${formatDecimal(priceUsd)}` : "—"} hint={data.settledPrice ? t("Global settlement price") : data.usdSource || t("No market with volume")} title={data.usdSource} />
             <Stat label={t("Market cap")} value={cap == null ? "—" : compactUsd(cap)} hint={supplyFloat == null ? "" : t("{n} {sym} supply", { n: compactNumber(supplyFloat), sym: asset.symbol })} />
             <Stat label={t("Holders")} value={holders.data ? formatRaw(holders.data.total, 0) : "—"} hint={holders.data?.relation === "gte" ? t("At least this many") : t("Non-zero balances")} />
             <Stat label={t("Current supply")} value={formatRaw(data.dynamic.current_supply ?? 0, asset.precision)} hint={t("{n} decimal places", { n: asset.precision })} />
@@ -173,7 +173,7 @@ function MarketList({ data, detailed }: { data: AssetPageData; detailed?: boolea
     <ul className="divide-y divide-line">
       {data.markets.map((row) => (
         <li key={`${row.base}/${row.quote}`} className={`flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm ${row.volume <= 0 ? "text-muted opacity-60" : ""}`}>
-          <Link className={linkClass} to={`/market/${row.base}/${row.quote}`}>{row.base}/{row.quote}</Link>
+          <Link className={linkClass} to={`/market/${row.base}/${row.quote}`}>{row.quote}/{row.base}</Link>
           <span className="font-mono tabular-nums">{formatDecimal(row.latest)}</span>
           <span className="text-xs text-muted">{t("Volume")} {formatDecimal(row.baseVolume)} {row.base} · {formatDecimal(row.quoteVolume)} {row.quote}</span>
           {detailed ? <span className="text-xs text-muted">{row.change}%</span> : null}
@@ -480,6 +480,24 @@ function Stat({ label, value, hint, title }: { label: string; value: string; hin
       <div className="text-xs text-muted">{label}</div>
       <div className="truncate text-lg font-semibold">{value}</div>
       {hint ? <div className="truncate text-xs text-muted">{hint}</div> : null}
+    </div>
+  )
+}
+
+/** Issuers can publish pages of text; show three lines and let the reader expand it. */
+function AssetBlurb({ text }: { text: string }) {
+  const { t } = useI18n()
+  const [open, setOpen] = useState(false)
+  if (!text) return <p className="mt-1 max-w-3xl text-sm text-muted">{t("No description published.")}</p>
+  const long = text.length > 280 || text.split("\n").length > 3
+  return (
+    <div className="mt-1 max-w-3xl text-sm text-muted">
+      <p className={`break-words ${long && !open ? "line-clamp-3" : ""}`}>{text}</p>
+      {long ? (
+        <button type="button" onClick={() => setOpen((value) => !value)} className="mt-1 text-xs font-medium text-link hover:underline">
+          {open ? t("Show less") : t("Show more")}
+        </button>
+      ) : null}
     </div>
   )
 }

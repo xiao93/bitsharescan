@@ -1072,4 +1072,7 @@ export const he: Record<string, string> = {
   "No funds.": "אין קרנות.",
   "No funds for this asset.": "אין קרנות לנכס הזה.",
   "No SameT operations were found for this asset.": "לא נמצאו פעולות SameT עבור הנכס הזה.",
+  "Never": "אף פעם",
+  "Show more": "הצג עוד",
+  "Show less": "הצג פחות",
 }

@@ -76,7 +76,7 @@ export default function Pools() {
         <p className="bx-swipe">{t("Swipe sideways to see all columns →").replace(/\s*→\s*$/, "")} <span className="inline-block rtl:rotate-180" aria-hidden="true">→</span></p>
         <div className="bx-scroll overflow-x-auto">
           <table className="w-full min-w-[1100px] text-start text-sm">
-            <thead className="bg-canvas text-[11px] uppercase tracking-wide text-muted">
+            <thead className="whitespace-nowrap bg-canvas text-[11px] uppercase tracking-wide text-muted">
               <tr>
                 <th className="px-4 py-2.5 font-medium">{t("Pool")}</th>
                 <th className="px-4 py-2.5 font-medium">{t("Asset A")}</th>

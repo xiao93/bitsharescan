@@ -146,16 +146,27 @@ export function formatTime(iso: string | null | undefined): string {
 export function timeAgo(iso: string | null | undefined, now = Date.now()): string {
   const t = parseChainTime(iso)
   if (!Number.isFinite(t)) return "—"
-  const sec = Math.max(0, Math.round((now - t) / 1000))
   const rtf = new Intl.RelativeTimeFormat(numberLocale(), { numeric: "always" })
-  if (sec < 60) return rtf.format(-sec, "second")
+  // Deadlines (repay by, auto-disable, proposal expiry) are in the future: say "in 3 days", not "0 seconds ago".
+  // A block a few seconds ahead of the local clock still reads as just now.
+  const future = t - now > 60_000
+  const sign = future ? 1 : -1
+  const sec = future ? Math.round((t - now) / 1000) : Math.max(0, Math.round((now - t) / 1000))
+  if (sec < 60) return rtf.format(sign * sec, "second")
   const min = Math.floor(sec / 60)
-  if (min < 60) return rtf.format(-min, "minute")
+  if (min < 60) return rtf.format(sign * min, "minute")
   const hr = Math.floor(min / 60)
-  if (hr < 48) return rtf.format(-hr, "hour")
+  if (hr < 48) return rtf.format(sign * hr, "hour")
   const day = Math.floor(hr / 24)
-  if (day < 60) return rtf.format(-day, "day")
+  if (day < 60) return rtf.format(sign * day, "day")
   return formatTime(iso)
+}
+
+/** time_point_sec::maximum() (2106-02-07T06:28:15) and other far-future values mean "never". */
+export function isNeverTime(iso: string | null | undefined): boolean {
+  if (!iso) return false
+  const t = parseChainTime(iso)
+  return iso.startsWith("2106") || (Number.isFinite(t) && new Date(t).getUTCFullYear() >= 2100)
 }
 
 export function shortHash(value: string | null | undefined, left = 10, right = 8): string {

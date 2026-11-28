@@ -1072,4 +1072,7 @@ export const th: Record<string, string> = {
   "No funds.": "ไม่มีกองทุน",
   "No funds for this asset.": "ไม่มีกองทุนสำหรับสินทรัพย์นี้",
   "No SameT operations were found for this asset.": "ไม่พบการดำเนินการ SameT สำหรับสินทรัพย์นี้",
+  "Never": "ไม่มี",
+  "Show more": "แสดงเพิ่มเติม",
+  "Show less": "แสดงน้อยลง",
 }

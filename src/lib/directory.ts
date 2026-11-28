@@ -79,27 +79,30 @@ function rememberAsset(row: AssetInfo | null | undefined) {
 }
 
 async function objectChunks<T>(ids: string[]): Promise<Array<T | null>> {
-  const out: Array<T | null> = []
-  for (let i = 0; i < ids.length; i += 50) {
-    const chunk = ids.slice(i, i + 50)
-    const rows = await db<Array<T | null>>("get_objects", [chunk])
-    out.push(...(rows ?? []))
-  }
-  return out
+  const chunks: string[][] = []
+  for (let i = 0; i < ids.length; i += 50) chunks.push(ids.slice(i, i + 50))
+  // Up to six chunks in flight at once; one after another cost a full round trip each.
+  const pages = new Array<Array<T | null>>(chunks.length)
+  let next = 0
+  await Promise.all(Array.from({ length: Math.min(6, chunks.length) }, async () => {
+    while (next < chunks.length) {
+      const index = next
+      next += 1
+      pages[index] = (await db<Array<T | null>>("get_objects", [chunks[index]!])) ?? []
+    }
+  }))
+  return pages.flat()
 }
 
 export async function resolveAccounts(ids: Array<string | undefined | null>): Promise<void> {
   const want = [...new Set(ids.filter((id): id is string => !!id && /^1\.2\.\d+$/.test(id) && !accountNames.has(id)))]
-  for (let i = 0; i < want.length; i += 50) {
-    const chunk = want.slice(i, i + 50)
-    const rows = await db<Array<{ id: string; name: string } | null>>("get_objects", [chunk])
-    rows?.forEach((row) => {
-      if (row?.id && row.name) {
-        accountNames.set(row.id, row.name)
-        accountNames.set(row.name, row.id)
-      }
-    })
-  }
+  const rows = await objectChunks<{ id: string; name: string }>(want)
+  rows.forEach((row) => {
+    if (row?.id && row.name) {
+      accountNames.set(row.id, row.name)
+      accountNames.set(row.name, row.id)
+    }
+  })
 }
 
 export async function resolveAssets(ids: Array<string | undefined | null>): Promise<void> {
