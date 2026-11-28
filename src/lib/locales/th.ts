@@ -1068,4 +1068,8 @@ export const th: Record<string, string> = {
   "Last 24 hours, from the operation index": "24 ชั่วโมงที่ผ่านมา จากดัชนีการดำเนินการ",
   "Lifetime member": "สมาชิกตลอดชีพ",
   "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "ค่าธรรมเนียมสมาชิกตลอดชีพคือส่วนที่เหลือหลังเงินคืน ที่อัตรา {pct} การสร้างสินทรัพย์ (ปฏิบัติการ 10) ยังคง 50% ไว้ในกลุ่มค่าธรรมเนียมของสินทรัพย์ใหม่",
+  "{n} of {total} funds": "{n} จาก {total} กองทุน",
+  "No funds.": "ไม่มีกองทุน",
+  "No funds for this asset.": "ไม่มีกองทุนสำหรับสินทรัพย์นี้",
+  "No SameT operations were found for this asset.": "ไม่พบการดำเนินการ SameT สำหรับสินทรัพย์นี้",
 }

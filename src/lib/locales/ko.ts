@@ -1068,4 +1068,8 @@ export const ko: Record<string, string> = {
   "Last 24 hours, from the operation index": "최근 24시간, 작업 인덱스 기준",
   "Lifetime member": "평생 회원",
   "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "평생 회원 수수료는 캐시백 후 남는 금액이며, 비율은 {pct}입니다. 자산 생성(op 10)은 새 자산의 수수료 풀에 50%를 추가로 남깁니다.",
+  "{n} of {total} funds": "{n} / {total}개 펀드",
+  "No funds.": "펀드가 없습니다.",
+  "No funds for this asset.": "이 자산의 펀드가 없습니다.",
+  "No SameT operations were found for this asset.": "이 자산의 SameT 작업을 찾지 못했습니다.",
 }

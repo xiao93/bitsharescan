@@ -1068,4 +1068,8 @@ export const ur: Record<string, string> = {
   "Last 24 hours, from the operation index": "پچھلے 24 گھنٹے، آپریشن انڈیکس سے",
   "Lifetime member": "تاحیات رکن",
   "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "تاحیات رکن کی فیس کیش بیک کے بعد باقی حصہ ہے، شرح {pct}۔ اثاثہ بناتے وقت (آپ 10) نئے اثاثے کے فیس پول میں 50% مزید رہتا ہے۔",
+  "{n} of {total} funds": "{n} از {total} فنڈز",
+  "No funds.": "کوئی فنڈ نہیں۔",
+  "No funds for this asset.": "اس اثاثے کا کوئی فنڈ نہیں۔",
+  "No SameT operations were found for this asset.": "اس اثاثے کے لیے کوئی SameT آپریشن نہیں ملا۔",
 }

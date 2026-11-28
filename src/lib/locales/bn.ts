@@ -1068,4 +1068,8 @@ export const bn: Record<string, string> = {
   "Last 24 hours, from the operation index": "গত 24 ঘণ্টা, অপারেশন ইনডেক্স থেকে",
   "Lifetime member": "আজীবন সদস্য",
   "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "আজীবন সদস্য ফি হলো ক্যাশব্যাকের পর অবশিষ্ট অংশ, হার {pct}। অ্যাসেট তৈরি (অপ 10) নতুন অ্যাসেটের ফি পুলে আরও 50% রেখে দেয়।",
+  "{n} of {total} funds": "{n} / {total} তহবিল",
+  "No funds.": "কোনো তহবিল নেই।",
+  "No funds for this asset.": "এই অ্যাসেটের কোনো তহবিল নেই।",
+  "No SameT operations were found for this asset.": "এই অ্যাসেটের জন্য কোনো SameT অপারেশন পাওয়া যায়নি।",
 }

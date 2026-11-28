@@ -1068,4 +1068,8 @@ export const vi: Record<string, string> = {
   "Last 24 hours, from the operation index": "24 giờ qua, từ chỉ mục thao tác",
   "Lifetime member": "Thành viên trọn đời",
   "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "Phí thành viên trọn đời là phần còn lại sau hoàn phí, tỷ lệ {pct}. Tạo tài sản (thao tác 10) còn giữ 50% trong nhóm phí của tài sản mới.",
+  "{n} of {total} funds": "{n} / {total} quỹ",
+  "No funds.": "Không có quỹ.",
+  "No funds for this asset.": "Không có quỹ cho tài sản này.",
+  "No SameT operations were found for this asset.": "Không tìm thấy thao tác SameT cho tài sản này.",
 }

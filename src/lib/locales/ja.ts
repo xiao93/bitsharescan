@@ -1068,4 +1068,8 @@ export const ja: Record<string, string> = {
   "Last 24 hours, from the operation index": "過去 24 時間、オペレーションインデックスより",
   "Lifetime member": "生涯会員",
   "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "生涯会員の手数料はキャッシュバック後の残額で、比率は {pct} です。資産作成（オペレーション 10）では、さらに 50% が新しい資産の手数料プールに残ります。",
+  "{n} of {total} funds": "{n} / {total} 件のファンド",
+  "No funds.": "ファンドはありません。",
+  "No funds for this asset.": "この資産のファンドはありません。",
+  "No SameT operations were found for this asset.": "この資産の SameT オペレーションは見つかりませんでした。",
 }

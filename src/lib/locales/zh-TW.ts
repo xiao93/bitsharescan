@@ -1068,4 +1068,8 @@ export const zhTW: Record<string, string> = {
   "Last 24 hours, from the operation index": "最近 24 小時，來自操作索引",
   "Lifetime member": "終身會員",
   "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "終身會員手續費是返現後的剩餘部分，比例為 {pct}。建立資產（操作 10）還會把 50% 留在新資產的手續費池中。",
+  "{n} of {total} funds": "{n} / {total} 個資金池",
+  "No funds.": "暫無資金池。",
+  "No funds for this asset.": "沒有這個資產的資金池。",
+  "No SameT operations were found for this asset.": "沒有找到這個資產的 SameT 操作。",
 }

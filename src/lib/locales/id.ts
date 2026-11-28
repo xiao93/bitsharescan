@@ -1068,4 +1068,8 @@ export const id: Record<string, string> = {
   "Last 24 hours, from the operation index": "24 jam terakhir, dari indeks operasi",
   "Lifetime member": "Anggota seumur hidup",
   "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "Biaya anggota seumur hidup adalah sisa setelah cashback, sebesar {pct}. Pembuatan aset (op 10) juga menyimpan 50% di kumpulan biaya aset baru.",
+  "{n} of {total} funds": "{n} dari {total} dana",
+  "No funds.": "Tidak ada dana.",
+  "No funds for this asset.": "Tidak ada dana untuk aset ini.",
+  "No SameT operations were found for this asset.": "Tidak ditemukan operasi SameT untuk aset ini.",
 }

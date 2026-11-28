@@ -302,13 +302,34 @@ export async function fetchPoolHistory(id: string, limit = 30): Promise<PoolEven
   return events
 }
 
-export async function fetchRecentOps(types: number[], limit = 12): Promise<OpView[]> {
+export type RecentOpFilter = {
+  /** Object id such as 1.3.0. */
+  assetId?: string
+  /** SameT fund ids that currently hold this asset, used for delete/update ops that only store fund_id. */
+  fundIds?: string[]
+}
+
+export async function fetchRecentOps(types: number[], limit = 12, filter?: RecentOpFilter): Promise<OpView[]> {
   const end = new Date()
   const start = new Date(end.getTime() - 120 * 86400000)
+  const assetClauses: Record<string, unknown>[] = []
+  if (filter?.assetId) {
+    const id = filter.assetId
+    assetClauses.push(
+      { term: { "operation_history.op_object.asset_type.keyword": id } },
+      { term: { "operation_history.op_object.borrow_amount.asset_id.keyword": id } },
+      { term: { "operation_history.op_object.repay_amount.asset_id.keyword": id } },
+    )
+    if (filter.fundIds?.length) {
+      assetClauses.push({ terms: { "operation_history.op_object.fund_id.keyword": filter.fundIds } })
+    }
+  }
   const body = {
     size: limit,
     sort: [{ "block_data.block_time": "desc" }, { operation_id_num: "desc" }],
-    query: { terms: { operation_type: types } },
+    query: assetClauses.length
+      ? { bool: { filter: [{ terms: { operation_type: types } }, { bool: { should: assetClauses, minimum_should_match: 1 } }] } }
+      : { terms: { operation_type: types } },
     collapse: { field: "operation_id_num" },
     _source: ["block_data", "operation_type", "operation_id_num", "operation_history", "account_history"],
   }

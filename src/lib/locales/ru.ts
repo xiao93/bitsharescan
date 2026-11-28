@@ -1068,4 +1068,8 @@ export const ru: Record<string, string> = {
   "Last 24 hours, from the operation index": "Последние 24 часа, по индексу операций",
   "Lifetime member": "Пожизненный член",
   "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "Комиссия для пожизненных членов — остаток после кэшбэка, доля {pct}. При создании актива (операция 10) ещё 50% остаётся в пуле комиссий нового актива.",
+  "{n} of {total} funds": "{n} из {total} фондов",
+  "No funds.": "Фондов нет.",
+  "No funds for this asset.": "Нет фондов для этого актива.",
+  "No SameT operations were found for this asset.": "Операции SameT для этого актива не найдены.",
 }

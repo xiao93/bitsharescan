@@ -1068,4 +1068,8 @@ export const it: Record<string, string> = {
   "Last 24 hours, from the operation index": "Ultime 24 ore, dall'indice delle operazioni",
   "Lifetime member": "Membro a vita",
   "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "La commissione da membro a vita è il residuo dopo il rimborso, pari a {pct}. La creazione di un asset (op. 10) lascia anche il 50% nel fondo commissioni del nuovo asset.",
+  "{n} of {total} funds": "{n} di {total} fondi",
+  "No funds.": "Nessun fondo.",
+  "No funds for this asset.": "Nessun fondo per questo asset.",
+  "No SameT operations were found for this asset.": "Nessuna operazione SameT trovata per questo asset.",
 }

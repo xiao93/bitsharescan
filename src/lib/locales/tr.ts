@@ -1068,4 +1068,8 @@ export const tr: Record<string, string> = {
   "Last 24 hours, from the operation index": "Son 24 saat, işlem dizininden",
   "Lifetime member": "Ömür boyu üye",
   "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "Ömür boyu üye ücreti, iade sonrası kalan paydır: {pct}. Varlık oluşturma (işlem 10) ayrıca yeni varlığın ücret havuzunda %50 bırakır.",
+  "{n} of {total} funds": "{n} / {total} fon",
+  "No funds.": "Fon yok.",
+  "No funds for this asset.": "Bu varlık için fon yok.",
+  "No SameT operations were found for this asset.": "Bu varlık için SameT işlemi bulunamadı.",
 }

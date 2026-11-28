@@ -1068,4 +1068,8 @@ export const nl: Record<string, string> = {
   "Last 24 hours, from the operation index": "Laatste 24 uur, uit de operatie-index",
   "Lifetime member": "Levenslang lid",
   "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "De levenslid-vergoeding is het restant na cashback, namelijk {pct}. Bij het aanmaken van een asset (op 10) blijft ook 50% in de vergoedingenpool van de nieuwe asset.",
+  "{n} of {total} funds": "{n} van {total} fondsen",
+  "No funds.": "Geen fondsen.",
+  "No funds for this asset.": "Geen fondsen voor dit asset.",
+  "No SameT operations were found for this asset.": "Geen SameT-operaties gevonden voor dit asset.",
 }

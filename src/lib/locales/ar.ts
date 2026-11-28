@@ -1068,4 +1068,8 @@ export const ar: Record<string, string> = {
   "Last 24 hours, from the operation index": "آخر 24 ساعة، من فهرس العمليات",
   "Lifetime member": "عضو مدى الحياة",
   "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "رسوم العضو مدى الحياة هي المتبقي بعد الاسترداد النقدي، بنسبة {pct}. إنشاء الأصل (العملية 10) يُبقي أيضًا 50% في مجمع رسوم الأصل الجديد.",
+  "{n} of {total} funds": "{n} من أصل {total} صندوقًا",
+  "No funds.": "لا توجد صناديق.",
+  "No funds for this asset.": "لا توجد صناديق لهذا الأصل.",
+  "No SameT operations were found for this asset.": "لم يتم العثور على عمليات SameT لهذا الأصل.",
 }

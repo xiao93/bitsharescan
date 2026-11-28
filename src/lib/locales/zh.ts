@@ -1068,4 +1068,8 @@ export const zh: Record<string, string> = {
   "Last 24 hours, from the operation index": "最近 24 小时，来自操作索引",
   "Lifetime member": "终身会员",
   "Lifetime member fees are the residual after cashback of {pct}. Asset creation (op 10) also keeps 50% in the new asset's fee pool.": "终身会员手续费是返现后的剩余部分，比例为 {pct}。创建资产（操作 10）还会把 50% 留在新资产的手续费池中。",
+  "{n} of {total} funds": "{n} / {total} 个资金池",
+  "No funds.": "暂无资金池。",
+  "No funds for this asset.": "没有这个资产的资金池。",
+  "No SameT operations were found for this asset.": "没有找到这个资产的 SameT 操作。",
 }
