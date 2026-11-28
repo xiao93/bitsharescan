@@ -69,7 +69,7 @@ export type BlockRow = {
   merkle: string
   signature: string
   transactions: SignedBlock["transactions"]
-  /** Sum of every operation's fee, in raw core units. Fees paid in other assets are converted at their core exchange rate. */
+  /** Sum of every operation's fee, in raw core units. An operation paid in another asset counts the BTS fee its type requires. */
   feeCore: bigint
   /** True when part of feeCore came from a non-core fee asset, so the total is an estimate. */
   feeConverted: boolean
@@ -147,41 +147,78 @@ export async function fetchChainId(): Promise<string> {
 
 const CORE_ID = "1.3.0"
 
-/** Fee amounts per fee asset across every operation of every transaction in a block. */
-function sumBlockFees(block: SignedBlock | null): Map<string, bigint> {
-  const sums = new Map<string, bigint>()
+type FeeSchedule = { scale: bigint; byOp: Map<number, Record<string, unknown>> }
+let scheduleCache: { at: number; value: Promise<FeeSchedule> } | null = null
+
+/** The current fee schedule, loaded once and kept for ten minutes (it only changes at maintenance). */
+function feeSchedule(): Promise<FeeSchedule> {
+  if (scheduleCache && Date.now() - scheduleCache.at < 600_000) return scheduleCache.value
+  const value = fetchGlobal().then((props) => {
+    const fees = props.parameters.current_fees
+    return { scale: asBig(fees.scale ?? 10000), byOp: new Map(fees.parameters.map(([index, fields]) => [index, fields])) }
+  })
+  scheduleCache = { at: Date.now(), value }
+  value.catch(() => {
+    if (scheduleCache?.value === value) scheduleCache = null
+  })
+  return value
+}
+
+type PaidOp = { type: number; body: Record<string, unknown> }
+
+/** Core fee total for ops paid in BTS, plus the ops paid in another asset (priced from the schedule below). */
+function sumBlockFees(block: SignedBlock | null): { core: bigint; others: PaidOp[] } {
+  let core = 0n
+  const others: PaidOp[] = []
   for (const tx of block?.transactions ?? []) {
     for (const op of tx.operations ?? []) {
-      const fee = (op[1] as { fee?: Amount } | undefined)?.fee
+      const body = op[1] as { fee?: Amount } | undefined
+      const fee = body?.fee
       if (!fee?.asset_id) continue
-      sums.set(fee.asset_id, (sums.get(fee.asset_id) ?? 0n) + asBig(fee.amount))
+      if (fee.asset_id === CORE_ID) core += asBig(fee.amount)
+      else others.push({ type: Number(op[0]), body: body as Record<string, unknown> })
     }
   }
-  return sums
+  return { core, others }
 }
 
-/** Core units a fee paid in another asset is worth, from the asset's core exchange rate (rounded up, like the chain). */
-function feeInCore(assetId: string, amount: bigint): bigint | null {
-  const rate = peekAsset(assetId)?.options?.core_exchange_rate
-  if (!rate) return null
-  const base = asBig(rate.base.amount)
-  const quote = asBig(rate.quote.amount)
-  if (base <= 0n || quote <= 0n) return null
-  if (rate.base.asset_id === assetId && rate.quote.asset_id === CORE_ID) return (amount * quote + base - 1n) / base
-  if (rate.quote.asset_id === assetId && rate.base.asset_id === CORE_ID) return (amount * base + quote - 1n) / quote
-  return null
+function raw(value: unknown): bigint {
+  return typeof value === "number" || (typeof value === "string" && /^-?\d+$/.test(value)) ? asBig(value) : 0n
 }
 
-function blockFeeTotal(sums: Map<string, bigint>): { feeCore: bigint; feeConverted: boolean } {
-  let total = sums.get(CORE_ID) ?? 0n
-  let converted = false
-  for (const [assetId, amount] of sums) {
-    if (assetId === CORE_ID || amount === 0n) continue
-    converted = true
-    const core = feeInCore(assetId, amount)
-    if (core != null) total += core
+/**
+ * The BTS fee the chain requires for one operation: the schedule entry for its type (scaled),
+ * as the node computes it. Size-based parts are added where the size is known (a transfer's memo);
+ * other per-kilobyte parts need the packed size and are left out, so those ops use the base fee.
+ */
+function requiredCoreFee(schedule: FeeSchedule, { type, body }: PaidOp): bigint {
+  const fields = schedule.byOp.get(type) ?? {}
+  let fee: bigint
+  if (type === 5) fee = raw(fields.basic_fee)
+  else if (type === 8) fee = raw(body.upgrade_to_lifetime_member ? fields.membership_lifetime_fee : fields.membership_annual_fee)
+  else if (type === 10) {
+    const length = String(body.symbol ?? "").length
+    fee = raw(length === 3 ? fields.symbol3 : length === 4 ? fields.symbol4 : fields.long_symbol)
+  } else fee = raw(fields.fee)
+  if (type === 0 && body.memo && typeof body.memo === "object") {
+    // optional<memo_data>: flag byte, two 33-byte keys, 8-byte nonce, then the length-prefixed message.
+    const message = String((body.memo as { message?: unknown }).message ?? "")
+    const bytes = Math.floor(message.length / 2)
+    const prefix = bytes < 128 ? 1 : bytes < 16384 ? 2 : 3
+    const size = 1 + 33 + 33 + 8 + prefix + bytes
+    fee += (BigInt(size) * raw(fields.price_per_kbyte)) / 1024n
   }
-  return { feeCore: total, feeConverted: converted }
+  return (fee * schedule.scale) / 10000n
+}
+
+async function blockFeeTotals(sums: Array<{ core: bigint; others: PaidOp[] }>): Promise<Array<{ feeCore: bigint; feeConverted: boolean }>> {
+  const needs = sums.some((sum) => sum.others.length)
+  const schedule = needs ? await feeSchedule().catch(() => null) : null
+  return sums.map((sum) => {
+    let total = sum.core
+    if (schedule) for (const op of sum.others) total += requiredCoreFee(schedule, op)
+    return { feeCore: total, feeConverted: sum.others.length > 0 }
+  })
 }
 
 export function blockFeeText(block: Pick<BlockRow, "feeCore" | "feeConverted">): string {
@@ -199,11 +236,9 @@ export async function fetchBlocks(nums: number[]): Promise<BlockRow[]> {
     }
   })
   const names = await witnessNames(blocks.map((row) => row.block?.witness ?? ""))
-  const feeSums = blocks.map(({ block }) => sumBlockFees(block))
-  const otherAssets = [...new Set(feeSums.flatMap((sum) => [...sum.keys()]).filter((id) => id !== CORE_ID))]
-  if (otherAssets.length) await resolveAssets(otherAssets).catch(() => undefined)
+  const feeTotals = await blockFeeTotals(blocks.map(({ block }) => sumBlockFees(block)))
   return blocks.map(({ num, block }, index) => ({
-    ...blockFeeTotal(feeSums[index]!),
+    ...feeTotals[index]!,
     num,
     time: block?.timestamp ?? "",
     witness: block?.witness ?? "",

@@ -1077,5 +1077,5 @@ export const ar: Record<string, string> = {
   "Show less": "عرض أقل",
   "Fees": "الرسوم",
   "Total fees": "إجمالي الرسوم",
-  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "مجموع الرسوم التي دفعتها جميع العمليات في الكتلة. تُحوَّل الرسوم المدفوعة بأصول أخرى وفق سعر صرفها الأساسي.",
+  "Sum of the fees of every operation in the block. An operation paid in another asset counts the standard BTS fee for its type (marked ≈).": "مجموع رسوم جميع العمليات في الكتلة. تُحتسب العملية المدفوعة بأصل آخر برسم BTS القياسي لنوعها (مع علامة ≈).",
 }

@@ -1077,5 +1077,5 @@ export const bn: Record<string, string> = {
   "Show less": "কম দেখান",
   "Fees": "ফি",
   "Total fees": "মোট ফি",
-  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "ব্লকের সব অপারেশনের দেওয়া ফির যোগফল। অন্য সম্পদে দেওয়া ফি তাদের কোর বিনিময় হারে রূপান্তরিত।",
+  "Sum of the fees of every operation in the block. An operation paid in another asset counts the standard BTS fee for its type (marked ≈).": "ব্লকের সব অপারেশনের ফির যোগফল। অন্য সম্পদে ফি দেওয়া অপারেশন তার ধরনের স্ট্যান্ডার্ড BTS ফি হিসেবে গণনা হয় (≈ চিহ্নিত)।",
 }

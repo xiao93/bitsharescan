@@ -1077,5 +1077,5 @@ export const th: Record<string, string> = {
   "Show less": "แสดงน้อยลง",
   "Fees": "ค่าธรรมเนียม",
   "Total fees": "ค่าธรรมเนียมรวม",
-  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "ผลรวมค่าธรรมเนียมที่ทุกการดำเนินการในบล็อกจ่าย ค่าธรรมเนียมที่จ่ายด้วยสินทรัพย์อื่นแปลงด้วยอัตราแลกเปลี่ยนหลักของสินทรัพย์นั้น",
+  "Sum of the fees of every operation in the block. An operation paid in another asset counts the standard BTS fee for its type (marked ≈).": "ผลรวมค่าธรรมเนียมของทุกการดำเนินการในบล็อก การดำเนินการที่จ่ายด้วยสินทรัพย์อื่นจะนับตามค่าธรรมเนียม BTS มาตรฐานของประเภทนั้น (ทำเครื่องหมาย ≈)",
 }

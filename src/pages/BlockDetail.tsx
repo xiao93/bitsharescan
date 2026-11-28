@@ -76,7 +76,7 @@ export default function BlockDetail() {
                 { label: "Merkle root", value: <MonoCopy value={block.merkle} /> },
                 { label: "Witness signature", value: <MonoCopy value={block.signature} /> },
                 { label: "Transactions", value: formatInt(block.txCount) },
-                { label: "Total fees", value: blockFeeText(block), hint: t("Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.") },
+                { label: "Total fees", value: blockFeeText(block), hint: t("Sum of the fees of every operation in the block. An operation paid in another asset counts the standard BTS fee for its type (marked ≈).") },
                 { label: "Indexed operations", value: formatInt(data.esOps.length) },
               ]}
             />

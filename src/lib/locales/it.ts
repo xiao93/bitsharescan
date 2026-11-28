@@ -1077,5 +1077,5 @@ export const it: Record<string, string> = {
   "Show less": "Mostra meno",
   "Fees": "Commissioni",
   "Total fees": "Commissioni totali",
-  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "Somma delle commissioni pagate da tutte le operazioni del blocco. Le commissioni in altri asset sono convertite al loro tasso di cambio base.",
+  "Sum of the fees of every operation in the block. An operation paid in another asset counts the standard BTS fee for its type (marked ≈).": "Somma delle commissioni di tutte le operazioni del blocco. Un'operazione pagata in un altro asset conta la commissione BTS standard del suo tipo (segnata con ≈).",
 }

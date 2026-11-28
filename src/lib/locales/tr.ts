@@ -1077,5 +1077,5 @@ export const tr: Record<string, string> = {
   "Show less": "Daha az göster",
   "Fees": "Ücretler",
   "Total fees": "Toplam ücret",
-  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "Bloktaki tüm işlemlerin ödediği ücretlerin toplamı. Diğer varlıklarla ödenen ücretler çekirdek kurlarıyla çevrilir.",
+  "Sum of the fees of every operation in the block. An operation paid in another asset counts the standard BTS fee for its type (marked ≈).": "Bloktaki tüm işlemlerin ücretlerinin toplamı. Başka bir varlıkla ödenen işlem, türünün standart BTS ücretiyle hesaplanır (≈ ile işaretli).",
 }

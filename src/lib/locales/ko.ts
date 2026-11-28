@@ -1077,5 +1077,5 @@ export const ko: Record<string, string> = {
   "Show less": "접기",
   "Fees": "수수료",
   "Total fees": "총 수수료",
-  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "블록 내 모든 작업이 지불한 수수료의 합계입니다. 다른 자산으로 낸 수수료는 핵심 환율로 환산합니다.",
+  "Sum of the fees of every operation in the block. An operation paid in another asset counts the standard BTS fee for its type (marked ≈).": "블록 내 모든 작업의 수수료 합계입니다. 다른 자산으로 수수료를 낸 작업은 해당 작업 유형의 표준 BTS 수수료로 계산합니다(≈ 표시).",
 }

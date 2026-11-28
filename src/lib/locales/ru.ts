@@ -1077,5 +1077,5 @@ export const ru: Record<string, string> = {
   "Show less": "Свернуть",
   "Fees": "Комиссии",
   "Total fees": "Всего комиссий",
-  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "Сумма комиссий всех операций в блоке. Комиссии в других активах пересчитаны по их курсу к основному активу.",
+  "Sum of the fees of every operation in the block. An operation paid in another asset counts the standard BTS fee for its type (marked ≈).": "Сумма комиссий всех операций в блоке. Операция, оплаченная другим активом, учитывается по стандартной комиссии BTS для её типа (помечено ≈).",
 }

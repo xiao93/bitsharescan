@@ -1077,5 +1077,5 @@ export const he: Record<string, string> = {
   "Show less": "הצג פחות",
   "Fees": "עמלות",
   "Total fees": "סך העמלות",
-  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "סכום העמלות ששילמו כל הפעולות בבלוק. עמלות שנגבו בנכסים אחרים הומרו לפי שער ההמרה הליבתי שלהם.",
+  "Sum of the fees of every operation in the block. An operation paid in another asset counts the standard BTS fee for its type (marked ≈).": "סכום העמלות של כל הפעולות בבלוק. פעולה ששולמה בנכס אחר נספרת לפי עמלת ה-BTS הסטנדרטית של סוגה (מסומן ≈).",
 }

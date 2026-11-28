@@ -1077,5 +1077,5 @@ export const id: Record<string, string> = {
   "Show less": "Tampilkan lebih sedikit",
   "Fees": "Biaya",
   "Total fees": "Total biaya",
-  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "Jumlah biaya yang dibayar oleh setiap operasi dalam blok. Biaya dalam aset lain dikonversi dengan kurs inti aset tersebut.",
+  "Sum of the fees of every operation in the block. An operation paid in another asset counts the standard BTS fee for its type (marked ≈).": "Jumlah biaya semua operasi dalam blok. Operasi yang dibayar dengan aset lain dihitung dengan biaya BTS standar untuk jenisnya (ditandai ≈).",
 }

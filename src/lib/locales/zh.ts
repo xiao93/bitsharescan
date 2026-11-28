@@ -1077,5 +1077,5 @@ export const zh: Record<string, string> = {
   "Show less": "收起",
   "Fees": "手续费",
   "Total fees": "总手续费",
-  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "区块内所有操作支付的手续费之和。以其他资产支付的手续费按其核心汇率折算。",
+  "Sum of the fees of every operation in the block. An operation paid in another asset counts the standard BTS fee for its type (marked ≈).": "区块内所有操作的手续费之和。以其他资产支付手续费的操作,按其操作类型的标准 BTS 手续费计入(标记 ≈)。",
 }

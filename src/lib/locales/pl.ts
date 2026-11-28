@@ -1077,5 +1077,5 @@ export const pl: Record<string, string> = {
   "Show less": "Pokaż mniej",
   "Fees": "Opłaty",
   "Total fees": "Opłaty łącznie",
-  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "Suma opłat wniesionych przez wszystkie operacje w bloku. Opłaty w innych aktywach przeliczono po ich kursie bazowym.",
+  "Sum of the fees of every operation in the block. An operation paid in another asset counts the standard BTS fee for its type (marked ≈).": "Suma opłat wszystkich operacji w bloku. Operacja opłacona innym aktywem jest liczona według standardowej opłaty BTS dla jej typu (oznaczone ≈).",
 }

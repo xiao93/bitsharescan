@@ -1077,5 +1077,5 @@ export const ur: Record<string, string> = {
   "Show less": "کم دکھائیں",
   "Fees": "فیس",
   "Total fees": "کل فیس",
-  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "بلاک کی تمام کارروائیوں کی ادا کردہ فیس کا مجموعہ۔ دوسرے اثاثوں میں دی گئی فیس ان کی بنیادی شرحِ تبادلہ سے تبدیل کی گئی ہے۔",
+  "Sum of the fees of every operation in the block. An operation paid in another asset counts the standard BTS fee for its type (marked ≈).": "بلاک کی تمام کارروائیوں کی فیس کا مجموعہ۔ کسی دوسرے اثاثے میں فیس دینے والی کارروائی اپنی قسم کی معیاری BTS فیس کے طور پر شمار ہوتی ہے (≈ کا نشان)۔",
 }

@@ -317,7 +317,7 @@ export default function Home() {
                           {t("Witness")} <span className="text-link">{block.witnessName}</span>
                         </span>
                         <span className="flex shrink-0 items-center gap-2">
-                          <span className="text-xs text-muted" title={t("Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.")}><span className="hidden sm:inline">{t("Fees")} </span><span className="tabular-nums text-ink">{blockFeeText(block)}</span></span>
+                          <span className="text-xs text-muted" title={t("Sum of the fees of every operation in the block. An operation paid in another asset counts the standard BTS fee for its type (marked ≈).")}><span className="hidden sm:inline">{t("Fees")} </span><span className="tabular-nums text-ink">{blockFeeText(block)}</span></span>
                           <span className="rounded bg-canvas px-1.5 py-0.5 text-xs text-ink">{t("{n} txns", { n: block.txCount })}</span>
                         </span>
                       </span>

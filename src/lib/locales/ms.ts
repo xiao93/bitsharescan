@@ -1077,5 +1077,5 @@ export const ms: Record<string, string> = {
   "Show less": "Tunjukkan kurang",
   "Fees": "Yuran",
   "Total fees": "Jumlah yuran",
-  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "Jumlah yuran yang dibayar oleh setiap operasi dalam blok. Yuran dalam aset lain ditukar mengikut kadar pertukaran terasnya.",
+  "Sum of the fees of every operation in the block. An operation paid in another asset counts the standard BTS fee for its type (marked ≈).": "Jumlah yuran semua operasi dalam blok. Operasi yang dibayar dengan aset lain dikira mengikut yuran BTS standard bagi jenisnya (ditanda ≈).",
 }

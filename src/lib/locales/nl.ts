@@ -1077,5 +1077,5 @@ export const nl: Record<string, string> = {
   "Show less": "Minder tonen",
   "Fees": "Kosten",
   "Total fees": "Totale kosten",
-  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "Som van de kosten die alle bewerkingen in het blok betalen. Kosten in andere activa zijn omgerekend tegen hun kernwisselkoers.",
+  "Sum of the fees of every operation in the block. An operation paid in another asset counts the standard BTS fee for its type (marked ≈).": "Som van de kosten van alle bewerkingen in het blok. Een bewerking die in een ander activum is betaald, telt de standaard BTS-kosten van haar type mee (gemarkeerd met ≈).",
 }

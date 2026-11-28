@@ -1077,5 +1077,5 @@ export const vi: Record<string, string> = {
   "Show less": "Thu gọn",
   "Fees": "Phí",
   "Total fees": "Tổng phí",
-  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "Tổng phí do mọi thao tác trong khối trả. Phí trả bằng tài sản khác được quy đổi theo tỷ giá lõi.",
+  "Sum of the fees of every operation in the block. An operation paid in another asset counts the standard BTS fee for its type (marked ≈).": "Tổng phí của mọi thao tác trong khối. Thao tác trả phí bằng tài sản khác được tính theo phí BTS tiêu chuẩn của loại thao tác đó (đánh dấu ≈).",
 }

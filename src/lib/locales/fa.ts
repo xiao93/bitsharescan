@@ -1077,5 +1077,5 @@ export const fa: Record<string, string> = {
   "Show less": "نمایش کمتر",
   "Fees": "کارمزدها",
   "Total fees": "کل کارمزدها",
-  "Sum of the fees paid by every operation in the block. Fees paid in other assets are converted at their core exchange rate.": "مجموع کارمزد همه عملیات بلوک. کارمزدهای پرداخت‌شده با دارایی‌های دیگر با نرخ تبدیل هسته‌ای آن‌ها تبدیل شده‌اند.",
+  "Sum of the fees of every operation in the block. An operation paid in another asset counts the standard BTS fee for its type (marked ≈).": "مجموع کارمزد همه عملیات بلوک. عملیاتی که با دارایی دیگر پرداخت شده، با کارمزد استاندارد BTS برای نوع خود محاسبه می‌شود (با نشانه ≈).",
 }
